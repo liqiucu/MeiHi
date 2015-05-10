@@ -7,25 +7,27 @@
         </div>
     </div>
 </header>
+<script type="text/javascript">
+    //js 实现动态加减图片地址
+</script>
 <div id="body">
-
-    <h2>Multipart/form-data</h2>
-
     <section class="main-content clear-fix">
-
         <form name="form1" method="post" enctype="multipart/form-data" action="user/upload_profile">
+            
             <fieldset>
                 <legend>File Upload Example</legend>
                 <div>
                     <label for="caption">Image Caption</label>
-                    <input name="caption" type="text" />
+                    <input name="id" id="id" type="text" />
+                </div>
+                <div id="divImages">
+                    <input id="image1" name="image1" type="file" />
                 </div>
                 <div>
-                    <label for="image1">Image File</label>
-                    <input name="image1" type="file" />
+                    <input  type="button" value="增加"/>
                 </div>
                 <div>
-                    <input type="submit" value="Submit" />
+                    <input type="submit" value="提交" />
                 </div>
             </fieldset>
         </form>

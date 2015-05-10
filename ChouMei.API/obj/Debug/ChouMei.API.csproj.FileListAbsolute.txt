@@ -34,3 +34,5 @@ D:\Product\ChouMei.API\bin\Antlr3.Runtime.pdb
 D:\Product\ChouMei.API\obj\Debug\ChouMei.API.csprojResolveAssemblyReference.cache
 D:\Product\ChouMei.API\obj\Debug\ChouMei.API.dll
 D:\Product\ChouMei.API\obj\Debug\ChouMei.API.pdb
+D:\Product\ChouMei.API\bin\EntityFramework.SqlServer.dll
+D:\Product\ChouMei.API\bin\EntityFramework.SqlServer.xml
