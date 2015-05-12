@@ -1,0 +1,80 @@
+﻿@model MeiHi.Admin.Models.ShopModel
+@using PagedList.Mvc;
+<link href="~/Content/PagedList.css" rel="stylesheet" />
+@{
+    ViewBag.Title = "ShopManege";
+}
+
+<h2>ShopManege</h2>
+
+<p>
+    @Html.ActionLink("Create New", "CreateShop")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            ShopID
+        </th>
+        <th>
+            DetailAddress
+        </th>
+        <th>
+            RegionName
+        </th>
+        <th>
+            Phone
+        </th>
+        <th>
+            Contract
+        </th>
+        <th>
+            IsHot)
+        </th>
+        <th>
+            IsOnline
+        </th>
+        <th>
+            Comment
+        </th>
+        <th></th>
+    </tr>
+@foreach (var item in Model.Lists)
+{
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.ShopId)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DetailAddress)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.RegionName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Phone)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Contract)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.IsHot)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.IsOnline)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Comment)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "EditShop", new { id=item.ShopId }) |
+            @Html.ActionLink("Details", "ShopDetail", new { id=item.ShopId }) |
+            @Html.ActionLink("Delete", "DeleteShop", new { shopId=item.ShopId })
+        </td>
+    </tr>
+}
+</table>
+<br />
+Page @(Model.Lists.PageCount < Model.Lists.PageNumber ? 0 : Model.Lists.PageNumber) of @Model.Lists.PageCount
+
+@Html.PagedListPager(Model.Lists, page => Url.Action("ShopManege", "Shop",
+    new { page }))

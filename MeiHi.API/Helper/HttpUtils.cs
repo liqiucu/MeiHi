@@ -15,42 +15,64 @@ namespace MeiHi.API.Helper
     /// </summary>
     public class HttpUtils
     {
-        /// <summary>
-        /// 地名必须详细，不然百度地图返回null
-        /// </summary>
-        /// <returns></returns>
-        public static MeiHiDistanceModel RequestApi(
-            List<string> destinations,
-            string ak = "yAcXaLCAD2OIEeoSRMwEyvNU",
-            string origin = "上海长宁区福泉路99号携程旅游")
+        public static List<double> CalAllShops(string origin, List<string> destinations)
         {
-            //string destination1 = "上海虹桥火车站",
-            //string destination2 = "上海东方明珠",
-            //string destination3 = "上海交通大学闵行校区",
-            //string destination4 = "上海闵行区爱博家园四村",
-            //string destination5 = "上海闵行区爱博家园二村"
-            //yAcXaLCAD2OIEeoSRMwEyvNU        AK
-            //http://api.map.baidu.com/direction/v1/routematrix
+            List<double> results = new List<double>(destinations.Count);
+            string[] originLatLng = origin.Split(',');
+            double slng = double.Parse(originLatLng[0]);
+            double slat = double.Parse(originLatLng[1]);
 
-            string destinationsUrl = string.Join("|", destinations);
-            string apiUrl = "http://api.map.baidu.com/direction/v1/routematrix?output=json&ak="
-                + ak + "&origins="
-                + origin + "&destinations=" +
-                destinationsUrl;
-
-            var info = new MeiHiDistanceModel();
-            try
+            for (int i = 0; i < destinations.Count; i++)
             {
-                //以 Get 形式请求 Api 地址
-                string result = HttpUtils.DoGet(apiUrl);
-                info = JsonConvert.DeserializeObject<MeiHiDistanceModel>(result);
-            }
-            catch (Exception)
-            {
-                throw;
+                string[] destinationLatLng = destinations[i].Split(',');
+                double dlng = double.Parse(destinationLatLng[0]);
+                double dlat = double.Parse(destinationLatLng[1]);
+                var temp = GetDistance(slat, slng, dlat, dlng);
+                results.Add(temp);
             }
 
-            return info;
+            return results;
+        }
+
+        public static double CalOneShop(string origin, string destination)
+        {
+            string[] originLatLng = origin.Split(',');
+            double slng = double.Parse(originLatLng[0]);
+            double slat = double.Parse(originLatLng[1]);
+
+            string[] destinationLatLng = destination.Split(',');
+            double dlng = double.Parse(destinationLatLng[0]);
+            double dlat = double.Parse(destinationLatLng[1]);
+            return GetDistance(slat, slng, dlat, dlng);
+        }
+
+        private const double EARTH_RADIUS = 6378.137;//地球半径
+
+        private static double rad(double d)
+        {
+            return d * Math.PI / 180.0;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="lat1">纬度</param>
+        /// <param name="lng1">经度</param>
+        /// <param name="lat2"></param>
+        /// <param name="lng2"></param>
+        /// <returns></returns>
+        public static double GetDistance(double lat1, double lng1, double lat2, double lng2)
+        {
+            double radLat1 = rad(lat1);
+            double radLat2 = rad(lat2);
+            double a = radLat1 - radLat2;
+            double b = rad(lng1) - rad(lng2);
+
+            double s = 2 * Math.Asin(Math.Sqrt(Math.Pow(Math.Sin(a / 2), 2) +
+             Math.Cos(radLat1) * Math.Cos(radLat2) * Math.Pow(Math.Sin(b / 2), 2)));
+            s = s * EARTH_RADIUS;
+            s = Math.Round(s * 10000) / 10000;
+            return s;
         }
 
         /// <summary>

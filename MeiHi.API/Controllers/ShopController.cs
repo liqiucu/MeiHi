@@ -9,6 +9,7 @@ using MeiHi.API.Models;
 using System.Threading.Tasks;
 using MeiHi.API.Helper;
 using Newtonsoft.Json;
+using System.Web.Caching;
 
 namespace MeiHi.API.Controllers
 {
@@ -131,48 +132,17 @@ namespace MeiHi.API.Controllers
         public void CalDistance(string region)
         {
             var shops = db.Shop.Where(a => a.IsOnline == true).ToList();
-            int index = 0;
             var shopResults = new List<ShopModel>();
-            int count = shops.Count() < 5 ? shops.Count() : 5;
-            var temp = new List<ShopModel>(count);
 
             for (int j = 0; j < shops.Count(); j++)
             {
-                if (index != count)
-                {
-                    temp.Add(ConvertToShopModel(shops[j]));
-                    index++;
-                }
-                if (index == count)
-                {
-                    var result = HttpUtils.RequestApi(
-                        origin: region,
-                        destinations: temp.Select(a => a.DetailAddress).ToList());
-
-                    var addressShopError = result.Result.Elements.Any(a => a.Distance == null || a.Duration == null);
-
-                    if (result == null
-                        || result.Status != 0
-                        || addressShopError)
-                    {
-                        throw new Exception("店铺地址不对 shop ID列表：" + string.Join(",", temp.Select(a => a.ShopId).ToList()));
-                    }
-
-                    for (int i = 0; i < count; i++)
-                    {
-                        temp[i].Distance = result.Result.Elements[i].Distance.Value;
-                    }
-
-                    shopResults.AddRange(temp);
-                    count = shops.Count - j < 5 ? shops.Count - j : 5;
-                    temp = new List<ShopModel>(count);
-                    index = 0;
-                }
+                shopResults.Add(ConvertToShopModel(shops[j], region));
             }
+
             System.Web.HttpContext.Current.Session["Shops"] = shopResults;
         }
 
-        private ShopModel ConvertToShopModel(Shop shop)
+        public ShopModel ConvertToShopModel(Shop shop, string startCoordinates = "")
         {
             return new ShopModel()
             {
@@ -186,13 +156,30 @@ namespace MeiHi.API.Controllers
                 DiscountRate = GetDiscountRate(shop.ShopId),
                 BranchStoreCount = GetBranchStoreCount(shop.ParentShopId),
                 RegionName = GetRegionName(shop.RegionID, shop.ShopId),
-                ShopImageUrl = GetShopImageUrl(shop.ProductBrandId)
+                ShopImageUrl = GetShopImageUrl(shop.ProductBrandId),
+                Rate = GetShopRate(shop.ShopId),
+                ProductBrandCount = GetProductBrandCount(shop.ProductBrandId),
+                Distance = string.IsNullOrEmpty(startCoordinates) ? 0 : HttpUtils.CalOneShop(startCoordinates, shop.Coordinates),
+                Services = GetServices(shop.ShopId)
             };
         }
 
-        private string GetShopImageUrl(long? ProductBrandId)
+        public decimal GetShopRate(long shopId)
         {
-            if (ProductBrandId == null)
+            var temp = db.UserComments.Where(a => a.ShopId == shopId);
+
+            if (temp != null && temp.Count() > 0)
+            {
+                return decimal.Round(temp.Sum(a => a.Rate) / temp.Count(), 1);
+            }
+
+            return 4.5M;
+        }
+
+        public string GetShopImageUrl(string ProductBrandId)
+        {
+
+            if (string.IsNullOrEmpty(ProductBrandId))
             {
                 return "";
             }
@@ -204,7 +191,64 @@ namespace MeiHi.API.Controllers
             return "";
         }
 
-        private int GetBranchStoreCount(long? ParentShopId)
+        /// <summary>
+        /// 品牌照片数量
+        /// </summary>
+        /// <param name="ProductBrandId"></param>
+        /// <returns></returns>
+        public int GetProductBrandCount(string ProductBrandId)
+        {
+            if (string.IsNullOrEmpty(ProductBrandId))
+            {
+                return 0;
+            }
+
+            var temp = db.ProductBrand.Where(a => a.ProductBrandId == ProductBrandId);
+
+            if (temp != null && temp.Count() > 0)
+            {
+                return temp.Count();
+            }
+
+            return 0;
+        }
+
+        /// <summary>
+        /// 每个店铺的服务列表，按照服务类型名称分组
+        /// </summary>
+        /// <param name="shopId"></param>
+        /// <returns></returns>
+        public IEnumerable<IGrouping<string, ServiceForShopDetailModel>> GetServices(long shopId)
+        {
+            var services = from a in db.Service
+                           where a.ShopId == shopId
+                           select a;
+
+            var result = new List<ServiceForShopDetailModel>();
+
+            foreach (var item in services)
+            {
+                var temp = new ServiceForShopDetailModel
+                {
+                    CMUnitCost = item.CMUnitCost,
+                    OriginalUnitCost = item.OriginalUnitCost,
+                    ServiceId = item.ServiceId,
+                    Title = item.Title,
+                    ShopId = item.ShopId,
+                    ServiceTypeId = item.ServiceTypeId
+                };
+                result.Add(temp);
+            }
+
+            var serviceGroups = result.GroupBy(a => a.ServiceTypeName);
+            return serviceGroups;
+        }
+        /// <summary>
+        /// 分店数量
+        /// </summary>
+        /// <param name="ParentShopId"></param>
+        /// <returns></returns>
+        public int GetBranchStoreCount(long? ParentShopId)
         {
             if (ParentShopId == null)
             {
@@ -213,7 +257,7 @@ namespace MeiHi.API.Controllers
             return db.Shop.Where(a => a.ParentShopId == ParentShopId).Count();
         }
 
-        private decimal GetDiscountRate(long ShopId)
+        public decimal GetDiscountRate(long ShopId)
         {
             var services = db.Service.Where(a => a.ShopId == ShopId);
             if (services != null && services.Count() > 0)
@@ -230,8 +274,10 @@ namespace MeiHi.API.Controllers
             return 10;
         }
 
-        private string GetRegionName(int regionId, long shopId)
+
+        public string GetRegionName(int regionId, long shopId)
         {
+
             var region = (from a in db.Region where a.RegionId == regionId select a).FirstOrDefault();
 
             if (region == null)

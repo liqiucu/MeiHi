@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MeiHi.API.Helper
+namespace MeiHi.FrameWork.Helper
 {
     public static class Constants
     {

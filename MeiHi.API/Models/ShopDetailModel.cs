@@ -31,29 +31,15 @@ namespace MeiHi.API.Models
         /// 享受3000会员级别待遇
         /// </summary>
         public string ShopTag { get; set; }
-        public long ProductBrandId { get; set; }
+        public string ProductBrandId { get; set; }
 
         /// <summary>
         /// 品牌数量
         /// </summary>
         public int ProductBrandCount
         {
-            get
-            {
-                if (ProductBrandId == 0)
-                {
-                    return 0;
-                }
-
-                var temp = db.ProductBrand.Where(a => a.ProductBrandId == this.ProductBrandId);
-
-                if (temp != null && temp.Count()>0)
-                {
-                    return temp.Count();
-                }
-
-                return 0;
-            }
+            get;
+            set;
         }
 
         /// <summary>
@@ -61,19 +47,8 @@ namespace MeiHi.API.Models
         /// </summary>
         public string ShopImageUrl
         {
-            get
-            {
-                if (this.ProductBrandId == 0)
-                {
-                    return "";
-                }
-                var temp = db.ProductBrand.Where(a => a.ProductBrandId == this.ProductBrandId).FirstOrDefault();
-                if (temp != null)
-                {
-                    return temp.ProductUrl;
-                }
-                return "";
-            }
+            get;
+            set;
         }
 
         /// <summary>

@@ -4,6 +4,7 @@ D:\Product\ChouMei.API\bin\ChouMei.API.pdb
 D:\Product\ChouMei.API\bin\Antlr3.Runtime.dll
 D:\Product\ChouMei.API\bin\ChouMei.Model.dll
 D:\Product\ChouMei.API\bin\EntityFramework.dll
+D:\Product\ChouMei.API\bin\EntityFramework.SqlServer.dll
 D:\Product\ChouMei.API\bin\Microsoft.Web.Infrastructure.dll
 D:\Product\ChouMei.API\bin\Newtonsoft.Json.dll
 D:\Product\ChouMei.API\bin\System.Net.Http.Formatting.dll
@@ -19,6 +20,7 @@ D:\Product\ChouMei.API\bin\System.Web.WebPages.Razor.dll
 D:\Product\ChouMei.API\bin\WebGrease.dll
 D:\Product\ChouMei.API\bin\ChouMei.Model.pdb
 D:\Product\ChouMei.API\bin\EntityFramework.xml
+D:\Product\ChouMei.API\bin\EntityFramework.SqlServer.xml
 D:\Product\ChouMei.API\bin\Newtonsoft.Json.xml
 D:\Product\ChouMei.API\bin\System.Net.Http.Formatting.xml
 D:\Product\ChouMei.API\bin\System.Web.Helpers.xml
@@ -34,5 +36,3 @@ D:\Product\ChouMei.API\bin\Antlr3.Runtime.pdb
 D:\Product\ChouMei.API\obj\Debug\ChouMei.API.csprojResolveAssemblyReference.cache
 D:\Product\ChouMei.API\obj\Debug\ChouMei.API.dll
 D:\Product\ChouMei.API\obj\Debug\ChouMei.API.pdb
-D:\Product\ChouMei.API\bin\EntityFramework.SqlServer.dll
-D:\Product\ChouMei.API\bin\EntityFramework.SqlServer.xml

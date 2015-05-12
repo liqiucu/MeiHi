@@ -5,9 +5,9 @@ using System.Web;
 using MeiHi.Model;
 using System.Runtime.Serialization;
 
-namespace MeiHi.API.Models
+namespace MeiHi.Admin.Models
 {
-    public class ShopModel
+    public class ShopXModel
     {
         MeiHiEntities db = new MeiHiEntities();
 
@@ -78,7 +78,7 @@ namespace MeiHi.API.Models
         /// 实时计算距离
         /// </summary>
 
-        public double Distance { get; set; }
+        public int Distance { get; set; }
 
         /// <summary>
         /// 享受3000会员级别待遇
