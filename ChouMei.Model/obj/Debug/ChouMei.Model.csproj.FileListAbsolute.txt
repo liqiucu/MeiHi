@@ -1,9 +1,9 @@
 D:\Product\ChouMei.Model\bin\Debug\ChouMei.Model.dll.config
 D:\Product\ChouMei.Model\bin\Debug\ChouMei.Model.dll
 D:\Product\ChouMei.Model\bin\Debug\ChouMei.Model.pdb
-D:\Product\ChouMei.Model\obj\Debug\ChouMei.Model.dll
-D:\Product\ChouMei.Model\obj\Debug\ChouMei.Model.pdb
 D:\Product\ChouMei.Model\bin\Debug\EntityFramework.dll
 D:\Product\ChouMei.Model\bin\Debug\EntityFramework.SqlServer.dll
 D:\Product\ChouMei.Model\bin\Debug\EntityFramework.xml
 D:\Product\ChouMei.Model\bin\Debug\EntityFramework.SqlServer.xml
+D:\Product\ChouMei.Model\obj\Debug\ChouMei.Model.dll
+D:\Product\ChouMei.Model\obj\Debug\ChouMei.Model.pdb
