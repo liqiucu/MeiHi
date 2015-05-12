@@ -16,7 +16,7 @@ namespace MeiHi.Model
     {
         public long ShopBrandImagesId { get; set; }
         public string url { get; set; }
-        public long ShopId { get; set; }
+        public Nullable<long> ShopId { get; set; }
         public System.DateTime DateCreated { get; set; }
     
         public virtual Shop Shop { get; set; }

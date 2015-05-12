@@ -221,7 +221,7 @@
           </Key>
           <Property Name="ShopBrandImagesId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="url" Type="nvarchar" MaxLength="50" Nullable="false" />
-          <Property Name="ShopId" Type="bigint" Nullable="false" />
+          <Property Name="ShopId" Type="bigint" />
           <Property Name="DateCreated" Type="datetime" Nullable="false" />
         </EntityType>
         <EntityType Name="ShopUser">
@@ -503,7 +503,7 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_ShopBrandImages_Shop">
-          <End Role="Shop" Type="Self.Shop" Multiplicity="1" />
+          <End Role="Shop" Type="Self.Shop" Multiplicity="0..1" />
           <End Role="ShopBrandImages" Type="Self.ShopBrandImages" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Shop">
@@ -1007,7 +1007,7 @@
           </Key>
           <Property Name="ShopBrandImagesId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="url" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="ShopId" Type="Int64" Nullable="false" />
+          <Property Name="ShopId" Type="Int64" />
           <Property Name="DateCreated" Type="DateTime" Nullable="false" Precision="3" />
           <NavigationProperty Name="Shop" Relationship="Self.FK_ShopBrandImages_Shop" FromRole="ShopBrandImages" ToRole="Shop" />
         </EntityType>
@@ -1328,7 +1328,7 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_ShopBrandImages_Shop">
-          <End Role="Shop" Type="Self.Shop" Multiplicity="1" />
+          <End Role="Shop" Type="Self.Shop" Multiplicity="0..1" />
           <End Role="ShopBrandImages" Type="Self.ShopBrandImages" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Shop">

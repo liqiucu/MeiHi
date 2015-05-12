@@ -61,6 +61,20 @@ namespace MeiHi.Admin.Logic
             }
         }
 
+        public static long GetShopIdByShopName(string shopName)
+        {
+            using (var db = new MeiHiEntities())
+            {
+                var shop = db.Shop.Where(a => a.Title == shopName).FirstOrDefault();
+                if (shop != null)
+                {
+                    return shop.ShopId;
+                }
+
+                return 0;
+            }
+        }
+
         public static long GetParentShopId(string shopName)
         {
             using (var db = new MeiHiEntities())

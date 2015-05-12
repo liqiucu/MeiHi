@@ -67,7 +67,7 @@ namespace MeiHi.Admin.Controllers
                         tempPath = System.IO.Path.Combine(Server.MapPath("~/App_Data"), System.IO.Path.GetFileName(fileToUploadForShop[0].FileName));
                     }
 
-                    long shopId = db.Shop.Add(new Shop()
+                    db.Shop.Add(new Shop()
                     {
                         RegionID = model.RegionId,
                         ShopTag = model.ShopTag,
@@ -85,7 +85,7 @@ namespace MeiHi.Admin.Controllers
                         DetailAddress = model.DetailAddress,
                         DateCreated = DateTime.Now,
                         DateModified = DateTime.Now
-                    }).ShopId;
+                    });
 
                     db.SaveChanges();
 
@@ -94,10 +94,9 @@ namespace MeiHi.Admin.Controllers
                         string path = System.IO.Path.Combine(Server.MapPath("~/App_Data"), System.IO.Path.GetFileName(file.FileName));
                         file.SaveAs(path);
 
-
                         db.ShopBrandImages.Add(new ShopBrandImages()
                         {
-                            ShopId = shopId,
+                            ShopId = ShopLogic.GetShopIdByShopName(model.Title),
                             DateCreated = DateTime.Now,
                             url = path
                         });
@@ -158,8 +157,8 @@ namespace MeiHi.Admin.Controllers
 
                 if (shop != null)
                 {
+                    access.Shop.Attach(shop);
                     access.Shop.Remove(shop);
-
                     access.SaveChanges();
                 }
             }

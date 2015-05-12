@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="d4d2f955ff4b4671bfe61936b5244f61" Name="Diagram1">
+      <Diagram DiagramId="285bbe125d764e3ca9e03a5deacb5309" Name="Diagram1">
         <EntityTypeShape EntityType="MeiHiModel.Add" Width="1.5" PointX="0.75" PointY="6" IsExpanded="true" />
         <EntityTypeShape EntityType="MeiHiModel.Admin" Width="1.5" PointX="10.75" PointY="17.375" IsExpanded="true" />
         <EntityTypeShape EntityType="MeiHiModel.AdminPermission" Width="1.5" PointX="13" PointY="3.625" IsExpanded="true" />
