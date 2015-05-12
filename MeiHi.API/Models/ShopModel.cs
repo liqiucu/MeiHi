@@ -9,8 +9,6 @@ namespace MeiHi.API.Models
 {
     public class ShopModel
     {
-        MeiHiEntities db = new MeiHiEntities();
-
         public long ShopId { get; set; }
 
         public string DetailAddress { get; set; }
@@ -20,6 +18,7 @@ namespace MeiHi.API.Models
             get;
             set;
         }
+        public long? ParentShopId { get; set; }
         /// <summary>
         /// 店铺图片地址
         /// </summary>
@@ -85,6 +84,7 @@ namespace MeiHi.API.Models
         /// </summary>
 
         public string ShopTag { get; set; }
+        public string Title { get; set; }
 
         /// <summary>
         /// 服务列表
@@ -94,5 +94,9 @@ namespace MeiHi.API.Models
             get;
             set;
         }
+
+        public List<string> UserComments { get; set; }
+
+        public List<string> ProductBrandImages { get; set; }
     }
 }
