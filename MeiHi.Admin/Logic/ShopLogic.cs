@@ -5,95 +5,35 @@ using System.Web;
 using MeiHi.Model;
 using MeiHi.Admin.Models;
 using PagedList;
+using MeiHi.Admin.Models.UserComments;
 
 namespace MeiHi.Admin.Logic
 {
-    public class ShopLogic
+    public static class ShopLogic
     {
-        MeiHiEntities db = new MeiHiEntities();
-
-        public List<RegionModel> GetRegionsModel()
-        {
-            List<RegionModel> result = new List<RegionModel>();
-            var regions = db.Region.Where(a => a.ProvinceId == 1);
-
-            foreach (var item in regions)
-            {
-                RegionModel model = new RegionModel()
-                {
-                    RegionId = item.RegionId,
-                    RegionName = item.Name
-                };
-                result.Add(model);
-            }
-
-            return result;
-        }
-
-        public long GetParentShopId(string shopName)
-        {
-            using(var db=new MeiHiEntities())
-            {
-                var shop = db.Shop.Where(a => a.Title == shopName).FirstOrDefault();
-                if (shop != null)
-                {
-                    return shop.ShopId;
-                }
-
-                return 0;
-            }
-        }
-
-        public decimal GetShopRate(long shopId)
-        {
-            var temp = db.UserComments.Where(a => a.ShopId == shopId);
-
-            if (temp != null && temp.Count() > 0)
-            {
-                return decimal.Round(temp.Sum(a => a.Rate) / temp.Count(), 1);
-            }
-
-            return 4.5M;
-        }
-
-        public string GetShopImageUrl(string ProductBrandId)
-        {
-
-            if (string.IsNullOrEmpty(ProductBrandId))
-            {
-                return "";
-            }
-            var temp = db.ProductBrand.Where(a => a.ProductBrandId == ProductBrandId).FirstOrDefault();
-            if (temp != null)
-            {
-                return temp.ProductUrl;
-            }
-            return "";
-        }
-
-        /// <summary>
-        /// 品牌照片数量
-        /// </summary>
-        /// <param name="ProductBrandId"></param>
-        /// <returns></returns>
-        public int GetProductBrandCount(string ProductBrandId)
-        {
-            if (string.IsNullOrEmpty(ProductBrandId))
-            {
-                return 0;
-            }
-
-            var temp = db.ProductBrand.Where(a => a.ProductBrandId == ProductBrandId);
-
-            if (temp != null && temp.Count() > 0)
-            {
-                return temp.Count();
-            }
-
-            return 0;
-        }
-
-        public StaticPagedList<ShopListDetailModel> GetShops(int page, int pageSize)
+        //public static long CreateShop()
+        //{
+        //    db.Shop.Add(new Shop()
+        //    {
+        //        RegionID = model.RegionId,
+        //        ShopTag = model.ShopTag,
+        //        Comment = model.Comment,
+        //        PurchaseNotes = model.PurchaseNotes,
+        //        ProductBrandId = productBrandId,
+        //        Phone = model.Phone,
+        //        ParentShopId = ShopLogic.GetParentShopId(model.ParentShopName),
+        //        IsOnline = model.IsOnline,
+        //        IsHot = model.IsHot,
+        //        Contract = model.Contract,
+        //        Coordinates = model.Coordinates,
+        //        Title = model.Title,
+        //        ImageUrl = imageTitleUrl,
+        //        DetailAddress = model.DetailAddress,
+        //        DateCreated = DateTime.Now,
+        //        DateModified = DateTime.Now
+        //    });
+        //}
+        public static StaticPagedList<ShopListDetailModel> GetShops(int page, int pageSize)
         {
             using (var access = new MeiHiEntities())
             {
@@ -121,79 +61,259 @@ namespace MeiHi.Admin.Logic
             }
         }
 
+        public static long GetParentShopId(string shopName)
+        {
+            using (var db = new MeiHiEntities())
+            {
+                var shop = db.Shop.Where(a => a.Title == shopName).FirstOrDefault();
+                if (shop != null)
+                {
+                    return shop.ShopId;
+                }
+
+                return 0;
+            }
+        }
+
+        public static decimal GetShopRate(long shopId)
+        {
+            using (var db = new MeiHiEntities())
+            {
+                var temp = db.UserComments.Where(a => a.ShopId == shopId);
+
+                if (temp != null && temp.Count() > 0)
+                {
+                    return decimal.Round(temp.Sum(a => a.Rate) / temp.Count(), 1);
+                }
+
+                return 4.5M;
+            }
+        }
+
+        public static string GetShopImageUrl(string ProductBrandId)
+        {
+            using (var db = new MeiHiEntities())
+            {
+                if (string.IsNullOrEmpty(ProductBrandId))
+                {
+                    return "";
+                }
+                var temp = db.ProductBrand.Where(a => a.ProductBrandId == ProductBrandId).FirstOrDefault();
+                if (temp != null)
+                {
+                    return temp.ProductUrl;
+                }
+                return "";
+            }
+        }
+
+        /// <summary>
+        /// 品牌照片数量
+        /// </summary>
+        /// <param name="ProductBrandId"></param>
+        /// <returns></returns>
+        public static int GetProductBrandCount(string ProductBrandId)
+        {
+            using (var db = new MeiHiEntities())
+            {
+                if (string.IsNullOrEmpty(ProductBrandId))
+                {
+                    return 0;
+                }
+
+                var temp = db.ProductBrand.Where(a => a.ProductBrandId == ProductBrandId);
+
+                if (temp != null && temp.Count() > 0)
+                {
+                    return temp.Count();
+                }
+
+                return 0;
+            }
+        }
+
         /// <summary>
         /// 每个店铺的服务列表，按照服务类型名称分组
         /// </summary>
         /// <param name="shopId"></param>
         /// <returns></returns>
-        public IEnumerable<IGrouping<string, ServiceForShopDetailModel>> GetServices(long shopId)
+        public static IEnumerable<IGrouping<string, ServiceForShopDetailModel>> GetServices(long shopId)
         {
-            var services = from a in db.Service
-                           where a.ShopId == shopId
-                           select a;
-
-            var result = new List<ServiceForShopDetailModel>();
-
-            foreach (var item in services)
+            using (var db = new MeiHiEntities())
             {
-                var temp = new ServiceForShopDetailModel
-                {
-                    CMUnitCost = item.CMUnitCost,
-                    OriginalUnitCost = item.OriginalUnitCost,
-                    ServiceId = item.ServiceId,
-                    Title = item.Title,
-                    ShopId = item.ShopId,
-                    ServiceTypeId = item.ServiceTypeId
-                };
-                result.Add(temp);
-            }
+                var services = from a in db.Service
+                               where a.ShopId == shopId
+                               select a;
 
-            var serviceGroups = result.GroupBy(a => a.ServiceTypeName);
-            return serviceGroups;
+                var result = new List<ServiceForShopDetailModel>();
+
+                foreach (var item in services)
+                {
+                    var temp = new ServiceForShopDetailModel
+                    {
+                        CMUnitCost = item.CMUnitCost,
+                        OriginalUnitCost = item.OriginalUnitCost,
+                        ServiceId = item.ServiceId,
+                        Title = item.Title,
+                        ShopId = item.ShopId,
+                        ServiceTypeId = item.ServiceTypeId
+                    };
+                    result.Add(temp);
+                }
+
+                var serviceGroups = result.GroupBy(a => a.ServiceTypeName);
+                return serviceGroups;
+            }
         }
         /// <summary>
         /// 分店数量
         /// </summary>
         /// <param name="ParentShopId"></param>
         /// <returns></returns>
-        public int GetBranchStoreCount(long? ParentShopId)
+        public static int GetBranchStoreCount(long? ParentShopId)
         {
-            if (ParentShopId == null)
+            using (var db = new MeiHiEntities())
             {
-                return 0;
-            }
-            return db.Shop.Where(a => a.ParentShopId == ParentShopId).Count();
-        }
-
-        public decimal GetDiscountRate(long ShopId)
-        {
-            var services = db.Service.Where(a => a.ShopId == ShopId);
-            if (services != null && services.Count() > 0)
-            {
-                var lowestDiscountRate = services.OrderBy(a => a.CMUnitCost / a.OriginalUnitCost).FirstOrDefault();
-
-                if (lowestDiscountRate != null)
+                if (ParentShopId == null)
                 {
-                    var temp = (lowestDiscountRate.CMUnitCost / lowestDiscountRate.OriginalUnitCost);
-                    temp = temp * 10;
-                    return decimal.Round(temp, 1);
+                    return 0;
                 }
+                return db.Shop.Where(a => a.ParentShopId == ParentShopId).Count();
             }
-            return 10;
+        }
+
+        /// <summary>
+        /// 店铺详情页 需要的用户评论
+        /// </summary>
+        /// <param name="shopId"></param>
+        /// <returns></returns>
+        public static List<UserCommentsModel> GetUserCommentsTopFiveByShopId(long shopId)
+        {
+            using (var db = new MeiHiEntities())
+            {
+                var comments = db.UserComments.Where(a => a.ShopId == shopId && a.Display == true);
+
+                if (comments != null && comments.Count() > 0)
+                {
+                    List<UserCommentsModel> result = new List<UserCommentsModel>();
+
+                    foreach (var item in comments.Take(5))
+                    {
+                        var temp = item.UserCommentSharedImg.Where(a => a.UserCommentId == item.UserCommentId);
+                        var temp1 = item.UserCommentsReply.Where(a => a.UserCommentId == item.UserCommentId);
+
+                        result.Add(new UserCommentsModel()
+                        {
+                            Comment = item.Comment,
+                            DateCreated = item.DateCreated,
+                            Rate = item.Rate,
+                            ServiceName = item.ServiceName,
+                            ShopId = item.ShopId,
+                            UserFullName = item.User.FullName,
+                            UserSharedImgaeList = temp != null && temp.Count() > 0 ? temp.Select(a => a.ImgUrl).ToList() : null,
+                            MeiHiReply = temp1 != null && temp1.Count() > 0 ? temp1.Select(a => a.Comment).ToList() : null,
+                        });
+                    }
+
+                    return result;
+                }
+
+                return null;
+            }
+        }
+
+        public static List<UserCommentsModel> GetAllUserCommentsByShopId(long shopId)
+        {
+            using (var db = new MeiHiEntities())
+            {
+                var comments = db.UserComments.Where(a => a.ShopId == shopId && a.Display == true);
+
+                if (comments != null && comments.Count() > 0)
+                {
+                    List<UserCommentsModel> result = new List<UserCommentsModel>();
+
+                    foreach (var item in comments)
+                    {
+                        var temp = item.UserCommentSharedImg.Where(a => a.UserCommentId == item.UserCommentId);
+                        var temp1 = item.UserCommentsReply.Where(a => a.UserCommentId == item.UserCommentId);
+
+                        result.Add(new UserCommentsModel()
+                        {
+                            Comment = item.Comment,
+                            DateCreated = item.DateCreated,
+                            Rate = item.Rate,
+                            ServiceName = item.ServiceName,
+                            ShopId = item.ShopId,
+                            UserFullName = item.User.FullName,
+                            UserSharedImgaeList = temp != null && temp.Count() > 0 ? temp.Select(a => a.ImgUrl).ToList() : null,
+                            MeiHiReply = temp1 != null && temp1.Count() > 0 ? temp1.Select(a => a.Comment).ToList() : null,
+                        });
+                    }
+
+                    return result;
+                }
+
+                return null;
+            }
+        }
+
+        public static decimal GetDiscountRate(long ShopId)
+        {
+            using (var db = new MeiHiEntities())
+            {
+                var services = db.Service.Where(a => a.ShopId == ShopId);
+                if (services != null && services.Count() > 0)
+                {
+                    var lowestDiscountRate = services.OrderBy(a => a.CMUnitCost / a.OriginalUnitCost).FirstOrDefault();
+
+                    if (lowestDiscountRate != null)
+                    {
+                        var temp = (lowestDiscountRate.CMUnitCost / lowestDiscountRate.OriginalUnitCost);
+                        temp = temp * 10;
+                        return decimal.Round(temp, 1);
+                    }
+                }
+                return 10;
+            }
         }
 
 
-        public string GetRegionName(int regionId, long shopId)
+        public static string GetRegionName(int regionId, long shopId)
         {
-
-            var region = (from a in db.Region where a.RegionId == regionId select a).FirstOrDefault();
-
-            if (region == null)
+            using (var db = new MeiHiEntities())
             {
-                throw new Exception("店铺ID: " + shopId + " 区域未设置");
-            }
+                var region = (from a in db.Region where a.RegionId == regionId select a).FirstOrDefault();
 
-            return region.Name;
+                if (region == null)
+                {
+                    throw new Exception("店铺ID: " + shopId + " 区域未设置");
+                }
+
+                return region.Name;
+            }
+        }
+
+        public static List<string> GetShopProductBrandImages(long shopId)
+        {
+            using (var db = new MeiHiEntities())
+            {
+                var shop = db.Shop.Where(a => a.ShopId == shopId).FirstOrDefault();
+
+                if (shop != null)
+                {
+                    if (!string.IsNullOrEmpty(shop.ProductBrandId))
+                    {
+                        var lists = db.ProductBrand.Where(a => a.ProductBrandId == shop.ProductBrandId);
+
+                        if (lists != null && lists.Count() > 0)
+                        {
+                            return lists.Select(a => a.ProductUrl).ToList();
+                        }
+                    }
+                }
+
+                return null;
+            }
         }
     }
 }

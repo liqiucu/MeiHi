@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using MeiHi.Model;
 using System.Runtime.Serialization;
+using MeiHi.API.Models.UserComments;
 
 namespace MeiHi.API.Models
 {
@@ -95,7 +96,7 @@ namespace MeiHi.API.Models
             set;
         }
 
-        public List<string> UserComments { get; set; }
+        public List<UserCommentsModel> UserComments { get; set; }
 
         public List<string> ProductBrandImages { get; set; }
     }

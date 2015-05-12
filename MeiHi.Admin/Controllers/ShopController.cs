@@ -30,30 +30,25 @@ namespace MeiHi.Admin.Controllers
         public ActionResult ShopManege(int page = 1)
         {
             ShopModel shopmodel = new ShopModel();
-            shopmodel.Lists = new ShopLogic().GetShops(page, 10);
+            shopmodel.Lists = ShopLogic.GetShops(page, 10);
             return View(shopmodel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult SaveShop(CreateShopMpdel model, HttpPostedFileBase[] fileToUpload)
+        public ActionResult SaveShop(CreateShopMpdel model, HttpPostedFileBase[] fileToUpload, HttpPostedFileBase[] fileToUploadForShop)
         {
             try
             {
                 using (var db = new MeiHiEntities())
                 {
                     string productBrandId = Guid.NewGuid().ToString();
-                    string imageTitleUrl = "";
+
 
                     foreach (HttpPostedFileBase file in fileToUpload)
                     {
                         string path = System.IO.Path.Combine(Server.MapPath("~/App_Data"), System.IO.Path.GetFileName(file.FileName));
                         file.SaveAs(path);
-
-                        if (string.IsNullOrEmpty(imageTitleUrl))
-                        {
-                            imageTitleUrl = path;
-                        }
 
                         db.ProductBrand.Add(new ProductBrand()
                         {
@@ -66,7 +61,13 @@ namespace MeiHi.Admin.Controllers
 
                     db.SaveChanges();
 
-                    db.Shop.Add(new Shop()
+                    string tempPath = "";
+                    if (fileToUploadForShop != null && fileToUploadForShop.Count() > 0)
+                    {
+                        tempPath = System.IO.Path.Combine(Server.MapPath("~/App_Data"), System.IO.Path.GetFileName(fileToUploadForShop[0].FileName));
+                    }
+
+                    long shopId = db.Shop.Add(new Shop()
                     {
                         RegionID = model.RegionId,
                         ShopTag = model.ShopTag,
@@ -74,17 +75,33 @@ namespace MeiHi.Admin.Controllers
                         PurchaseNotes = model.PurchaseNotes,
                         ProductBrandId = productBrandId,
                         Phone = model.Phone,
-                        ParentShopId = new ShopLogic().GetParentShopId(model.ParentShopName),
+                        ParentShopId = ShopLogic.GetParentShopId(model.ParentShopName),
                         IsOnline = model.IsOnline,
                         IsHot = model.IsHot,
                         Contract = model.Contract,
                         Coordinates = model.Coordinates,
                         Title = model.Title,
-                        ImageUrl = imageTitleUrl,
+                        ImageUrl = tempPath,
                         DetailAddress = model.DetailAddress,
                         DateCreated = DateTime.Now,
                         DateModified = DateTime.Now
-                    });
+                    }).ShopId;
+
+                    db.SaveChanges();
+
+                    foreach (var file in fileToUploadForShop)
+                    {
+                        string path = System.IO.Path.Combine(Server.MapPath("~/App_Data"), System.IO.Path.GetFileName(file.FileName));
+                        file.SaveAs(path);
+
+
+                        db.ShopBrandImages.Add(new ShopBrandImages()
+                        {
+                            ShopId = shopId,
+                            DateCreated = DateTime.Now,
+                            url = path
+                        });
+                    }
 
                     db.SaveChanges();
                 }

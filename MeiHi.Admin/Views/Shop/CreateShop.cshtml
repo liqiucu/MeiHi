@@ -103,6 +103,14 @@
             </div>
         </div>
 
+        @*上传店铺图片*@
+        <div class="form-group">
+            <label for="file" class="control-label col-md-2">上传店铺图片</label>
+            <div class="col-md-10">
+                <input type="file" name="fileToUploadForShop" id="fileToUpload3" multiple="multiple" />
+            </div>
+        </div>
+
         <div class="form-group">
             @Html.LabelFor(model => model.PurchaseNotes, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">

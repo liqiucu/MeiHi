@@ -195,6 +195,7 @@
     <Compile Include="Models\Shops\ProductBrandImages.cs" />
     <Compile Include="Models\Shops\ServiceForShopDetailModel.cs" />
     <Compile Include="Models\Shops\ShopXModel.cs" />
+    <Compile Include="Models\UserComments\UserCommentsModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>

@@ -13,8 +13,6 @@ namespace MeiHi.API.Logic
     {
         public static string GetUserNameById(long userId)
         {
-            MeiHiEntities1 dad = new MeiHiEntities1();
-            
             using (var db = new MeiHiEntities())
             {
                 var user=db.User.Where(a => a.UserId == userId).FirstOrDefault();

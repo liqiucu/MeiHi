@@ -181,7 +181,7 @@ namespace MeiHi.API.Controllers
         {
             using (var db = new MeiHiEntities())
             {
-                
+
                 var shop = db.Shop.Where(a => a.ShopId == shopId).FirstOrDefault();
                 if (shop != null)
                 {
@@ -195,8 +195,7 @@ namespace MeiHi.API.Controllers
                         PurchaseNotes = shop.PurchaseNotes,
                         ParentShopId = shop.ParentShopId,//当要调用Show_BranchShops时候传递ParentShopId
                         BranchStoreCount = ShopLogic.GetBranchStoreCount(shop.ParentShopId),//如果查询出来有分店 那么就需要调用 接口Show_BranchShops
-
-                         //UserComments=
+                        UserComments = ShopLogic.GetUserCommentsTopFiveByShopId(shop.ShopId)
                     };
                     return new
                     {
@@ -209,6 +208,38 @@ namespace MeiHi.API.Controllers
                 {
                     jsonStatus = 0,
                     resut = "获取店铺服务列表失败"
+                };
+            }
+        }
+
+        /// <summary>
+        /// 获取店铺所有的评论
+        /// </summary>
+        /// <param name="shopId"></param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("Show_ShopAllComments")]
+        [AllowAnonymous]
+        public object GetAllShopComments(long shopId, int page, int size)
+        {
+            using (var db = new MeiHiEntities())
+            {
+                var temp = ShopLogic.GetAllUserCommentsByShopId(shopId);
+                if (temp != null && temp.Count > 0)
+                {
+                    var temps = temp.OrderByDescending(a => a.DateCreated).Skip((page - 1) * size).Take(size);
+
+                    return new
+                    {
+                        jsonStatus = 1,
+                        resut = temps
+                    };
+                }
+
+                return new
+                {
+                    jsonStatus = 1,
+                    resut = "没有店铺评论"
                 };
             }
         }
@@ -254,14 +285,14 @@ namespace MeiHi.API.Controllers
         {
             using (var db = new MeiHiEntities())
             {
-                var productBrands = ShopLogic.GetShopProductBrandImages(shopId);
+                var shop = db.Shop.Where(a => a.ShopId == shopId).FirstOrDefault();//ShopLogic.GetShopProductBrandImages(shopId);
 
-                if (productBrands != null)
+                if (shop != null && shop.ShopBrandImages != null && shop.ShopBrandImages.Count>0)
                 {
                     return new
                     {
                         jsonStatus = 1,
-                        resut = productBrands
+                        resut = shop.ShopBrandImages.Select(a=>a.url)
                     };
                 }
 
@@ -295,8 +326,8 @@ namespace MeiHi.API.Controllers
                         ShopId = shops[j].ShopId,
                         Title = shops[j].Title,
                         DiscountRate = ShopLogic.GetDiscountRate(shops[j].ShopId),
-                        RegionName = ShopLogic.GetRegionName(shops[j].RegionID, shops[j].ShopId),
-                        ShopImageUrl = ShopLogic.GetShopImageUrl(shops[j].ProductBrandId),
+                        RegionName =shops[j].Region.Name,// ShopLogic.GetRegionName(shops[j].RegionID, shops[j].ShopId),
+                        ShopImageUrl = shops[j].ShopBrandImages.FirstOrDefault().url,
                         Rate = ShopLogic.GetShopRate(shops[j].ShopId),
                         ParentShopId = shops[j].ParentShopId,
                         Distance = HttpUtils.CalOneShop(region, shops[j].Coordinates)

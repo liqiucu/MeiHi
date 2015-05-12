@@ -147,7 +147,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.Config" />
+    <None Include="App.Config">
+      <SubType>Designer</SubType>
+    </None>
     <EntityDeploy Include="MeiHiAccess.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>MeiHiAccess.Designer.cs</LastGenOutput>

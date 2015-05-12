@@ -141,7 +141,12 @@ namespace MeiHi.API.Logic
             }
         }
 
-        public static List<UserCommentsModel> GetUserComments(long shopId)
+        /// <summary>
+        /// 店铺详情页 需要的用户评论
+        /// </summary>
+        /// <param name="shopId"></param>
+        /// <returns></returns>
+        public static List<UserCommentsModel> GetUserCommentsTopFiveByShopId(long shopId)
         {
             using (var db = new MeiHiEntities())
             {
@@ -153,6 +158,9 @@ namespace MeiHi.API.Logic
 
                     foreach (var item in comments.Take(5))
                     {
+                        var temp = item.UserCommentSharedImg.Where(a => a.UserCommentId == item.UserCommentId);
+                        var temp1 = item.UserCommentsReply.Where(a => a.UserCommentId == item.UserCommentId);
+
                         result.Add(new UserCommentsModel()
                         {
                             Comment = item.Comment,
@@ -160,14 +168,53 @@ namespace MeiHi.API.Logic
                             Rate = item.Rate,
                             ServiceName = item.ServiceName,
                             ShopId = item.ShopId,
-                            ServiceId = item.ServiceId,
                             UserFullName = item.User.FullName,
-                            //UserSharedImgaeList= db.UserCommentSharedImg.Where(a=>a.UserCommentSharedImgId==item.UserCommentSharedImg.UserCommentSharedImgId)
+                            UserSharedImgaeList = temp != null && temp.Count() > 0 ? temp.Select(a => a.ImgUrl).ToList() : null,
+                            MeiHiReply = temp1 != null && temp1.Count() > 0 ? temp1.Select(a => a.Comment).ToList() : null,
                         });
                     }
+
+                    return result;
                 }
+
+                return null;
             }
         }
+
+        public static List<UserCommentsModel> GetAllUserCommentsByShopId(long shopId)
+        {
+            using (var db = new MeiHiEntities())
+            {
+                var comments = db.UserComments.Where(a => a.ShopId == shopId && a.Display == true);
+
+                if (comments != null && comments.Count() > 0)
+                {
+                    List<UserCommentsModel> result = new List<UserCommentsModel>();
+
+                    foreach (var item in comments)
+                    {
+                        var temp = item.UserCommentSharedImg.Where(a => a.UserCommentId == item.UserCommentId);
+                        var temp1 = item.UserCommentsReply.Where(a => a.UserCommentId == item.UserCommentId);
+
+                        result.Add(new UserCommentsModel()
+                        {
+                            Comment = item.Comment,
+                            DateCreated = item.DateCreated,
+                            Rate = item.Rate,
+                            ServiceName = item.ServiceName,
+                            ShopId = item.ShopId,
+                            UserFullName = item.User.FullName,
+                            UserSharedImgaeList = temp != null && temp.Count() > 0 ? temp.Select(a => a.ImgUrl).ToList() : null,
+                            MeiHiReply = temp1 != null && temp1.Count() > 0 ? temp1.Select(a => a.Comment).ToList() : null,
+                        });
+                    }
+
+                    return result;
+                }
+
+                return null;
+            }
+        } 
 
         public static decimal GetDiscountRate(long ShopId)
         {
