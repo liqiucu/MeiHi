@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="MeiHiModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+      <Schema Namespace="MeiHiModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Add">
           <Key>
             <PropertyRef Name="AddId" />
@@ -215,6 +215,15 @@
           <Property Name="Title" Type="nvarchar" MaxLength="50" />
           <Property Name="ImageUrl" Type="nvarchar" MaxLength="500" />
         </EntityType>
+        <EntityType Name="ShopBrandImages">
+          <Key>
+            <PropertyRef Name="ShopBrandImagesId" />
+          </Key>
+          <Property Name="ShopBrandImagesId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="url" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="ShopId" Type="bigint" Nullable="false" />
+          <Property Name="DateCreated" Type="datetime" Nullable="false" />
+        </EntityType>
         <EntityType Name="ShopUser">
           <Key>
             <PropertyRef Name="ShopUserId" />
@@ -270,7 +279,6 @@
           <Property Name="ServiceName" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="Rate" Type="int" Nullable="false" />
           <Property Name="Comment" Type="nvarchar" MaxLength="500" />
-          <Property Name="UserCommentSharedImgID" Type="bigint" />
           <Property Name="DateCreated" Type="datetime" Nullable="false" />
           <Property Name="DateModified" Type="datetime" Nullable="false" />
         </EntityType>
@@ -282,6 +290,7 @@
           <Property Name="ImgUrl" Type="nvarchar" MaxLength="500" />
           <Property Name="DateCreated" Type="datetime" Nullable="false" />
           <Property Name="DateModified" Type="datetime" Nullable="false" />
+          <Property Name="UserCommentId" Type="bigint" Nullable="false" />
         </EntityType>
         <EntityType Name="UserCommentsReply">
           <Key>
@@ -493,6 +502,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_ShopBrandImages_Shop">
+          <End Role="Shop" Type="Self.Shop" Multiplicity="1" />
+          <End Role="ShopBrandImages" Type="Self.ShopBrandImages" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Shop">
+              <PropertyRef Name="ShopId" />
+            </Principal>
+            <Dependent Role="ShopBrandImages">
+              <PropertyRef Name="ShopId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_ShopUser_Shop">
           <End Role="Shop" Type="Self.Shop" Multiplicity="1" />
           <End Role="ShopUser" Type="Self.ShopUser" Multiplicity="*" />
@@ -541,15 +562,15 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_UserComments_UserCommentSharedImg">
-          <End Role="UserCommentSharedImg" Type="Self.UserCommentSharedImg" Multiplicity="0..1" />
-          <End Role="UserComments" Type="Self.UserComments" Multiplicity="*" />
+        <Association Name="FK_UserCommentSharedImg_UserComments">
+          <End Role="UserComments" Type="Self.UserComments" Multiplicity="1" />
+          <End Role="UserCommentSharedImg" Type="Self.UserCommentSharedImg" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="UserCommentSharedImg">
-              <PropertyRef Name="UserCommentSharedImgId" />
+            <Principal Role="UserComments">
+              <PropertyRef Name="UserCommentId" />
             </Principal>
-            <Dependent Role="UserComments">
-              <PropertyRef Name="UserCommentSharedImgID" />
+            <Dependent Role="UserCommentSharedImg">
+              <PropertyRef Name="UserCommentId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -620,6 +641,7 @@
           <EntitySet Name="Service" EntityType="Self.Service" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ServiceType" EntityType="Self.ServiceType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Shop" EntityType="Self.Shop" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ShopBrandImages" EntityType="Self.ShopBrandImages" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ShopUser" EntityType="Self.ShopUser" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
@@ -688,6 +710,10 @@
             <End Role="Region" EntitySet="Region" />
             <End Role="Shop" EntitySet="Shop" />
           </AssociationSet>
+          <AssociationSet Name="FK_ShopBrandImages_Shop" Association="Self.FK_ShopBrandImages_Shop">
+            <End Role="Shop" EntitySet="Shop" />
+            <End Role="ShopBrandImages" EntitySet="ShopBrandImages" />
+          </AssociationSet>
           <AssociationSet Name="FK_ShopUser_Shop" Association="Self.FK_ShopUser_Shop">
             <End Role="Shop" EntitySet="Shop" />
             <End Role="ShopUser" EntitySet="ShopUser" />
@@ -704,9 +730,9 @@
             <End Role="User" EntitySet="User" />
             <End Role="UserComments" EntitySet="UserComments" />
           </AssociationSet>
-          <AssociationSet Name="FK_UserComments_UserCommentSharedImg" Association="Self.FK_UserComments_UserCommentSharedImg">
-            <End Role="UserCommentSharedImg" EntitySet="UserCommentSharedImg" />
+          <AssociationSet Name="FK_UserCommentSharedImg_UserComments" Association="Self.FK_UserCommentSharedImg_UserComments">
             <End Role="UserComments" EntitySet="UserComments" />
+            <End Role="UserCommentSharedImg" EntitySet="UserCommentSharedImg" />
           </AssociationSet>
           <AssociationSet Name="FK_UserCommentsReply_UserComments" Association="Self.FK_UserCommentsReply_UserComments">
             <End Role="UserComments" EntitySet="UserComments" />
@@ -725,7 +751,8 @@
             <End Role="UserFavorites" EntitySet="UserFavorites" />
           </AssociationSet>
         </EntityContainer>
-      </Schema></edmx:StorageModels>
+      </Schema>
+    </edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="MeiHiModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -969,9 +996,20 @@
           <NavigationProperty Name="RecommandShop" Relationship="Self.FK_RecommandShop_Shop" FromRole="Shop" ToRole="RecommandShop" />
           <NavigationProperty Name="Region" Relationship="Self.FK_Shop_Region" FromRole="Shop" ToRole="Region" />
           <NavigationProperty Name="Service" Relationship="Self.FK_Service_Shop" FromRole="Shop" ToRole="Service" />
+          <NavigationProperty Name="ShopBrandImages" Relationship="Self.FK_ShopBrandImages_Shop" FromRole="Shop" ToRole="ShopBrandImages" />
           <NavigationProperty Name="ShopUser" Relationship="Self.FK_ShopUser_Shop" FromRole="Shop" ToRole="ShopUser" />
           <NavigationProperty Name="UserComments" Relationship="Self.FK_UserComments_Shop" FromRole="Shop" ToRole="UserComments" />
           <NavigationProperty Name="UserFavorites" Relationship="Self.FK_UserFavorites_Shop" FromRole="Shop" ToRole="UserFavorites" />
+        </EntityType>
+        <EntityType Name="ShopBrandImages">
+          <Key>
+            <PropertyRef Name="ShopBrandImagesId" />
+          </Key>
+          <Property Name="ShopBrandImagesId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="url" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ShopId" Type="Int64" Nullable="false" />
+          <Property Name="DateCreated" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Shop" Relationship="Self.FK_ShopBrandImages_Shop" FromRole="ShopBrandImages" ToRole="Shop" />
         </EntityType>
         <EntityType Name="ShopUser">
           <Key>
@@ -1032,13 +1070,12 @@
           <Property Name="ServiceName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Rate" Type="Int32" Nullable="false" />
           <Property Name="Comment" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="UserCommentSharedImgID" Type="Int64" />
           <Property Name="DateCreated" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="DateModified" Type="DateTime" Nullable="false" Precision="3" />
           <NavigationProperty Name="Service" Relationship="Self.FK_UserComments_Service" FromRole="UserComments" ToRole="Service" />
           <NavigationProperty Name="Shop" Relationship="Self.FK_UserComments_Shop" FromRole="UserComments" ToRole="Shop" />
           <NavigationProperty Name="User" Relationship="Self.FK_UserComments_User" FromRole="UserComments" ToRole="User" />
-          <NavigationProperty Name="UserCommentSharedImg" Relationship="Self.FK_UserComments_UserCommentSharedImg" FromRole="UserComments" ToRole="UserCommentSharedImg" />
+          <NavigationProperty Name="UserCommentSharedImg" Relationship="Self.FK_UserCommentSharedImg_UserComments" FromRole="UserComments" ToRole="UserCommentSharedImg" />
           <NavigationProperty Name="UserCommentsReply" Relationship="Self.FK_UserCommentsReply_UserComments" FromRole="UserComments" ToRole="UserCommentsReply" />
         </EntityType>
         <EntityType Name="UserCommentSharedImg">
@@ -1049,7 +1086,8 @@
           <Property Name="ImgUrl" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
           <Property Name="DateCreated" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="DateModified" Type="DateTime" Nullable="false" Precision="3" />
-          <NavigationProperty Name="UserComments" Relationship="Self.FK_UserComments_UserCommentSharedImg" FromRole="UserCommentSharedImg" ToRole="UserComments" />
+          <Property Name="UserCommentId" Type="Int64" Nullable="false" />
+          <NavigationProperty Name="UserComments" Relationship="Self.FK_UserCommentSharedImg_UserComments" FromRole="UserCommentSharedImg" ToRole="UserComments" />
         </EntityType>
         <EntityType Name="UserCommentsReply">
           <Key>
@@ -1289,6 +1327,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_ShopBrandImages_Shop">
+          <End Role="Shop" Type="Self.Shop" Multiplicity="1" />
+          <End Role="ShopBrandImages" Type="Self.ShopBrandImages" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Shop">
+              <PropertyRef Name="ShopId" />
+            </Principal>
+            <Dependent Role="ShopBrandImages">
+              <PropertyRef Name="ShopId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_ShopUser_Shop">
           <End Role="Shop" Type="Self.Shop" Multiplicity="1" />
           <End Role="ShopUser" Type="Self.ShopUser" Multiplicity="*" />
@@ -1349,15 +1399,15 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_UserComments_UserCommentSharedImg">
-          <End Role="UserCommentSharedImg" Type="Self.UserCommentSharedImg" Multiplicity="0..1" />
-          <End Role="UserComments" Type="Self.UserComments" Multiplicity="*" />
+        <Association Name="FK_UserCommentSharedImg_UserComments">
+          <End Role="UserComments" Type="Self.UserComments" Multiplicity="1" />
+          <End Role="UserCommentSharedImg" Type="Self.UserCommentSharedImg" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="UserCommentSharedImg">
-              <PropertyRef Name="UserCommentSharedImgId" />
+            <Principal Role="UserComments">
+              <PropertyRef Name="UserCommentId" />
             </Principal>
-            <Dependent Role="UserComments">
-              <PropertyRef Name="UserCommentSharedImgID" />
+            <Dependent Role="UserCommentSharedImg">
+              <PropertyRef Name="UserCommentId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1392,6 +1442,7 @@
           <EntitySet Name="Service" EntityType="Self.Service" />
           <EntitySet Name="ServiceType" EntityType="Self.ServiceType" />
           <EntitySet Name="Shop" EntityType="Self.Shop" />
+          <EntitySet Name="ShopBrandImages" EntityType="Self.ShopBrandImages" />
           <EntitySet Name="ShopUser" EntityType="Self.ShopUser" />
           <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" />
           <EntitySet Name="User" EntityType="Self.User" />
@@ -1468,6 +1519,10 @@
             <End Role="Service" EntitySet="Service" />
             <End Role="UserFavorites" EntitySet="UserFavorites" />
           </AssociationSet>
+          <AssociationSet Name="FK_ShopBrandImages_Shop" Association="Self.FK_ShopBrandImages_Shop">
+            <End Role="Shop" EntitySet="Shop" />
+            <End Role="ShopBrandImages" EntitySet="ShopBrandImages" />
+          </AssociationSet>
           <AssociationSet Name="FK_ShopUser_Shop" Association="Self.FK_ShopUser_Shop">
             <End Role="Shop" EntitySet="Shop" />
             <End Role="ShopUser" EntitySet="ShopUser" />
@@ -1488,9 +1543,9 @@
             <End Role="User" EntitySet="User" />
             <End Role="UserFavorites" EntitySet="UserFavorites" />
           </AssociationSet>
-          <AssociationSet Name="FK_UserComments_UserCommentSharedImg" Association="Self.FK_UserComments_UserCommentSharedImg">
-            <End Role="UserCommentSharedImg" EntitySet="UserCommentSharedImg" />
+          <AssociationSet Name="FK_UserCommentSharedImg_UserComments" Association="Self.FK_UserCommentSharedImg_UserComments">
             <End Role="UserComments" EntitySet="UserComments" />
+            <End Role="UserCommentSharedImg" EntitySet="UserCommentSharedImg" />
           </AssociationSet>
           <AssociationSet Name="FK_UserCommentsReply_UserComments" Association="Self.FK_UserCommentsReply_UserComments">
             <End Role="UserComments" EntitySet="UserComments" />
@@ -1728,6 +1783,16 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="ShopBrandImages">
+            <EntityTypeMapping TypeName="MeiHiModel.ShopBrandImages">
+              <MappingFragment StoreEntitySet="ShopBrandImages">
+                <ScalarProperty Name="ShopBrandImagesId" ColumnName="ShopBrandImagesId" />
+                <ScalarProperty Name="url" ColumnName="url" />
+                <ScalarProperty Name="ShopId" ColumnName="ShopId" />
+                <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="ShopUser">
             <EntityTypeMapping TypeName="MeiHiModel.ShopUser">
               <MappingFragment StoreEntitySet="ShopUser">
@@ -1785,7 +1850,6 @@
                 <ScalarProperty Name="ServiceName" ColumnName="ServiceName" />
                 <ScalarProperty Name="Rate" ColumnName="Rate" />
                 <ScalarProperty Name="Comment" ColumnName="Comment" />
-                <ScalarProperty Name="UserCommentSharedImgID" ColumnName="UserCommentSharedImgID" />
                 <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
                 <ScalarProperty Name="DateModified" ColumnName="DateModified" />
               </MappingFragment>
@@ -1798,6 +1862,7 @@
                 <ScalarProperty Name="ImgUrl" ColumnName="ImgUrl" />
                 <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
                 <ScalarProperty Name="DateModified" ColumnName="DateModified" />
+                <ScalarProperty Name="UserCommentId" ColumnName="UserCommentId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

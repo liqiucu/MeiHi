@@ -12,14 +12,13 @@ namespace MeiHi.Model
     using System;
     using System.Collections.Generic;
     
-    public partial class UserCommentSharedImg
+    public partial class ShopBrandImages
     {
-        public long UserCommentSharedImgId { get; set; }
-        public string ImgUrl { get; set; }
+        public long ShopBrandImagesId { get; set; }
+        public string url { get; set; }
+        public long ShopId { get; set; }
         public System.DateTime DateCreated { get; set; }
-        public System.DateTime DateModified { get; set; }
-        public long UserCommentId { get; set; }
     
-        public virtual UserComments UserComments { get; set; }
+        public virtual Shop Shop { get; set; }
     }
 }

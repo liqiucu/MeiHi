@@ -43,6 +43,7 @@ namespace MeiHi.Model
         public virtual DbSet<Service> Service { get; set; }
         public virtual DbSet<ServiceType> ServiceType { get; set; }
         public virtual DbSet<Shop> Shop { get; set; }
+        public virtual DbSet<ShopBrandImages> ShopBrandImages { get; set; }
         public virtual DbSet<ShopUser> ShopUser { get; set; }
         public virtual DbSet<sysdiagrams> sysdiagrams { get; set; }
         public virtual DbSet<User> User { get; set; }
