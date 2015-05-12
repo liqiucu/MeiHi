@@ -18,6 +18,7 @@ namespace MeiHi.Model
         {
             this.Booking = new HashSet<Booking>();
             this.Service = new HashSet<Service>();
+            this.ShopBrandImages = new HashSet<ShopBrandImages>();
             this.ShopUser = new HashSet<ShopUser>();
             this.UserComments = new HashSet<UserComments>();
             this.UserFavorites = new HashSet<UserFavorites>();
@@ -45,6 +46,7 @@ namespace MeiHi.Model
         public virtual RecommandShop RecommandShop { get; set; }
         public virtual Region Region { get; set; }
         public virtual ICollection<Service> Service { get; set; }
+        public virtual ICollection<ShopBrandImages> ShopBrandImages { get; set; }
         public virtual ICollection<ShopUser> ShopUser { get; set; }
         public virtual ICollection<UserComments> UserComments { get; set; }
         public virtual ICollection<UserFavorites> UserFavorites { get; set; }

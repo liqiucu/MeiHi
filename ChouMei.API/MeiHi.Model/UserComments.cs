@@ -16,6 +16,7 @@ namespace MeiHi.Model
     {
         public UserComments()
         {
+            this.UserCommentSharedImg = new HashSet<UserCommentSharedImg>();
             this.UserCommentsReply = new HashSet<UserCommentsReply>();
         }
     
@@ -27,14 +28,13 @@ namespace MeiHi.Model
         public string ServiceName { get; set; }
         public int Rate { get; set; }
         public string Comment { get; set; }
-        public Nullable<long> UserCommentSharedImgID { get; set; }
         public System.DateTime DateCreated { get; set; }
         public System.DateTime DateModified { get; set; }
     
         public virtual Service Service { get; set; }
         public virtual Shop Shop { get; set; }
         public virtual User User { get; set; }
-        public virtual UserCommentSharedImg UserCommentSharedImg { get; set; }
+        public virtual ICollection<UserCommentSharedImg> UserCommentSharedImg { get; set; }
         public virtual ICollection<UserCommentsReply> UserCommentsReply { get; set; }
     }
 }

@@ -118,6 +118,9 @@
     <Compile Include="Shop.cs">
       <DependentUpon>MeiHiAccess.tt</DependentUpon>
     </Compile>
+    <Compile Include="ShopBrandImages.cs">
+      <DependentUpon>MeiHiAccess.tt</DependentUpon>
+    </Compile>
     <Compile Include="ShopUser.cs">
       <DependentUpon>MeiHiAccess.tt</DependentUpon>
     </Compile>
