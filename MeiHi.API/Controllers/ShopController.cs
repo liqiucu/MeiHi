@@ -40,7 +40,7 @@ namespace MeiHi.API.Controllers
                             select a;
 
                 var results = new List<ShopModel>();
-
+                
                 foreach (var item in shops)
                 {
                     var shopModel = new ShopModel()
@@ -222,17 +222,14 @@ namespace MeiHi.API.Controllers
         [AllowAnonymous]
         public object GetAllShopComments(long shopId, int page, int size)
         {
-            using (var db = new MeiHiEntities())
-            {
-                var temp = ShopLogic.GetAllUserCommentsByShopId(shopId);
+                var temp = ShopLogic.GetAllUserCommentsByShopId(shopId, page,size);
+
                 if (temp != null && temp.Count > 0)
                 {
-                    var temps = temp.OrderByDescending(a => a.DateCreated).Skip((page - 1) * size).Take(size);
-
                     return new
                     {
                         jsonStatus = 1,
-                        resut = temps
+                        resut = temp
                     };
                 }
 
@@ -241,7 +238,6 @@ namespace MeiHi.API.Controllers
                     jsonStatus = 1,
                     resut = "没有店铺评论"
                 };
-            }
         }
 
         /// <summary>
@@ -301,6 +297,49 @@ namespace MeiHi.API.Controllers
                     jsonStatus = 0,
                     resut = "店铺没有品牌图片"
                 };
+            }
+        }
+
+
+        /// <summary>
+        /// 收藏
+        /// </summary>
+        /// <param name="serviceId"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("Add_Favorite")]
+        [AllowAnonymous]
+        public object AddToFavorite(long shopId, long userId)
+        {
+            try
+            {
+                using (var db = new MeiHiEntities())
+                {
+                    db.UserFavorites.Add(new UserFavorites()
+                    {
+                        UserId = userId,
+                        ShopId = shopId
+                    });
+
+                    db.SaveChanges();
+
+                    return new
+                    {
+                        jsonStatus = 1,
+                        resut = "添加成功"
+                    };
+                }
+            }
+            catch (Exception)
+            {
+                return new
+                {
+                    jsonStatus = 0,
+                    resut = "添加失败"
+                };
+
+                throw;
             }
         }
 

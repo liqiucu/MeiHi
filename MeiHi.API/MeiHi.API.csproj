@@ -154,6 +154,8 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\MeiHiHomeController.cs" />
+    <Compile Include="Controllers\ServiceController.cs" />
     <Compile Include="Controllers\ShopController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -182,6 +184,7 @@
     <Compile Include="Models\MeiHiDistanceModelJsonTypes\Result.cs" />
     <Compile Include="Models\ProductBrandImages.cs" />
     <Compile Include="Models\ServiceForShopDetailModel.cs" />
+    <Compile Include="Models\Service\ServiceModel.cs" />
     <Compile Include="Models\ShopDetailModel.cs" />
     <Compile Include="Models\ShopListModel.cs" />
     <Compile Include="Models\ShopModel.cs" />
