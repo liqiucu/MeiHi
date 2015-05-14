@@ -255,9 +255,10 @@
     <Content Include="Views\Account\ResetPassword.cshtml" />
     <Content Include="Views\Account\ResetPasswordConfirmation.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
-    <Content Include="Views\Shop\CreateProductBrand.cshtml" />
     <Content Include="Views\Shop\ShopManege.cshtml" />
     <Content Include="Views\Shop\CreateShop.cshtml" />
+    <Content Include="Views\Shop\ShopDetail.cshtml" />
+    <Content Include="Views\Shop\EditShop.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

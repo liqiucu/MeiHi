@@ -1,18 +1,27 @@
-﻿@model MeiHi.Admin.Models.CreateShopMpdel
+﻿@model MeiHi.Admin.Models.EditShopMpdel
 
 @{
-    ViewBag.Title = "CreateShop";
+    ViewBag.Title = "EditShop";
 }
-<h2>CreateShop</h2>
-<script src="~/Scripts/Shop/Shop.js"></script>
+
+<h2>EditShop</h2>
+
 @using (Html.BeginForm("SaveShop", "Shop", FormMethod.Post, new { enctype = "multipart/form-data", id = "form2" }))
 {
     @Html.AntiForgeryToken()
-
+    
     <div class="form-horizontal">
-        <h4>CreateShopMpdel</h4>
+        <h4>EditShopMpdel</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.RegionId, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.RegionId, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.RegionId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
         <div class="form-group">
             @Html.LabelFor(model => model.Title, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
@@ -20,12 +29,7 @@
                 @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
             </div>
         </div>
-        <div class="form-group">
-            <label class="control-label col-md-2">RegionName</label>
-            <div class="col-md-10">
-                @Html.DropDownListFor(model => model.RegionId, Model.RegionNameList)
-            </div>
-        </div>
+
         <div class="form-group">
             @Html.LabelFor(model => model.DetailAddress, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
@@ -85,7 +89,6 @@
             </div>
         </div>
 
-        @*如果有分店就填写主店铺名字（必须完全一致），否则就不要写*@
         <div class="form-group">
             @Html.LabelFor(model => model.ParentShopName, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
@@ -94,19 +97,26 @@
             </div>
         </div>
 
-        @*上传店铺的品牌图片*@
         <div class="form-group">
-            <label for="file" class="control-label col-md-2">上传店铺品牌图片</label>
+            <label class="control-label col-md-2">
+                店铺图片列表
+            </label>
             <div class="col-md-10">
-                <input type="file" name="fileToUpload" id="fileToUpload2" multiple="multiple" />
+                @foreach (var item in Model.ProductBrandList)
+                {
+                    <img src="@item" />
+                }
+                <input type="file" name="ProductBrandFile" id="fileToUpload2" multiple="multiple" />
             </div>
-        </div>
-
-        @*上传店铺图片*@
-        <div class="form-group">
-            <label for="file" class="control-label col-md-2">上传店铺图片</label>
+            <label class="control-label col-md-2">
+                产品图片列表
+            </label>
             <div class="col-md-10">
-                <input type="file" name="fileToUploadForShop" id="fileToUpload3" multiple="multiple" />
+                @foreach (var item in Model.ShopProductList)
+                {
+                    <img src="@item" />
+                }
+                <input type="file" name="shopProductFile" id="fileToUpload3" multiple="multiple" />
             </div>
         </div>
 
@@ -125,16 +135,15 @@
                 @Html.ValidationMessageFor(model => model.ShopTag, "", new { @class = "text-danger" })
             </div>
         </div>
-        <hr />
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default" />
+                <input type="submit" value="Save" class="btn btn-default" />
             </div>
         </div>
     </div>
 }
 
 <div>
-    @Html.ActionLink("Back to List", "ShopManege")
+    @Html.ActionLink("Back to List", "Index")
 </div>

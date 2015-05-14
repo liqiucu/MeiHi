@@ -191,7 +191,7 @@ namespace MeiHi.API.Controllers
                         DetailAddress = shop.DetailAddress,
                         Phone = shop.Phone,
                         ShopId = shop.ShopId,
-                        ProductBrandImages = ShopLogic.GetShopProductBrandImages(shopId),
+                        ProductBrandImages = ShopLogic.GetProductBrandImages(shopId),
                         PurchaseNotes = shop.PurchaseNotes,
                         ParentShopId = shop.ParentShopId,//当要调用Show_BranchShops时候传递ParentShopId
                         BranchStoreCount = ShopLogic.GetBranchStoreCount(shop.ParentShopId),//如果查询出来有分店 那么就需要调用 接口Show_BranchShops
@@ -275,9 +275,9 @@ namespace MeiHi.API.Controllers
         /// <param name="shopId"></param>
         /// <returns></returns>
         [HttpGet]
-        [Route("Show_ShopProductBrandImages")]
+        [Route("Show_ShopProductImages")]
         [AllowAnonymous]
-        public object GetShopProductBrandImages(long shopId)
+        public object GetShopProductImages(long shopId)
         {
             using (var db = new MeiHiEntities())
             {

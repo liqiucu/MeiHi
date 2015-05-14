@@ -92,6 +92,7 @@ namespace MeiHi.Admin.Controllers
                     foreach (var file in fileToUploadForShop)
                     {
                         string path = System.IO.Path.Combine(Server.MapPath("~/App_Data"), System.IO.Path.GetFileName(file.FileName));
+
                         file.SaveAs(path);
 
                         db.ShopBrandImages.Add(new ShopBrandImages()
@@ -112,7 +113,6 @@ namespace MeiHi.Admin.Controllers
 
                 throw ex;
             }
-
         }
 
         [HttpGet]
@@ -129,23 +129,75 @@ namespace MeiHi.Admin.Controllers
         [HttpGet]
         public ActionResult EditShop(long shopId)
         {
-            CreateShopMpdel model = new CreateShopMpdel()
+            using (var db = new MeiHiEntities())
             {
-                RegionNameList = new CommonLogic().RegionList()
-            };
+                var shop = db.Shop.Where(a => a.ShopId == shopId).FirstOrDefault();
 
-            return View(model);
+                if (shop != null)
+                {
+                    EditShopMpdel model = new EditShopMpdel()
+                    {
+                        RegionNameList = new CommonLogic().RegionList(),
+                        Comment = shop.Comment,
+                        Contract = shop.Contract,
+                        Phone = shop.Phone,
+                        Coordinates = shop.Coordinates,
+                        DetailAddress = shop.DetailAddress,
+                        IsHot = shop.IsHot,
+                        IsOnline = shop.IsOnline,
+                        PurchaseNotes = shop.PurchaseNotes,
+                        Title = shop.Title,
+                        ShopTag = shop.ShopTag,
+                        ParentShopName = ShopLogic.GetShopNameByShopId(shop.ParentShopId.Value),
+                        ProductBrandList = ShopLogic.GetProductBrandImages(shop.ProductBrandId),
+                        ShopProductList = shop.ShopBrandImages != null
+                                            && shop.ShopBrandImages.Count > 0
+                                            ? shop.ShopBrandImages.Select(a => a.url).ToList()
+                                            : null
+                    };
+
+                    return View(model);
+                }
+
+                return View();
+            }
         }
 
         [HttpGet]
         public ActionResult ShopDetail(long shopId)
         {
-            CreateShopMpdel model = new CreateShopMpdel()
+            using (var db = new MeiHiEntities())
             {
-                RegionNameList = new CommonLogic().RegionList()
-            };
+                var shop = db.Shop.Where(a => a.ShopId == shopId).FirstOrDefault();
 
-            return View(model);
+                if (shop != null)
+                {
+                    ShopDetailMpdel model = new ShopDetailMpdel()
+                    {
+                        Comment = shop.Comment,
+                        Contract = shop.Contract,
+                        Phone = shop.Phone,
+                        Coordinates = shop.Coordinates,
+                        DetailAddress = shop.DetailAddress,
+                        IsHot = shop.IsHot,
+                        IsOnline = shop.IsOnline,
+                        PurchaseNotes = shop.PurchaseNotes,
+                        Title = shop.Title,
+                        ShopTag = shop.ShopTag,
+                        ParentShopName = ShopLogic.GetShopNameByShopId(shop.ParentShopId.Value),
+                        RegionName = shop.Region.Name,
+                        ProductBrandList = ShopLogic.GetProductBrandImages(shop.ProductBrandId),
+                        ShopProductList = shop.ShopBrandImages != null
+                                            && shop.ShopBrandImages.Count > 0
+                                            ? shop.ShopBrandImages.Select(a => a.url).ToList()
+                                            : null
+                    };
+
+                    return View(model);
+                }
+
+                return View();
+            }
         }
 
         [HttpGet]

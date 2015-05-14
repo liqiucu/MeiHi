@@ -31,7 +31,7 @@ namespace MeiHi.API.Controllers
                 {
                     ServiceModel serviceModel = new ServiceModel();
                     serviceModel.CMUnitCost = service.CMUnitCost;
-                    serviceModel.Designer = "";
+                    serviceModel.Designer = service.Designer;
                     serviceModel.Detail = service.Detail;
                     serviceModel.IfSupportRealTimeRefund = service.IfSupportRealTimeRefund;
                     serviceModel.OriginalUnitCost = service.OriginalUnitCost;

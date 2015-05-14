@@ -356,7 +356,7 @@ namespace MeiHi.API.Logic
             }
         }
 
-        public static List<string> GetShopProductBrandImages(long shopId)
+        public static List<string> GetProductBrandImages(long shopId)
         {
             using (var db = new MeiHiEntities())
             {

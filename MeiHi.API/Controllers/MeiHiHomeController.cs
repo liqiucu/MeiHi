@@ -90,5 +90,30 @@ namespace MeiHi.API.Controllers
                 };
             }
         }
+
+        [HttpGet]
+        [Route("Show_homeadd")]
+        [AllowAnonymous]
+        public object GetHomepageAddImageUrl()
+        {
+            using(var db=new MeiHiEntities())
+            {
+                var add = db.Add.Select(a => a.Url).FirstOrDefault();
+
+                if (!string.IsNullOrEmpty(add))
+                {
+                    return new
+                    {
+                        jsonStatus = 1,
+                        resut = add
+                    };
+                }
+                return new
+                {
+                    jsonStatus = 1,
+                    resut = "没有首页广告图片"
+                };
+            }
+        }
     }
 }

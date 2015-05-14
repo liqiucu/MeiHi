@@ -75,6 +75,20 @@ namespace MeiHi.Admin.Logic
             }
         }
 
+        public static string GetShopNameByShopId(long shopId)
+        {
+            using (var db = new MeiHiEntities())
+            {
+                var shop = db.Shop.Where(a => a.ShopId == shopId).FirstOrDefault();
+                if (shop != null)
+                {
+                    return shop.Title;
+                }
+
+                return "";
+            }
+        }
+
         public static long GetParentShopId(string shopName)
         {
             using (var db = new MeiHiEntities())
@@ -323,6 +337,24 @@ namespace MeiHi.Admin.Logic
                         {
                             return lists.Select(a => a.ProductUrl).ToList();
                         }
+                    }
+                }
+
+                return null;
+            }
+        }
+
+        public static List<string> GetProductBrandImages(string productBrandId)
+        {
+            using (var db = new MeiHiEntities())
+            {
+                if (!string.IsNullOrEmpty(productBrandId))
+                {
+                    var lists = db.ProductBrand.Where(a => a.ProductBrandId == productBrandId);
+
+                    if (lists != null && lists.Count() > 0)
+                    {
+                        return lists.Select(a => a.ProductUrl).ToList();
                     }
                 }
 
