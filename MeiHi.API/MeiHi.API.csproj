@@ -121,6 +121,7 @@
     <Folder Include="App_Data\" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="App_Start\ApiAuthorize.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
@@ -153,10 +154,13 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\SampleDirection.cs" />
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
+    <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\MeiHiHomeController.cs" />
     <Compile Include="Controllers\ServiceController.cs" />
     <Compile Include="Controllers\ShopController.cs" />
+    <Compile Include="Filters\HandleApiExceptionFilter.cs" />
+    <Compile Include="Filters\ValidationActionFilter.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -175,20 +179,22 @@
     <Compile Include="Helper\WGS2GCJ.cs" />
     <Compile Include="Logic\ShopLogic.cs" />
     <Compile Include="Logic\UserLogic.cs" />
-    <Compile Include="Models\MeiHiDistanceModel.cs" />
+    <Compile Include="Models\MeiHiDistanceModelJsonTypes\MeiHiDistanceModel.cs" />
     <Compile Include="Models\MeiHiDistanceModelJsonTypes\Copyright.cs" />
     <Compile Include="Models\MeiHiDistanceModelJsonTypes\Distance.cs" />
     <Compile Include="Models\MeiHiDistanceModelJsonTypes\Duration.cs" />
     <Compile Include="Models\MeiHiDistanceModelJsonTypes\Element.cs" />
     <Compile Include="Models\MeiHiDistanceModelJsonTypes\Info.cs" />
     <Compile Include="Models\MeiHiDistanceModelJsonTypes\Result.cs" />
-    <Compile Include="Models\ProductBrandImages.cs" />
-    <Compile Include="Models\ServiceForShopDetailModel.cs" />
+    <Compile Include="Models\Shop\ProductBrandImages.cs" />
+    <Compile Include="Models\Service\ServiceForShopDetailModel.cs" />
     <Compile Include="Models\Service\ServiceModel.cs" />
-    <Compile Include="Models\ShopDetailModel.cs" />
-    <Compile Include="Models\ShopListModel.cs" />
-    <Compile Include="Models\ShopModel.cs" />
+    <Compile Include="Models\Shop\ShopDetailModel.cs" />
+    <Compile Include="Models\Shop\ShopListModel.cs" />
+    <Compile Include="Models\Shop\ShopModel.cs" />
     <Compile Include="Models\UserComments\UserCommentsModel.cs" />
+    <Compile Include="Models\User\Register.cs" />
+    <Compile Include="Models\User\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

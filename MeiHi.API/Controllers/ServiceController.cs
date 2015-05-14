@@ -91,9 +91,9 @@ namespace MeiHi.API.Controllers
         /// <param name="serviceId"></param>
         /// <param name="userId"></param>
         /// <returns></returns>
+        [ApiAuthorize]
         [HttpPost]
         [Route("Add_Favorite")]
-        [AllowAnonymous]
         public object AddToFavorite(long serviceId,long userId)
         {
             try
