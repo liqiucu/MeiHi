@@ -186,15 +186,16 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Helper\ImageHelper.cs" />
+    <Compile Include="Logic\ServiceLogic.cs" />
     <Compile Include="Logic\CommonLogic.cs" />
     <Compile Include="Logic\ShopLogic.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="Models\Service\ServiceModel.cs" />
     <Compile Include="Models\Shops\ProductBrandModel.cs" />
     <Compile Include="Models\Shops\ShopModel.cs" />
     <Compile Include="Models\Shops\ProductBrandImages.cs" />
     <Compile Include="Models\Shops\ServiceForShopDetailModel.cs" />
-    <Compile Include="Models\Shops\ShopXModel.cs" />
     <Compile Include="Models\UserComments\UserCommentsModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
@@ -259,6 +260,10 @@
     <Content Include="Views\Shop\CreateShop.cshtml" />
     <Content Include="Views\Shop\ShopDetail.cshtml" />
     <Content Include="Views\Shop\EditShop.cshtml" />
+    <Content Include="Views\Shop\ShowServicesByShopId.cshtml" />
+    <Content Include="Views\Shop\CreateService.cshtml" />
+    <Content Include="Views\Shop\ServiceDetail.cshtml" />
+    <Content Include="Views\Shop\EditService.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

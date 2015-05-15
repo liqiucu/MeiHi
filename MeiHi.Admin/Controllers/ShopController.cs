@@ -16,6 +16,7 @@ using PagedList;
 using Owin;
 using MeiHi.Admin.Logic;
 using System.Data.Entity.Validation;
+using MeiHi.Admin.Models.Service;
 
 namespace MeiHi.Admin.Controllers
 {
@@ -36,7 +37,7 @@ namespace MeiHi.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult SaveShop(CreateShopMpdel model, HttpPostedFileBase[] fileToUpload, HttpPostedFileBase[] fileToUploadForShop)
+        public ActionResult SaveShop(CreateShopMpdel model, HttpPostedFileBase[] ProductBrandFile, HttpPostedFileBase[] shopProductFile)
         {
             try
             {
@@ -44,8 +45,7 @@ namespace MeiHi.Admin.Controllers
                 {
                     string productBrandId = Guid.NewGuid().ToString();
 
-
-                    foreach (HttpPostedFileBase file in fileToUpload)
+                    foreach (HttpPostedFileBase file in ProductBrandFile)
                     {
                         string path = System.IO.Path.Combine(Server.MapPath("~/App_Data"), System.IO.Path.GetFileName(file.FileName));
                         file.SaveAs(path);
@@ -62,9 +62,10 @@ namespace MeiHi.Admin.Controllers
                     db.SaveChanges();
 
                     string tempPath = "";
-                    if (fileToUploadForShop != null && fileToUploadForShop.Count() > 0)
+
+                    if (shopProductFile != null && shopProductFile.Count() > 0)
                     {
-                        tempPath = System.IO.Path.Combine(Server.MapPath("~/App_Data"), System.IO.Path.GetFileName(fileToUploadForShop[0].FileName));
+                        tempPath = System.IO.Path.Combine(Server.MapPath("~/App_Data"), System.IO.Path.GetFileName(shopProductFile[0].FileName));
                     }
 
                     db.Shop.Add(new Shop()
@@ -89,7 +90,7 @@ namespace MeiHi.Admin.Controllers
 
                     db.SaveChanges();
 
-                    foreach (var file in fileToUploadForShop)
+                    foreach (var file in shopProductFile)
                     {
                         string path = System.IO.Path.Combine(Server.MapPath("~/App_Data"), System.IO.Path.GetFileName(file.FileName));
 
@@ -110,10 +111,115 @@ namespace MeiHi.Admin.Controllers
             }
             catch (DbEntityValidationException ex)
             {
+                throw ex;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="ProductBrandFile">产品</param>
+        /// <param name="shopProductFile">店铺</param>
+        /// <returns></returns>
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult UpdateShop(EditShopMpdel model, HttpPostedFileBase[] ProductBrandFile, HttpPostedFileBase[] shopProductFile)
+        {
+            try
+            {
+                using (var db = new MeiHiEntities())
+                {
+                    var shop = db.Shop.Where(a => a.ShopId == model.ShopId).FirstOrDefault();
+                    if (shop == null)
+                    {
+                        throw new Exception("the shop not exist shopId:" + model.ShopId);
+                    }
+
+                    string productBrandId = shop.ProductBrandId;
+                    //ProductBrand 产品
+                    if (ProductBrandFile != null && ProductBrandFile.Count() > 0)
+                    {
+                        var productBrands = db.ProductBrand.Where(a => a.ProductBrandId == productBrandId);
+
+                        foreach (var item in productBrands)
+                        {
+                            db.ProductBrand.Remove(item);
+                        }
+
+                        foreach (var file in ProductBrandFile)
+                        {
+                            string path = System.IO.Path.Combine(Server.MapPath("~/App_Data"), System.IO.Path.GetFileName(file.FileName));
+                            file.SaveAs(path);
+
+                            db.ProductBrand.Add(new ProductBrand()
+                            {
+                                ProductUrl = path,
+                                ProductBrandId = productBrandId,
+                                DateCreated = DateTime.Now,
+                                DateModified = DateTime.Now
+                            });
+                        }
+
+                        db.SaveChanges();
+                    }
+
+                    string tempPath = shop.ImageUrl;
+                    //ShopBrandImages 店铺
+                    if (shopProductFile != null && shopProductFile.Count() > 0)
+                    {
+                        tempPath = System.IO.Path.Combine(Server.MapPath("~/App_Data"), System.IO.Path.GetFileName(shopProductFile[0].FileName));
+
+                        foreach (var item in shop.ShopBrandImages)
+                        {
+                            db.ShopBrandImages.Remove(item);
+                        }
+
+                        foreach (var file in shopProductFile)
+                        {
+                            string path = System.IO.Path.Combine(Server.MapPath("~/App_Data"), System.IO.Path.GetFileName(file.FileName));
+
+                            file.SaveAs(path);
+
+                            db.ShopBrandImages.Add(new ShopBrandImages()
+                            {
+                                ShopId = ShopLogic.GetShopIdByShopName(model.Title),
+                                DateCreated = DateTime.Now,
+                                url = path
+                            });
+                        }
+
+                        db.SaveChanges();
+                    }
+
+                    shop.RegionID = model.RegionId;
+                    shop.ShopTag = model.ShopTag;
+                    shop.Comment = model.Comment;
+                    shop.PurchaseNotes = model.PurchaseNotes;
+                    shop.ProductBrandId = productBrandId;
+                    shop.Phone = model.Phone;
+                    shop.ParentShopId = ShopLogic.GetParentShopId(model.ParentShopName);
+                    shop.IsOnline = model.IsOnline;
+                    shop.IsHot = model.IsHot;
+                    shop.Contract = model.Contract;
+                    shop.Coordinates = model.Coordinates;
+                    shop.Title = model.Title;
+                    shop.ImageUrl = tempPath;
+                    shop.DetailAddress = model.DetailAddress;
+                    shop.DateModified = DateTime.Now;
+
+                    db.SaveChanges();
+                }
+
+                return RedirectToAction("ShopManege");
+            }
+            catch (DbEntityValidationException ex)
+            {
 
                 throw ex;
             }
         }
+
 
         [HttpGet]
         public ActionResult CreateShop()
@@ -217,5 +323,191 @@ namespace MeiHi.Admin.Controllers
 
             return RedirectToAction("ShopManege");
         }
+
+        #region service
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult SaveService(CreateServiceModel model, HttpPostedFileBase[] serviceTitleUrl)
+        {
+            try
+            {
+                using (var db = new MeiHiEntities())
+                {
+                    var service = db.Service.Where(a => a.ServiceId == model.ServiceId).FirstOrDefault();
+
+                    if (service == null)
+                    {
+                        service = new Service();
+                        foreach (var file in serviceTitleUrl)
+                        {
+                            string path = System.IO.Path.Combine(Server.MapPath("~/App_Data"), System.IO.Path.GetFileName(file.FileName));
+                            file.SaveAs(path);
+                            service.TitleUrl = path;
+                        }
+                        service.ServiceTypeId = model.ServiceTypeId;
+                        service.CMUnitCost = model.CMUnitCost;
+                        service.Designer = model.Designer;
+                        service.Detail = model.Detail;
+                        service.OriginalUnitCost = model.OriginalUnitCost;
+                        service.Title = model.Title;
+                        service.ShopId = model.ShopId;
+                        service.IfSupportRealTimeRefund = model.IfSupportRealTimeRefund;
+                        db.Service.Add(service);
+                    }
+                    else
+                    {
+                        foreach (var file in serviceTitleUrl)
+                        {
+                            string path = System.IO.Path.Combine(Server.MapPath("~/App_Data"), System.IO.Path.GetFileName(file.FileName));
+                            file.SaveAs(path);
+                            service.TitleUrl = path;
+                        }
+                        service.ServiceTypeId = model.ServiceTypeId;
+                        service.CMUnitCost = model.CMUnitCost;
+                        service.Designer = model.Designer;
+                        service.Detail = model.Detail;
+                        service.OriginalUnitCost = model.OriginalUnitCost;
+                        service.Title = model.Title;
+                        service.ShopId = model.ShopId;
+                        service.IfSupportRealTimeRefund = model.IfSupportRealTimeRefund;
+                    }
+
+                    db.SaveChanges();
+                }
+
+                return RedirectToAction("ShowServicesByShopId");
+            }
+            catch (DbEntityValidationException ex)
+            {
+                throw ex;
+            }
+        }
+
+        [HttpGet]
+        public ActionResult CreateService(long shopId)
+        {
+            using (var access = new MeiHiEntities())
+            {
+                var shop = access.Shop.Where(a => a.ShopId == shopId).FirstOrDefault();
+
+                CreateServiceModel model = new CreateServiceModel()
+                {
+                    ShopId = shopId,
+                    ServiceTypeLists = ServiceLogic.ServiceTypeList()
+                };
+                return View(model);
+            }
+        }
+
+        [HttpGet]
+        public ActionResult ShowServicesByShopId(long shopId)
+        {
+            using (var access = new MeiHiEntities())
+            {
+                var services = access.Service.Where(a => a.ShopId == shopId);
+
+                if (services != null && services.Count() > 0)
+                {
+                    List<ShowServiceListModel> results = new List<ShowServiceListModel>();
+
+                    foreach (var item in services)
+                    {
+                        results.Add(new ShowServiceListModel()
+                        {
+                            ShopId = item.ShopId,
+                            ServiceId = item.ServiceId,
+                            CMUnitCost = item.CMUnitCost,
+                            ServiceTypeName = item.ServiceType.Title,
+                            Title = item.Title,
+                            OriginalUnitCost = item.OriginalUnitCost,
+                            IfSupportRealTimeRefund = item.IfSupportRealTimeRefund
+                        });
+                    }
+                }
+            }
+
+            return RedirectToAction("ShopManege");
+        }
+
+        [HttpGet]
+        public ActionResult ServiceDetail(long serviceId)
+        {
+            using (var db = new MeiHiEntities())
+            {
+                var service = db.Service.Where(a => a.ServiceId == serviceId).FirstOrDefault();
+
+                if (service != null)
+                {
+                    ServiceDetailModel model = new ServiceDetailModel()
+                    {
+                        ShopId = service.ServiceId,
+                        ServiceId = service.ServiceId,
+                        CMUnitCost = service.CMUnitCost,
+                        Designer = service.Designer,
+                        Detail = service.Detail,
+                        IfSupportRealTimeRefund = service.IfSupportRealTimeRefund,
+                        OriginalUnitCost = service.OriginalUnitCost,
+                        //PurchaseNotes = service.Shop.PurchaseNotes,
+                        ServiceTypeName = service.ServiceType.Title,
+                        Title = service.Title,
+                        TitleUrl = service.TitleUrl
+                    };
+
+                    return View(model);
+                }
+
+                return View();
+            }
+        }
+
+        [HttpGet]
+        public ActionResult EditService(long serviceId)
+        {
+            using (var db = new MeiHiEntities())
+            {
+                var service = db.Service.Where(a => a.ServiceId == serviceId).FirstOrDefault();
+
+                if (service != null)
+                {
+                    var model = new CreateServiceModel()
+                    {
+                        ShopId = service.ServiceId,
+                        ServiceId = service.ServiceId,
+                        Title = service.Title,
+                        TitleUrl = service.TitleUrl,
+                        CMUnitCost = service.CMUnitCost,
+                        Designer = service.Designer,
+                        Detail = service.Detail,
+                        IfSupportRealTimeRefund = service.IfSupportRealTimeRefund,
+                        OriginalUnitCost = service.OriginalUnitCost,
+                        //PurchaseNotes = service.Shop.PurchaseNotes,
+                        ServiceTypeLists = ServiceLogic.ServiceTypeList()
+                    };
+
+                    return View(model);
+                }
+
+                return View();
+            }
+        }
+
+        [HttpGet]
+        public ActionResult DeleteService(long serviceId)
+        {
+            using (var access = new MeiHiEntities())
+            {
+                var service = access.Service.Where(a => a.ServiceId == serviceId).FirstOrDefault();
+
+                if (service != null)
+                {
+                    access.Service.Attach(service);
+                    access.Service.Remove(service);
+                    access.SaveChanges();
+                }
+            }
+
+            return RedirectToAction("ShopManege");
+        }
+        #endregion
     }
 }

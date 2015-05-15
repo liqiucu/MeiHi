@@ -11,6 +11,13 @@
     <hr />
     <dl class="dl-horizontal">
         <dt>
+            @Html.DisplayNameFor(model => model.ShopId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ShopId)
+        </dd>
+        <dt>
             @Html.DisplayNameFor(model => model.RegionName)
         </dt>
 
@@ -127,6 +134,6 @@
     </dl>
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
+    @Html.ActionLink("Edit", "EditShop", new { id = Model.ShopId }) |
     @Html.ActionLink("Back to List", "ShopManege")
 </p>

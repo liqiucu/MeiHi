@@ -66,6 +66,7 @@
             @Html.DisplayFor(modelItem => item.Comment)
         </td>
         <td>
+            @Html.ActionLink("Service", "ShowServicesByShopId", new { id = item.ShopId }) |
             @Html.ActionLink("Edit", "EditShop", new { id=item.ShopId }) |
             @Html.ActionLink("Details", "ShopDetail", new { id=item.ShopId }) |
             @Html.ActionLink("Delete", "DeleteShop", new { shopId=item.ShopId })

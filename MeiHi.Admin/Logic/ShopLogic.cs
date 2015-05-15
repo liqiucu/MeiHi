@@ -33,6 +33,15 @@ namespace MeiHi.Admin.Logic
         //        DateModified = DateTime.Now
         //    });
         //}
+
+        //public static bool DeleteProductBrand(string productBrandId)
+        //{
+        //    using(var db=new MeiHiEntities())
+        //    {
+        //        var productBrands=db.ProductBrand.Where(a=>a.ProductBrandId==productBrandId)
+        //    }
+        //}
+
         public static StaticPagedList<ShopListDetailModel> GetShops(int page, int pageSize)
         {
             using (var access = new MeiHiEntities())
