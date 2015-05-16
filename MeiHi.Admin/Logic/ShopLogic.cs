@@ -59,7 +59,8 @@ namespace MeiHi.Admin.Logic
                         DetailAddress = item.DetailAddress,
                         Phone = item.Phone,
                         RegionName = GetRegionName(item.RegionID, item.ShopId),
-                        ShopId = item.ShopId
+                        ShopId = item.ShopId,
+                         Title=item.Title
                     };
                     shopLists.Add(temp);
                 }

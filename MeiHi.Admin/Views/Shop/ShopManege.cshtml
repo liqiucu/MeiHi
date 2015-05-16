@@ -16,6 +16,9 @@
             ShopID
         </th>
         <th>
+            ShopTitle
+        </th>
+        <th>
             DetailAddress
         </th>
         <th>
@@ -45,6 +48,9 @@
             @Html.DisplayFor(modelItem => item.ShopId)
         </td>
         <td>
+            @Html.DisplayFor(modelItem => item.Title)
+        </td>
+        <td>
             @Html.DisplayFor(modelItem => item.DetailAddress)
         </td>
         <td>
@@ -66,9 +72,9 @@
             @Html.DisplayFor(modelItem => item.Comment)
         </td>
         <td>
-            @Html.ActionLink("Service", "ShowServicesByShopId", new { id = item.ShopId }) |
-            @Html.ActionLink("Edit", "EditShop", new { id=item.ShopId }) |
-            @Html.ActionLink("Details", "ShopDetail", new { id=item.ShopId }) |
+            @Html.ActionLink("Service", "ShowServicesByShopId", new { shopId = item.ShopId }) |
+            @Html.ActionLink("Edit", "EditShop", new { shopId = item.ShopId }) |
+            @Html.ActionLink("Details", "ShopDetail", new { shopId = item.ShopId }) |
             @Html.ActionLink("Delete", "DeleteShop", new { shopId=item.ShopId })
         </td>
     </tr>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="b0891cb4e6414a71b0161f85998190c5" Name="Diagram1">
+        <EntityTypeShape EntityType="MeiHiModel.Add" Width="1.5" PointX="0.75" PointY="6" IsExpanded="true" />
+        <EntityTypeShape EntityType="MeiHiModel.Admin" Width="1.5" PointX="10.75" PointY="17.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="MeiHiModel.AdminPermission" Width="1.5" PointX="13" PointY="3.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="MeiHiModel.AdminRole" Width="1.5" PointX="18" PointY="12.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="MeiHiModel.ApplyJoin" Width="1.5" PointX="5.75" PointY="2" IsExpanded="true" />
+        <EntityTypeShape EntityType="MeiHiModel.Booking" Width="1.5" PointX="7.5" PointY="10.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="MeiHiModel.HairStyle" Width="1.5" PointX="3" PointY="2.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="MeiHiModel.HairStyleType" Width="1.5" PointX="0.75" PointY="2.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="MeiHiModel.Permission" Width="1.5" PointX="10.75" PointY="3.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="MeiHiModel.ProductBrand" Width="1.5" PointX="7.75" PointY="2" IsExpanded="true" />
+        <EntityTypeShape EntityType="MeiHiModel.Province" Width="1.5" PointX="0.75" PointY="13.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="MeiHiModel.RecommandShop" Width="1.5" PointX="7.5" PointY="16.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="MeiHiModel.Region" Width="1.5" PointX="3" PointY="13" IsExpanded="true" />
+        <EntityTypeShape EntityType="MeiHiModel.Role" Width="1.5" PointX="10.75" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="MeiHiModel.RolePermission" Width="1.5" PointX="13" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="MeiHiModel.Service" Width="1.5" PointX="10.5" PointY="12.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="MeiHiModel.ServiceType" Width="1.5" PointX="8.25" PointY="7.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="MeiHiModel.Shop" Width="1.5" PointX="5.25" PointY="11.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="MeiHiModel.ShopBrandImages" Width="1.5" PointX="7.5" PointY="24.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="MeiHiModel.ShopUser" Width="1.5" PointX="7.5" PointY="26.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="MeiHiModel.sysdiagrams" Width="1.5" PointX="0.75" PointY="9" IsExpanded="true" />
+        <EntityTypeShape EntityType="MeiHiModel.User" Width="1.5" PointX="5.25" PointY="5.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="MeiHiModel.UserComments" Width="1.5" PointX="12.75" PointY="12.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="MeiHiModel.UserCommentSharedImg" Width="1.5" PointX="15" PointY="9.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="MeiHiModel.UserCommentsReply" Width="1.5" PointX="15" PointY="16.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="MeiHiModel.UserFavorites" Width="1.5" PointX="15.75" PointY="13" IsExpanded="true" />
+        <EntityTypeShape EntityType="MeiHiModel.UserSuggest" Width="1.5" PointX="7.75" PointY="5" IsExpanded="true" />
+        <AssociationConnector Association="MeiHiModel.FK_AdminPermission_Admin" ManuallyRouted="false" />
+        <AssociationConnector Association="MeiHiModel.FK_AdminRole_Admin" ManuallyRouted="false" />
+        <AssociationConnector Association="MeiHiModel.FK_AdminPermission_Permission" ManuallyRouted="false" />
+        <AssociationConnector Association="MeiHiModel.FK_AdminRole_Role" ManuallyRouted="false" />
+        <AssociationConnector Association="MeiHiModel.FK_Booking_Service" ManuallyRouted="false" />
+        <AssociationConnector Association="MeiHiModel.FK_Booking_Shop" ManuallyRouted="false" />
+        <AssociationConnector Association="MeiHiModel.FK_Booking_User" ManuallyRouted="false" />
+        <AssociationConnector Association="MeiHiModel.FK_HairStyle_HairStyleType" ManuallyRouted="false" />
+        <AssociationConnector Association="MeiHiModel.FK_RolePermission_Permission" ManuallyRouted="false" />
+        <AssociationConnector Association="MeiHiModel.FK_Region_Province" ManuallyRouted="false" />
+        <AssociationConnector Association="MeiHiModel.FK_RecommandShop_Shop" ManuallyRouted="false" />
+        <AssociationConnector Association="MeiHiModel.FK_Shop_Region" ManuallyRouted="false" />
+        <AssociationConnector Association="MeiHiModel.FK_RolePermission_Role" ManuallyRouted="false" />
+        <AssociationConnector Association="MeiHiModel.FK_Service_ServiceType" ManuallyRouted="false" />
+        <AssociationConnector Association="MeiHiModel.FK_Service_Shop" ManuallyRouted="false" />
+        <AssociationConnector Association="MeiHiModel.FK_UserComments_Service" ManuallyRouted="false" />
+        <AssociationConnector Association="MeiHiModel.FK_UserFavorites_Service" ManuallyRouted="false" />
+        <AssociationConnector Association="MeiHiModel.FK_ShopBrandImages_Shop" ManuallyRouted="false" />
+        <AssociationConnector Association="MeiHiModel.FK_ShopUser_Shop" ManuallyRouted="false" />
+        <AssociationConnector Association="MeiHiModel.FK_UserComments_Shop" ManuallyRouted="false" />
+        <AssociationConnector Association="MeiHiModel.FK_UserFavorites_Shop" ManuallyRouted="false" />
+        <AssociationConnector Association="MeiHiModel.FK_UserComments_User" ManuallyRouted="false" />
+        <AssociationConnector Association="MeiHiModel.FK_UserFavorites_User" ManuallyRouted="false" />
+        <AssociationConnector Association="MeiHiModel.FK_UserCommentSharedImg_UserComments" ManuallyRouted="false" />
+        <AssociationConnector Association="MeiHiModel.FK_UserCommentsReply_UserComments" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

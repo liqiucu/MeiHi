@@ -44,7 +44,7 @@ namespace MeiHi.Admin.Models
 
     public class EditShopMpdel
     {
-        public int ShopId { get; set; }
+        public long ShopId { get; set; }
         public int RegionId { get; set; }
 
         public List<SelectListItem> RegionNameList
@@ -106,6 +106,7 @@ namespace MeiHi.Admin.Models
         public string Contract { get; set; }
         public bool IsHot { get; set; }
         public bool IsOnline { get; set; }
+        public string Title { get; set; }
         public string Comment { get; set; }
     }
 }

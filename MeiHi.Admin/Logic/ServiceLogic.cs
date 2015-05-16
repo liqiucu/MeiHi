@@ -9,7 +9,7 @@ namespace MeiHi.Admin.Logic
 {
     public static class ServiceLogic
     {
-        public static List<SelectListItem> ServiceTypeList()
+        public static List<SelectListItem> ServiceTypeList(int serviceTypeId = 0)
         {
             using (var access = new MeiHiEntities())
             {
@@ -20,7 +20,8 @@ namespace MeiHi.Admin.Logic
                     Lists.Add(new SelectListItem()
                     {
                         Text = item.Title,
-                        Value = item.ServiceTypeId.ToString()
+                        Value = item.ServiceTypeId.ToString(),
+                        Selected = item.ServiceTypeId == serviceTypeId
                     });
                 });
 

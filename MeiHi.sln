@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.30501.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MeiHi.Admin", "MeiHi.Admin\MeiHi.Admin.csproj", "{558DDB05-E34D-43DA-8290-7674E715B648}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MeiHi.API", "MeiHi.API\MeiHi.API.csproj", "{F423E41D-5C7F-489F-918A-00741B440D1B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MeiHi.Model", "MeiHi.Model\MeiHi.Model.csproj", "{6E143717-BE86-4DAE-A353-C230572BB564}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{558DDB05-E34D-43DA-8290-7674E715B648}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{558DDB05-E34D-43DA-8290-7674E715B648}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{558DDB05-E34D-43DA-8290-7674E715B648}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{558DDB05-E34D-43DA-8290-7674E715B648}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F423E41D-5C7F-489F-918A-00741B440D1B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F423E41D-5C7F-489F-918A-00741B440D1B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F423E41D-5C7F-489F-918A-00741B440D1B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F423E41D-5C7F-489F-918A-00741B440D1B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6E143717-BE86-4DAE-A353-C230572BB564}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6E143717-BE86-4DAE-A353-C230572BB564}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6E143717-BE86-4DAE-A353-C230572BB564}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6E143717-BE86-4DAE-A353-C230572BB564}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

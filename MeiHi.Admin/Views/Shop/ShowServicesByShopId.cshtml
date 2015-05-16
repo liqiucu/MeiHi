@@ -1,70 +1,65 @@
-﻿@model IEnumerable<MeiHi.Admin.Models.Service.ShowServiceListModel>
+﻿@model MeiHi.Admin.Models.Service.ShowServiceModel
 
 @{
     ViewBag.Title = "ShowServicesByShopId";
 }
 
-<h2>ShowServicesByShopId</h2>
+<h2>ShopId:@Model.ShopId</h2>
 
 <p>
-    @Html.ActionLink("Create New", "CreateService")
+    @Html.ActionLink("Create New", "CreateService", new { shopId = Model.ShopId })
 </p>
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.ShopId)
+            @Html.DisplayName("服务ID")
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.ServiceId)
+            @Html.DisplayName("服务类型")
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.ServiceTypeName)
+            @Html.DisplayName("服务标题")
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Title)
+            @Html.DisplayName("美嗨价")
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.CMUnitCost)
+            @Html.DisplayName("原价")
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.OriginalUnitCost)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.IfSupportRealTimeRefund)
+           @Html.DisplayName("是否支持随时退款")
         </th>
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.ShopId)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.ServiceId)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.ServiceTypeName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Title)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.CMUnitCost)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.OriginalUnitCost)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.IfSupportRealTimeRefund)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "EditService", new { id = item.ServiceId }) |
-            @Html.ActionLink("Details", "ServiceDetail", new { id = item.ServiceId }) |
-            @Html.ActionLink("Delete", "DeleteService", new { shopId = item.ServiceId })
-        </td>
-    </tr>
-}
+    @foreach (var item in Model.ShowServiceList)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ServiceId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ServiceTypeName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CMUnitCost)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.OriginalUnitCost)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IfSupportRealTimeRefund)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "EditService", new { serviceId = item.ServiceId }) |
+                @Html.ActionLink("Details", "ServiceDetail", new { serviceId = item.ServiceId }) |
+                @Html.ActionLink("Delete", "DeleteService", new { serviceId = item.ServiceId })
+            </td>
+        </tr>
+    }
 
 </table>
 <p>

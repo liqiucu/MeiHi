@@ -9,7 +9,7 @@ namespace MeiHi.Admin.Logic
 {
     public class CommonLogic
     {
-        public List<SelectListItem> RegionList()
+        public List<SelectListItem> RegionList(int regionId = 0)
         {
             using (var access = new MeiHiEntities())
             {
@@ -20,7 +20,8 @@ namespace MeiHi.Admin.Logic
                     Lists.Add(new SelectListItem()
                     {
                         Text = item.Name,
-                        Value = item.RegionId.ToString()
+                        Value = item.RegionId.ToString(),
+                        Selected = item.RegionId == regionId
                     });
                 });
 

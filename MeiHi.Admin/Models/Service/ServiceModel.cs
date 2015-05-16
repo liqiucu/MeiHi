@@ -54,8 +54,6 @@ namespace MeiHi.Admin.Models.Service
     //}
     public class ShowServiceListModel
     {
-        public long ShopId { get; set; }
-
         public long ServiceId { get; set; }
         public string ServiceTypeName { get; set; }
 
@@ -64,5 +62,12 @@ namespace MeiHi.Admin.Models.Service
         public decimal OriginalUnitCost { get; set; }
 
         public bool? IfSupportRealTimeRefund { get; set; }
+    }
+
+    public class ShowServiceModel
+    {
+        public long ShopId { get; set; }
+
+        public List<ShowServiceListModel> ShowServiceList { get; set; }
     }
 }

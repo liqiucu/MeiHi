@@ -117,18 +117,26 @@
             店铺图片列表
         </dt>
         <dd>
-            @foreach (var item in Model.ProductBrandList)
+            @if (Model.ProductBrandList != null)
             {
-                <img src="@item" />
+                foreach (var item in Model.ProductBrandList)
+                {
+                    <img src="@item" />
+                }
             }
+
         </dd>
         <dt>
             店铺产品列表
         </dt>
         <dd>
-            @foreach (var item in Model.ShopProductList)
+            @if (Model.ShopProductList != null)
             {
-                <img src="@item" />
+
+                foreach (var item in Model.ShopProductList)
+                {
+                    <img src="@item" />
+                }
             }
         </dd>
     </dl>

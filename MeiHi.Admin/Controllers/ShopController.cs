@@ -17,6 +17,7 @@ using Owin;
 using MeiHi.Admin.Logic;
 using System.Data.Entity.Validation;
 using MeiHi.Admin.Models.Service;
+using System.IO;
 
 namespace MeiHi.Admin.Controllers
 {
@@ -47,25 +48,42 @@ namespace MeiHi.Admin.Controllers
 
                     foreach (HttpPostedFileBase file in ProductBrandFile)
                     {
-                        string path = System.IO.Path.Combine(Server.MapPath("~/App_Data"), System.IO.Path.GetFileName(file.FileName));
-                        file.SaveAs(path);
-
-                        db.ProductBrand.Add(new ProductBrand()
+                        if (file != null)
                         {
-                            ProductUrl = path,
-                            ProductBrandId = productBrandId,
-                            DateCreated = DateTime.Now,
-                            DateModified = DateTime.Now
-                        });
+                            string tempUploadPath = "/upload/product/";
+
+                            if (!Directory.Exists(HttpContext.Server.MapPath(tempUploadPath)))
+                            {
+                                Directory.CreateDirectory(HttpContext.Server.MapPath(tempUploadPath));
+                            }
+
+                            string path = System.IO.Path.Combine(HttpContext.Server.MapPath(tempUploadPath), System.IO.Path.GetFileName(file.FileName));
+                            file.SaveAs(path);
+
+                            db.ProductBrand.Add(new ProductBrand()
+                            {
+
+                                ProductUrl = "http://" + Request.Url.Authority + tempUploadPath + System.IO.Path.GetFileName(file.FileName),
+                                ProductBrandId = productBrandId,
+                                DateCreated = DateTime.Now,
+                                DateModified = DateTime.Now
+                            });
+                        }
                     }
 
                     db.SaveChanges();
 
                     string tempPath = "";
+                    string tempUploadShopPath = "/upload/shop/";
 
-                    if (shopProductFile != null && shopProductFile.Count() > 0)
+                    if (shopProductFile != null && shopProductFile.FirstOrDefault() != null)
                     {
-                        tempPath = System.IO.Path.Combine(Server.MapPath("~/App_Data"), System.IO.Path.GetFileName(shopProductFile[0].FileName));
+                        if (!Directory.Exists(HttpContext.Server.MapPath(tempUploadShopPath)))
+                        {
+                            Directory.CreateDirectory(HttpContext.Server.MapPath(tempUploadShopPath));
+                        }
+
+                        tempPath = System.IO.Path.Combine(Server.MapPath(tempUploadShopPath), System.IO.Path.GetFileName(shopProductFile[0].FileName));
                     }
 
                     db.Shop.Add(new Shop()
@@ -92,16 +110,20 @@ namespace MeiHi.Admin.Controllers
 
                     foreach (var file in shopProductFile)
                     {
-                        string path = System.IO.Path.Combine(Server.MapPath("~/App_Data"), System.IO.Path.GetFileName(file.FileName));
-
-                        file.SaveAs(path);
-
-                        db.ShopBrandImages.Add(new ShopBrandImages()
+                        if (file != null)
                         {
-                            ShopId = ShopLogic.GetShopIdByShopName(model.Title),
-                            DateCreated = DateTime.Now,
-                            url = path
-                        });
+                            string path = System.IO.Path.Combine(Server.MapPath(tempUploadShopPath), System.IO.Path.GetFileName(file.FileName));
+
+                            file.SaveAs(path);
+
+                            db.ShopBrandImages.Add(new ShopBrandImages()
+                            {
+                                ShopId = ShopLogic.GetShopIdByShopName(model.Title),
+                                DateCreated = DateTime.Now,
+                                url = "http://" + Request.Url.Authority + tempUploadShopPath + System.IO.Path.GetFileName(file.FileName)
+                            });
+
+                        }
                     }
 
                     db.SaveChanges();
@@ -138,7 +160,7 @@ namespace MeiHi.Admin.Controllers
 
                     string productBrandId = shop.ProductBrandId;
                     //ProductBrand 产品
-                    if (ProductBrandFile != null && ProductBrandFile.Count() > 0)
+                    if (ProductBrandFile != null && ProductBrandFile.FirstOrDefault() != null)
                     {
                         var productBrands = db.ProductBrand.Where(a => a.ProductBrandId == productBrandId);
 
@@ -149,12 +171,18 @@ namespace MeiHi.Admin.Controllers
 
                         foreach (var file in ProductBrandFile)
                         {
-                            string path = System.IO.Path.Combine(Server.MapPath("~/App_Data"), System.IO.Path.GetFileName(file.FileName));
+                            string tempUploadPath = "/upload/product/";
+
+                            if (!Directory.Exists(HttpContext.Server.MapPath(tempUploadPath)))
+                            {
+                                Directory.CreateDirectory(HttpContext.Server.MapPath(tempUploadPath));
+                            }
+                            string path = System.IO.Path.Combine(Server.MapPath(tempUploadPath), System.IO.Path.GetFileName(file.FileName));
                             file.SaveAs(path);
 
                             db.ProductBrand.Add(new ProductBrand()
                             {
-                                ProductUrl = path,
+                                ProductUrl = "http://" + Request.Url.Authority + tempUploadPath + System.IO.Path.GetFileName(file.FileName),
                                 ProductBrandId = productBrandId,
                                 DateCreated = DateTime.Now,
                                 DateModified = DateTime.Now
@@ -166,9 +194,16 @@ namespace MeiHi.Admin.Controllers
 
                     string tempPath = shop.ImageUrl;
                     //ShopBrandImages 店铺
-                    if (shopProductFile != null && shopProductFile.Count() > 0)
+                    if (shopProductFile != null && shopProductFile.FirstOrDefault() != null)
                     {
-                        tempPath = System.IO.Path.Combine(Server.MapPath("~/App_Data"), System.IO.Path.GetFileName(shopProductFile[0].FileName));
+                        string tempUploadPath = "/upload/shop/";
+
+                        if (!Directory.Exists(HttpContext.Server.MapPath(tempUploadPath)))
+                        {
+                            Directory.CreateDirectory(HttpContext.Server.MapPath(tempUploadPath));
+                        }
+
+                        tempPath = System.IO.Path.Combine(Server.MapPath(tempUploadPath), System.IO.Path.GetFileName(shopProductFile[0].FileName));
 
                         foreach (var item in shop.ShopBrandImages)
                         {
@@ -177,7 +212,7 @@ namespace MeiHi.Admin.Controllers
 
                         foreach (var file in shopProductFile)
                         {
-                            string path = System.IO.Path.Combine(Server.MapPath("~/App_Data"), System.IO.Path.GetFileName(file.FileName));
+                            string path = System.IO.Path.Combine(Server.MapPath(tempUploadPath), System.IO.Path.GetFileName(file.FileName));
 
                             file.SaveAs(path);
 
@@ -185,7 +220,7 @@ namespace MeiHi.Admin.Controllers
                             {
                                 ShopId = ShopLogic.GetShopIdByShopName(model.Title),
                                 DateCreated = DateTime.Now,
-                                url = path
+                                url = "http://" + Request.Url.Authority + tempUploadPath + System.IO.Path.GetFileName(file.FileName)
                             });
                         }
 
@@ -243,8 +278,9 @@ namespace MeiHi.Admin.Controllers
                 {
                     EditShopMpdel model = new EditShopMpdel()
                     {
-                        RegionNameList = new CommonLogic().RegionList(),
+                        RegionNameList = new CommonLogic().RegionList(shop.RegionID),
                         Comment = shop.Comment,
+                        ShopId = shopId,
                         Contract = shop.Contract,
                         Phone = shop.Phone,
                         Coordinates = shop.Coordinates,
@@ -280,6 +316,7 @@ namespace MeiHi.Admin.Controllers
                 {
                     ShopDetailMpdel model = new ShopDetailMpdel()
                     {
+                        ShopId = shopId,
                         Comment = shop.Comment,
                         Contract = shop.Contract,
                         Phone = shop.Phone,
@@ -315,7 +352,19 @@ namespace MeiHi.Admin.Controllers
 
                 if (shop != null)
                 {
-                    access.Shop.Attach(shop);
+                    access.Booking.RemoveRange(shop.Booking);
+
+                    if (shop.RecommandShop != null)
+                    {
+                        access.RecommandShop.Remove(shop.RecommandShop);
+                    }
+
+                    access.Service.RemoveRange(shop.Service);
+                    access.ShopBrandImages.RemoveRange(shop.ShopBrandImages);
+                    access.ShopUser.RemoveRange(shop.ShopUser);
+                    access.ProductBrand.RemoveRange(access.ProductBrand.Where(a => a.ProductBrandId == shop.ProductBrandId));
+                    access.UserComments.RemoveRange(shop.UserComments);
+                    access.UserFavorites.RemoveRange(shop.UserFavorites);
                     access.Shop.Remove(shop);
                     access.SaveChanges();
                 }
@@ -334,15 +383,24 @@ namespace MeiHi.Admin.Controllers
                 using (var db = new MeiHiEntities())
                 {
                     var service = db.Service.Where(a => a.ServiceId == model.ServiceId).FirstOrDefault();
+                    string tempUploadServicePath = "/upload/service/";
+
+                    if (!Directory.Exists(HttpContext.Server.MapPath(tempUploadServicePath)))
+                    {
+                        Directory.CreateDirectory(HttpContext.Server.MapPath(tempUploadServicePath));
+                    }
 
                     if (service == null)
                     {
                         service = new Service();
                         foreach (var file in serviceTitleUrl)
                         {
-                            string path = System.IO.Path.Combine(Server.MapPath("~/App_Data"), System.IO.Path.GetFileName(file.FileName));
-                            file.SaveAs(path);
-                            service.TitleUrl = path;
+                            if (file != null)
+                            {
+                                string path = System.IO.Path.Combine(Server.MapPath(tempUploadServicePath), System.IO.Path.GetFileName(file.FileName));
+                                file.SaveAs(path);
+                                service.TitleUrl = "http://" + Request.Url.Authority + tempUploadServicePath + System.IO.Path.GetFileName(file.FileName);
+                            }
                         }
                         service.ServiceTypeId = model.ServiceTypeId;
                         service.CMUnitCost = model.CMUnitCost;
@@ -352,15 +410,20 @@ namespace MeiHi.Admin.Controllers
                         service.Title = model.Title;
                         service.ShopId = model.ShopId;
                         service.IfSupportRealTimeRefund = model.IfSupportRealTimeRefund;
+                        service.DateCreated = DateTime.Now;
+                        service.DateModified = DateTime.Now;
                         db.Service.Add(service);
                     }
                     else
                     {
                         foreach (var file in serviceTitleUrl)
                         {
-                            string path = System.IO.Path.Combine(Server.MapPath("~/App_Data"), System.IO.Path.GetFileName(file.FileName));
-                            file.SaveAs(path);
-                            service.TitleUrl = path;
+                            if (file != null)
+                            {
+                                string path = System.IO.Path.Combine(Server.MapPath(tempUploadServicePath), System.IO.Path.GetFileName(file.FileName));
+                                file.SaveAs(path);
+                                service.TitleUrl = "http://" + Request.Url.Authority + tempUploadServicePath + System.IO.Path.GetFileName(file.FileName);
+                            }
                         }
                         service.ServiceTypeId = model.ServiceTypeId;
                         service.CMUnitCost = model.CMUnitCost;
@@ -368,14 +431,14 @@ namespace MeiHi.Admin.Controllers
                         service.Detail = model.Detail;
                         service.OriginalUnitCost = model.OriginalUnitCost;
                         service.Title = model.Title;
-                        service.ShopId = model.ShopId;
                         service.IfSupportRealTimeRefund = model.IfSupportRealTimeRefund;
+                        service.DateModified = DateTime.Now;
                     }
 
                     db.SaveChanges();
                 }
 
-                return RedirectToAction("ShowServicesByShopId");
+                return RedirectToAction("ShowServicesByShopId", new { shopId = model.ShopId });
             }
             catch (DbEntityValidationException ex)
             {
@@ -388,7 +451,7 @@ namespace MeiHi.Admin.Controllers
         {
             using (var access = new MeiHiEntities())
             {
-                var shop = access.Shop.Where(a => a.ShopId == shopId).FirstOrDefault();
+                //var shop = access.Shop.Where(a => a.ShopId == shopId).FirstOrDefault();
 
                 CreateServiceModel model = new CreateServiceModel()
                 {
@@ -404,17 +467,17 @@ namespace MeiHi.Admin.Controllers
         {
             using (var access = new MeiHiEntities())
             {
+                List<ShowServiceListModel> results = new List<ShowServiceListModel>();
+
                 var services = access.Service.Where(a => a.ShopId == shopId);
 
                 if (services != null && services.Count() > 0)
                 {
-                    List<ShowServiceListModel> results = new List<ShowServiceListModel>();
 
                     foreach (var item in services)
                     {
                         results.Add(new ShowServiceListModel()
                         {
-                            ShopId = item.ShopId,
                             ServiceId = item.ServiceId,
                             CMUnitCost = item.CMUnitCost,
                             ServiceTypeName = item.ServiceType.Title,
@@ -424,9 +487,12 @@ namespace MeiHi.Admin.Controllers
                         });
                     }
                 }
-            }
 
-            return RedirectToAction("ShopManege");
+                ShowServiceModel model = new ShowServiceModel();
+                model.ShopId = shopId;
+                model.ShowServiceList = results;
+                return View(model);
+            }
         }
 
         [HttpGet]
@@ -440,7 +506,7 @@ namespace MeiHi.Admin.Controllers
                 {
                     ServiceDetailModel model = new ServiceDetailModel()
                     {
-                        ShopId = service.ServiceId,
+                        ShopId = service.ShopId,
                         ServiceId = service.ServiceId,
                         CMUnitCost = service.CMUnitCost,
                         Designer = service.Designer,
@@ -471,7 +537,7 @@ namespace MeiHi.Admin.Controllers
                 {
                     var model = new CreateServiceModel()
                     {
-                        ShopId = service.ServiceId,
+                        ShopId = service.ShopId,
                         ServiceId = service.ServiceId,
                         Title = service.Title,
                         TitleUrl = service.TitleUrl,
@@ -481,7 +547,7 @@ namespace MeiHi.Admin.Controllers
                         IfSupportRealTimeRefund = service.IfSupportRealTimeRefund,
                         OriginalUnitCost = service.OriginalUnitCost,
                         //PurchaseNotes = service.Shop.PurchaseNotes,
-                        ServiceTypeLists = ServiceLogic.ServiceTypeList()
+                        ServiceTypeLists = ServiceLogic.ServiceTypeList(service.ServiceTypeId)
                     };
 
                     return View(model);
@@ -500,13 +566,16 @@ namespace MeiHi.Admin.Controllers
 
                 if (service != null)
                 {
-                    access.Service.Attach(service);
+                    access.UserComments.RemoveRange(service.UserComments);
+                    access.UserFavorites.RemoveRange(service.UserFavorites);
+                    access.Booking.RemoveRange(service.Booking);
                     access.Service.Remove(service);
                     access.SaveChanges();
+                    return RedirectToAction("ShowServicesByShopId", new { shopId = service.ShopId });
                 }
-            }
 
-            return RedirectToAction("ShopManege");
+                return RedirectToAction("ShopManege");
+            }
         }
         #endregion
     }

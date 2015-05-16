@@ -4,7 +4,7 @@
     ViewBag.Title = "ServiceDetail";
 }
 
-<h2>ServiceDetail</h2>
+<h2>ServiceId:@Model.ServiceId</h2>
 
 <div>
     <h4>ServiceDetailModel</h4>
@@ -16,14 +16,6 @@
 
         <dd>
             @Html.DisplayFor(model => model.ShopId)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.ServiceId)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.ServiceId)
         </dd>
 
         <dt>
@@ -94,5 +86,5 @@
 </div>
 <p>
     @Html.ActionLink("Edit", "EditService", new { id = Model.ServiceId }) |
-    @Html.ActionLink("Back to List", "ShowServicesByShopId")
+    @Html.ActionLink("Back to List", "ShowServicesByShopId", new { shopId = Model.ShopId })
 </p>

@@ -4,28 +4,31 @@
     ViewBag.Title = "EditService";
 }
 
-<h2>EditService</h2>
+<h2>ServiceId:@Model.ServiceId</h2>
 
 
 @using (Html.BeginForm("SaveService", "Shop", FormMethod.Post, new { enctype = "multipart/form-data", id = "form2" }))
 {
     @Html.AntiForgeryToken()
-    
+
     <div class="form-horizontal">
         <h4>EditServiceModel</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        <div class="form-group">
-            @Html.LabelFor(model => model.ServiceId, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DisplayFor(model => model.ServiceId, new { htmlAttributes = new { @class = "form-control" } })
-            </div>
-        </div>
-
+        <input type="hidden" name="ServiceId" id="ServiceId" value="@Model.ServiceId" />
+        <input type="hidden" name="ShopId" id="ShopId" value="@Model.ShopId" />
         <div class="form-group">
             <label class="control-label col-md-2">ServiceType</label>
             <div class="col-md-10">
-                @Html.DropDownListFor(model => model.ServiceTypeId, Model.ServiceTypeLists)
+                <select id="ServiceTypeId" name="ServiceTypeId">
+
+                    @foreach (var item in Model.ServiceTypeLists)
+                    {
+                        <option value="@item.Value" selected="@item.Selected">
+                            @item.Text
+                        </option>
+                    }
+                </select>
             </div>
         </div>
 
@@ -97,7 +100,7 @@
 }
 
 <div>
-    @Html.ActionLink("Back to List", "ShowServicesByShopId")
+    @Html.ActionLink("Back to List", "ShowServicesByShopId", new { shopId = Model.ShopId })
 </div>
 
 @section Scripts {
