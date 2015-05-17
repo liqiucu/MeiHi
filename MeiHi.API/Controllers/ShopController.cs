@@ -345,36 +345,54 @@ namespace MeiHi.API.Controllers
         /// <summary>
         /// 计算所有店铺距离和折扣并且排序
         /// </summary>
-        /// <param name="region"></param>
+        /// <param name="region">用户所在地的经纬度</param>
         [AllowAnonymous]
-        [Route("caldistance")]
-        [HttpPost]
-        public void CalDistance(string region)
+        [Route("shop_caldistance")]
+        [HttpGet]
+        public object CalDistance(string region)
         {
-            using (var db = new MeiHiEntities())
+            try
             {
-                var shops = db.Shop.Where(a => a.IsOnline == true).ToList();
-                var shopResults = new List<ShopModel>();
-
-                for (int j = 0; j < shops.Count(); j++)
+                using (var db = new MeiHiEntities())
                 {
-                    var shopModel = new ShopModel()
+                    var shops = db.Shop.Where(a => a.IsOnline == true).ToList();
+                    var shopResults = new List<ShopModel>();
+
+                    for (int j = 0; j < shops.Count(); j++)
                     {
-                        Coordinates = shops[j].Coordinates,
-                        ShopId = shops[j].ShopId,
-                        Title = shops[j].Title,
-                        DiscountRate = ShopLogic.GetDiscountRate(shops[j].ShopId),
-                        RegionName =shops[j].Region.Name,// ShopLogic.GetRegionName(shops[j].RegionID, shops[j].ShopId),
-                        ShopImageUrl = shops[j].ShopBrandImages.FirstOrDefault().url,
-                        Rate = ShopLogic.GetShopRate(shops[j].ShopId),
-                        ParentShopId = shops[j].ParentShopId,
-                        Distance = HttpUtils.CalOneShop(region, shops[j].Coordinates)
+                        var shopModel = new ShopModel()
+                        {
+                            Coordinates = shops[j].Coordinates,
+                            ShopId = shops[j].ShopId,
+                            Title = shops[j].Title,
+                            DiscountRate = ShopLogic.GetDiscountRate(shops[j].ShopId),
+                            RegionName = shops[j].Region.Name,// ShopLogic.GetRegionName(shops[j].RegionID, shops[j].ShopId),
+                            ShopImageUrl = shops[j].ShopBrandImages.FirstOrDefault().url,
+                            Rate = ShopLogic.GetShopRate(shops[j].ShopId),
+                            ParentShopId = shops[j].ParentShopId,
+                            Distance = HttpUtils.CalOneShop(region, shops[j].Coordinates)
+                        };
+
+                        shopResults.Add(shopModel);
+                    }
+
+                    System.Web.HttpContext.Current.Session["Shops"] = shopResults;
+
+                    return new
+                    {
+                        jsonStatus = 1,
+                        resut = shopResults
                     };
-
-                    shopResults.Add(shopModel);
                 }
-
-                System.Web.HttpContext.Current.Session["Shops"] = shopResults;
+            }
+            catch (Exception ex)
+            {
+                return new
+                {
+                    jsonStatus = 0,
+                    resut = ex
+                };
+                throw;
             }
         }
     }

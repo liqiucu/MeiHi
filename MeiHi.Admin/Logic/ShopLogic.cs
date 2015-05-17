@@ -42,11 +42,11 @@ namespace MeiHi.Admin.Logic
         //    }
         //}
 
-        public static StaticPagedList<ShopListDetailModel> GetShops(int page, int pageSize)
+        public static StaticPagedList<ShopListDetailModel> GetShops(int page, int pageSize, bool isOnline = true)
         {
             using (var access = new MeiHiEntities())
             {
-                var shops = access.Shop.OrderBy(a => a.ShopId).Skip((page - 1) * pageSize).Take(pageSize);
+                var shops = access.Shop.Where(a => a.IsOnline == isOnline).OrderBy(a => a.ShopId).Skip((page - 1) * pageSize).Take(pageSize);
                 List<ShopListDetailModel> shopLists = new List<ShopListDetailModel>();
                 foreach (var item in shops)
                 {
@@ -60,7 +60,7 @@ namespace MeiHi.Admin.Logic
                         Phone = item.Phone,
                         RegionName = GetRegionName(item.RegionID, item.ShopId),
                         ShopId = item.ShopId,
-                         Title=item.Title
+                        Title = item.Title
                     };
                     shopLists.Add(temp);
                 }

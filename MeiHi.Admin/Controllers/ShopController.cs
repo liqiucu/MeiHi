@@ -36,8 +36,22 @@ namespace MeiHi.Admin.Controllers
             return View(shopmodel);
         }
 
+        /// <summary>
+        /// 店铺下架管理
+        /// </summary>
+        /// <param name="shop"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public ActionResult OfflineShopManage(int page = 1)
+        {
+            ShopModel shopmodel = new ShopModel();
+            shopmodel.Lists = ShopLogic.GetShops(page, 10);
+            return View(shopmodel);
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Auth(PermissionName = "店铺维护管理")]
         public ActionResult SaveShop(CreateShopMpdel model, HttpPostedFileBase[] ProductBrandFile, HttpPostedFileBase[] shopProductFile)
         {
             try
@@ -146,6 +160,7 @@ namespace MeiHi.Admin.Controllers
         /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Auth(PermissionName = "店铺维护管理")]
         public ActionResult UpdateShop(EditShopMpdel model, HttpPostedFileBase[] ProductBrandFile, HttpPostedFileBase[] shopProductFile)
         {
             try
@@ -257,6 +272,7 @@ namespace MeiHi.Admin.Controllers
 
 
         [HttpGet]
+        [Auth(PermissionName = "店铺维护管理")]
         public ActionResult CreateShop()
         {
             CreateShopMpdel model = new CreateShopMpdel()
@@ -268,6 +284,7 @@ namespace MeiHi.Admin.Controllers
         }
 
         [HttpGet]
+        [Auth(PermissionName = "店铺维护管理")]
         public ActionResult EditShop(long shopId)
         {
             using (var db = new MeiHiEntities())
@@ -306,6 +323,7 @@ namespace MeiHi.Admin.Controllers
         }
 
         [HttpGet]
+        [Auth(PermissionName = "店铺维护管理")]
         public ActionResult ShopDetail(long shopId)
         {
             using (var db = new MeiHiEntities())
@@ -344,6 +362,7 @@ namespace MeiHi.Admin.Controllers
         }
 
         [HttpGet]
+        [Auth(PermissionName = "店铺维护管理")]
         public ActionResult DeleteShop(long shopId)
         {
             using (var access = new MeiHiEntities())
@@ -376,6 +395,7 @@ namespace MeiHi.Admin.Controllers
         #region service
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Auth(PermissionName = "店铺维护管理")]
         public ActionResult SaveService(CreateServiceModel model, HttpPostedFileBase[] serviceTitleUrl)
         {
             try
@@ -447,6 +467,7 @@ namespace MeiHi.Admin.Controllers
         }
 
         [HttpGet]
+        [Auth(PermissionName = "店铺维护管理")]
         public ActionResult CreateService(long shopId)
         {
             using (var access = new MeiHiEntities())
@@ -463,6 +484,7 @@ namespace MeiHi.Admin.Controllers
         }
 
         [HttpGet]
+        [Auth(PermissionName = "店铺维护管理")]
         public ActionResult ShowServicesByShopId(long shopId)
         {
             using (var access = new MeiHiEntities())
@@ -496,6 +518,7 @@ namespace MeiHi.Admin.Controllers
         }
 
         [HttpGet]
+        [Auth(PermissionName = "店铺维护管理")]
         public ActionResult ServiceDetail(long serviceId)
         {
             using (var db = new MeiHiEntities())
@@ -527,6 +550,7 @@ namespace MeiHi.Admin.Controllers
         }
 
         [HttpGet]
+        [Auth(PermissionName = "店铺维护管理")]
         public ActionResult EditService(long serviceId)
         {
             using (var db = new MeiHiEntities())
@@ -558,6 +582,7 @@ namespace MeiHi.Admin.Controllers
         }
 
         [HttpGet]
+        [Auth(PermissionName = "店铺维护管理")]
         public ActionResult DeleteService(long serviceId)
         {
             using (var access = new MeiHiEntities())

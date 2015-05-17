@@ -172,18 +172,34 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="App_Start\AuthAttribute.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\IdentityConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
+    <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\CommonController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ShopController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helper\Constants.cs" />
+    <Compile Include="Helper\DodgeTextMessage.cs" />
+    <Compile Include="Helper\Extensions.cs" />
+    <Compile Include="Helper\Helper.cs" />
+    <Compile Include="Helper\HttpUtils.cs" />
     <Compile Include="Helper\ImageHelper.cs" />
+    <Compile Include="Helper\IPAddress.cs" />
+    <Compile Include="Helper\LuoSiMaoTextMessage.cs" />
+    <Compile Include="Helper\TextMessage.cs" />
+    <Compile Include="Helper\Thumbnail.cs" />
+    <Compile Include="Helper\Utils.cs" />
+    <Compile Include="Helper\WaterMark.cs" />
+    <Compile Include="Helper\WGS2GCJ.cs" />
+    <Compile Include="Logic\AdminAccountManager.cs" />
+    <Compile Include="Logic\AdminLogic.cs" />
     <Compile Include="Logic\ServiceLogic.cs" />
     <Compile Include="Logic\CommonLogic.cs" />
     <Compile Include="Logic\ShopLogic.cs" />
@@ -197,6 +213,8 @@
     <Compile Include="Models\UserComments\UserCommentsModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="Models\Admin\AccountManageModel.cs" />
+    <Compile Include="Models\Admin\LoginModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-theme.css" />
@@ -238,20 +256,6 @@
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Scripts\jquery-1.10.2.min.map" />
-    <Content Include="Views\Account\_ChangePasswordPartial.cshtml" />
-    <Content Include="Views\Account\_ExternalLoginsListPartial.cshtml" />
-    <Content Include="Views\Account\_RemoveAccountPartial.cshtml" />
-    <Content Include="Views\Account\_SetPasswordPartial.cshtml" />
-    <Content Include="Views\Account\ConfirmEmail.cshtml" />
-    <Content Include="Views\Account\ExternalLoginConfirmation.cshtml" />
-    <Content Include="Views\Account\ExternalLoginFailure.cshtml" />
-    <Content Include="Views\Account\ForgotPassword.cshtml" />
-    <Content Include="Views\Account\ForgotPasswordConfirmation.cshtml" />
-    <Content Include="Views\Account\Login.cshtml" />
-    <Content Include="Views\Account\Manage.cshtml" />
-    <Content Include="Views\Account\Register.cshtml" />
-    <Content Include="Views\Account\ResetPassword.cshtml" />
-    <Content Include="Views\Account\ResetPasswordConfirmation.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Shop\ShopManege.cshtml" />
     <Content Include="Views\Shop\CreateShop.cshtml" />
@@ -261,6 +265,8 @@
     <Content Include="Views\Shop\CreateService.cshtml" />
     <Content Include="Views\Shop\ServiceDetail.cshtml" />
     <Content Include="Views\Shop\EditService.cshtml" />
+    <Content Include="Views\Account\Login.cshtml" />
+    <Content Include="Views\Shop\OfflineShopManage.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

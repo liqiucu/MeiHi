@@ -2,42 +2,42 @@
 @using PagedList.Mvc;
 <link href="~/Content/PagedList.css" rel="stylesheet" />
 @{
-    ViewBag.Title = "ShopManege";
+    ViewBag.Title = "已上架店铺管理";
 }
 
-<h2>ShopManege</h2>
+<h2>已上架店铺管理</h2>
 
 <p>
-    @Html.ActionLink("Create New", "CreateShop")
+    @Html.ActionLink("创建新店铺", "CreateShop")
 </p>
 <table class="table">
     <tr>
         <th>
-            ShopID
+            店铺Id
         </th>
         <th>
-            ShopTitle
+            店铺Title
         </th>
         <th>
-            DetailAddress
+            详细地址
         </th>
         <th>
-            RegionName
+            区域街道
         </th>
         <th>
-            Phone
+            电话
         </th>
         <th>
-            Contract
+            联系人
         </th>
         <th>
-            IsHot
+            是否热门
         </th>
         <th>
-            IsOnline
+            是否上架
         </th>
         <th>
-            Comment
+            备注
         </th>
         <th></th>
     </tr>
@@ -72,10 +72,10 @@
             @Html.DisplayFor(modelItem => item.Comment)
         </td>
         <td>
-            @Html.ActionLink("Service", "ShowServicesByShopId", new { shopId = item.ShopId }) |
-            @Html.ActionLink("Edit", "EditShop", new { shopId = item.ShopId }) |
-            @Html.ActionLink("Details", "ShopDetail", new { shopId = item.ShopId }) |
-            @Html.ActionLink("Delete", "DeleteShop", new { shopId=item.ShopId })
+            @Html.ActionLink("服务", "ShowServicesByShopId", new { shopId = item.ShopId }) |
+            @Html.ActionLink("编辑", "EditShop", new { shopId = item.ShopId }) |
+            @Html.ActionLink("详情", "ShopDetail", new { shopId = item.ShopId }) |
+            @Html.ActionLink("删除", "DeleteShop", new { shopId=item.ShopId })
         </td>
     </tr>
 }
