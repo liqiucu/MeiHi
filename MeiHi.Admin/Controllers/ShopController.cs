@@ -29,6 +29,7 @@ namespace MeiHi.Admin.Controllers
         /// <param name="shop"></param>
         /// <returns></returns>
         [HttpGet]
+        [Auth(PermissionName = "店铺维护管理")]
         public ActionResult ShopManege(int page = 1)
         {
             ShopModel shopmodel = new ShopModel();
@@ -42,6 +43,7 @@ namespace MeiHi.Admin.Controllers
         /// <param name="shop"></param>
         /// <returns></returns>
         [HttpGet]
+        [Auth(PermissionName = "店铺维护管理")]
         public ActionResult OfflineShopManage(int page = 1)
         {
             ShopModel shopmodel = new ShopModel();
@@ -269,7 +271,6 @@ namespace MeiHi.Admin.Controllers
                 throw ex;
             }
         }
-
 
         [HttpGet]
         [Auth(PermissionName = "店铺维护管理")]

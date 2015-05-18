@@ -10,11 +10,12 @@ namespace MeiHi.API.Helper
 {
     public class LuoSiMaoTextMessage
     {
-        public static void SendText(string mobile, string message)
+        public static bool SendText(string mobile, string message)
         {
-            message = "验证码 " + message + "【思途校园】";
+            message = "验证码 " + message + "【美嗨科技】";
             string username = "api";
-            string password = "key-e4ce14f0cd25bbd87a2ee45eba1a7a83";
+            //string password = "key-e4ce14f0cd25bbd87a2ee45eba1a7a83";
+            string password = "key-7b9bfef6b6960ee99046276d46e59206";
             string url = "https://sms-api.luosimao.com/v1/send.json";
 
             byte[] byteArray = Encoding.UTF8.GetBytes("mobile=" + mobile + "&message=" + message);
@@ -30,11 +31,15 @@ namespace MeiHi.API.Helper
             newStream.Close();
 
             HttpWebResponse response = (HttpWebResponse)webRequest.GetResponse();
-            StreamReader php = new StreamReader(response.GetResponseStream(), Encoding.Default);
-            string Message = php.ReadToEnd();
 
-            System.Console.Write(Message);
-            System.Console.Read();
+            if (response.StatusCode == 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }

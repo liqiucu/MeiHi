@@ -10,8 +10,8 @@ namespace MeiHi.Admin.Controllers
     {
         public ActionResult Index()
         {
-            return RedirectToAction("ShopManege", "Shop");
-          //  return View("ShopManege", "Shop");
+            return View();
+            //  return RedirectToAction("ShopManege", "Shop");
         }
 
         public ActionResult About()

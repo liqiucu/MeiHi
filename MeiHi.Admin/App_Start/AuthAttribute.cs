@@ -37,6 +37,7 @@ namespace MeiHi.Admin
                     if (!filterContext.HttpContext.Response.IsRequestBeingRedirected)
                     {
                         filterContext.Result = new RedirectResult(Constants.AdminSite.AdminUrl);
+                        
                         return;
                     }
                 }

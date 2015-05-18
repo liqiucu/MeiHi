@@ -1,11 +1,11 @@
 ﻿<div class="jumbotron">
-    <h1>ASP.NET</h1>
-    <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS, and JavaScript.</p>
-    <p><a href="http://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
+    MeiHomePage
 </div>
 <div class="row">
-    <form name="form1" method="post" enctype="multipart/form-data" action="shop/caldistance/?region=上海市闵行区爱博家园四村">
-        <input name="region" type="text" id="region" />
-        <input type="submit" value="提交" />
-    </form>
+    @using (Html.BeginForm("get_register_mobile_verification_code", "account", FormMethod.Get))
+    {
+        <label>手机号 </label>
+        <input name="mobile" type="text" id="mobile" />
+        <input type="submit" value="提获取验证码" />
+    }
 </div>

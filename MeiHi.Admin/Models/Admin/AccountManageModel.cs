@@ -13,54 +13,87 @@ namespace MeiHi.Admin.ViewModels
 {
     public class AccountManageModel
     {
-        public List<RoleModel> ListRoles { get; set; }
-        public StaticPagedList<AdminModel> ListAdmins { get; set; }
-
-        public List<SelectListItem> DropListRoles
-        {
-            get
-            {
-                List<SelectListItem> Lists = new List<SelectListItem>();
-
-                ListRoles.ForEach((item) =>
-                {
-                    Lists.Add(new SelectListItem()
-                    {
-                        Text = item.RoleName,
-                        Value = item.RoleId.ToString()
-                    });
-                });
-
-                return Lists;
-            }            
-        }
-
-        public string RoleName { get; set; }
+        public StaticPagedList<AdminModel> Admins { get; set; }
     }
 
     public class RoleModel
     {
-        [Display(Name = "Role Id", Order = 1)]
         public int RoleId { get; set; }
 
-        [Display(Name = "Role Name", Order = 2)]
         public string RoleName { get; set; }
+
+        public List<string> PermissionNames { get; set; }
+    }
+
+    public class PermissionModel
+    {
+        public int PermissionId { get; set; }
+
+        public string PermissionName { get; set; }
     }
 
     public class AdminModel
     {
-        [Display(Name = "User Id", Order = 0)]
         public int UserId { get; set; }
-        [Display(Name = "User Name", Order = 2)]
+
         public string UserName { get; set; }
 
-        [Display(Name = "Email", Order = 3)]
-        public string Email { get; set; }
+        public string Mobile { get; set; }
 
-        public string Salt { get; set; }
+        public bool Avaliable { get; set; }
 
-        public string Role { get; set; }
+        public List<string> RoleNmes { get; set; }
 
+        public List<string> PermissionNames { get; set; }
+    }
+
+    public class CreateAdminModel
+    {
+        [Required(ErrorMessage = "用户名必须填写")]
+        [Display(Name = "用户名")]
+        public string UserName { get; set; }
+
+        [Required(ErrorMessage = "移动电话必须填写")]
+        [Display(Name = "移动电话")]
+        public string Mobile { get; set; }
+
+        [Required(ErrorMessage = "密码必须填写")]
+        [Display(Name = "密码")]
         public string Password { get; set; }
+
+        [Display(Name = "是否有效")]
+        public bool Avaliable { get; set; }
+
+        [Display(Name = "角色列表")]
+        public List<SelectListItem> Roles { get; set; }
+
+        [Display(Name = "权限列表")]
+        public List<SelectListItem> Permissions { get; set; }
+    }
+
+    public class EditAdminModel
+    {
+        public int AdminId { get; set; }
+
+        [Required(ErrorMessage = "用户名必须填写")]
+        [Display(Name = "用户名")]
+        public string UserName { get; set; }
+
+        [Required(ErrorMessage = "移动电话必须填写")]
+        [Display(Name = "移动电话")]
+        public string Mobile { get; set; }
+
+        [Required(ErrorMessage = "密码必须填写")]
+        [Display(Name = "密码")]
+        public string Password { get; set; }
+
+        [Display(Name = "是否有效")]
+        public bool Avaliable { get; set; }
+
+        [Display(Name = "角色列表")]
+        public List<SelectListItem> Roles { get; set; }
+
+        [Display(Name = "权限列表")]
+        public List<SelectListItem> Permissions { get; set; }
     }
 }

@@ -19,6 +19,7 @@ namespace MeiHi.Admin.Controllers
         [AllowAnonymous]
         public ActionResult Login()
         {
+            ViewBag.FirstLogin = true;
             return View();
         }
 
@@ -49,50 +50,114 @@ namespace MeiHi.Admin.Controllers
         }
 
         [HttpGet]
-        [Auth(RoleName = "管理员")]
+        //[Auth(RoleName = "管理员")]
         public ActionResult ManageAccount(int? page)
         {
             AccountManageModel amm = new AccountManageModel();
-            amm.ListAdmins = manager.GetAdmins(page ?? 1, pagesize);
-            amm.ListRoles = manager.GetAdminRoles();
+            amm.Admins = manager.GetAdmins(page ?? 1, pagesize);
 
             return View(amm);
         }
 
-        [HttpPost]
-        [Auth(RoleName = "管理员")]
-        public ActionResult CreateAccount(AdminModel adminModel)
+        //[HttpGet]
+        //public ActionResult EditAccount(int adminId)
+        //{
+
+        //}
+
+        [HttpGet]
+        //[Auth(RoleName = "管理员")]
+        public ActionResult CreateAccount()
         {
-            int adminId = manager.CreateAdminAccount(new MeiHi.Model.Admin()
+            using (var db = new MeiHiEntities())
             {
-                DateCreated = DateTime.Now,
-                DateModified = DateTime.Now,
-                UserName = adminModel.UserName,
-                Password = adminModel.Password
-            });
+                CreateAdminModel adminModel = new CreateAdminModel();
+                var roles = db.Role.Where(a => a.Name != "管理员");
 
-            int roleId = int.Parse(adminModel.Role);
-            manager.CreatAdminRole(adminId, roleId);
+                List<SelectListItem> listRoles = new List<SelectListItem>();
+                foreach (var item in db.Role)
+                {
+                    SelectListItem temp = new SelectListItem()
+                    {
+                        Text = item.Name,
+                        Value = item.RoleId.ToString()
+                    };
+                    listRoles.Add(temp);
+                }
 
-            return View();
+                List<SelectListItem> listPermissions = new List<SelectListItem>();
+                foreach (var item in db.Permission)
+                {
+                    SelectListItem temp = new SelectListItem()
+                    {
+                        Text = item.Name,
+                        Value = item.PermissionId.ToString()
+                    };
+                    listPermissions.Add(temp);
+                }
+
+                adminModel.Permissions = listPermissions;
+                adminModel.Roles = listRoles;
+
+                return View(adminModel);
+            }
         }
 
         [HttpPost]
-        [Auth(RoleName = "管理员")]
-        public JsonResult ChangeAccount(AdminModel adminModel)
+        //[Auth(RoleName = "管理员")]
+        public ActionResult SaveAccount(CreateAdminModel adminModel, string[] Role, string[] Permission)
         {
-            manager.UpdateAdminAccount(adminModel);
+            using (var db = new MeiHiEntities())
+            {
+                var admin = new MeiHi.Model.Admin()
+                {
+                    Mobile = adminModel.Mobile,
+                    Avaliable = adminModel.Avaliable,
+                    Password = adminModel.Password,
+                    UserName = adminModel.UserName,
+                    DateCreated = DateTime.Now,
+                    DateModified = DateTime.Now
+                };
 
-            return Json("update account success", JsonRequestBehavior.AllowGet);
-        }
+                db.Admin.Add(admin);
+                db.SaveChanges();
+                var adminId = AdminLogic.GetAdminIdFromAdminName(adminModel.UserName);
 
-        [HttpPost]
-        [Auth(RoleName = "管理员")]
-        public JsonResult DeleteAdminAccount(string UserId)
-        {
-            manager.DeleteAdminAccount(int.Parse(UserId));
+                if (Permission != null)
+                {
+                    foreach (var item in Permission)
+                    {
+                        AdminPermission adminpermission = new AdminPermission()
+                        {
+                            AdminId = adminId,
+                            Avaliable = true,
+                            PermissionId = int.Parse(item),
+                            DateCreated = DateTime.Now
+                        };
 
-            return Json("delete account success", JsonRequestBehavior.AllowGet);
+                        db.AdminPermission.Add(adminpermission);
+                    }
+                }
+
+                if (Role != null)
+                {
+                    foreach (var item in Role)
+                    {
+                        AdminRole adminRole = new AdminRole()
+                        {
+                            AdminId = adminId,
+                            RoleId = int.Parse(item),
+                            DateCreated = DateTime.Now
+                        };
+
+                        db.AdminRole.Add(adminRole);
+                    }
+                }
+
+                db.SaveChanges();
+
+                return RedirectToAction("ManageAccount", "Account");
+            }
         }
     }
 }

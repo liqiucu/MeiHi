@@ -18,37 +18,39 @@ namespace MeiHi.API.Controllers
         /// <summary>
         /// 当token为空的或者主动调用都需要验证码验证登陆
         /// </summary>
-        /// <param name="mobileModel"></param>
+        /// <param name="mobileModel">手机号</param>
         /// <returns></returns>
         [Route("get_register_mobile_verification_code")]
-        [AcceptVerbs("POST")]
-        public HttpResponseMessage GetRegisterMobileVerificationCode([FromBody]MobileModel mobileModel)
+        [HttpGet]
+        public object GetRegisterMobileVerificationCode(string mobile)
         {
             using (var db = new MeiHiEntities())
             {
-                var reg = db.User.SingleOrDefault(r => r.Mobile == mobileModel.Mobile);
+                var reg = db.User.SingleOrDefault(r => r.Mobile == mobile);
+                var code = Helper.Helper.GenerateRandomNumber(100000, 999999).ToString();
                 if (reg == null)
                 {
                     reg = new User()
                     {
-                        Mobile = mobileModel.Mobile,
-                        VerifyCode = Helper.Helper.GenerateRandomNumber(100000, 999999).ToString(),
+                        Mobile = mobile,
+                        VerifyCode = code,
                         DateCreated = DateTime.Now,
                         DateModified = DateTime.Now,
                     };
                     db.User.Add(reg);
-                    LuoSiMaoTextMessage.SendText(reg.Mobile, reg.VerifyCode);
+                    LuoSiMaoTextMessage.SendText(reg.Mobile, reg.VerifyCode + " 用于登陆");
                 }
                 else
                 {
-                    reg.VerifyCode = Helper.Helper.GenerateRandomNumber(100000, 999999).ToString();
+                    reg.VerifyCode = code;
                     reg.DateModified = DateTime.Now;
-                    LuoSiMaoTextMessage.SendText(reg.Mobile, reg.VerifyCode);
+                    LuoSiMaoTextMessage.SendText(reg.Mobile, reg.VerifyCode + " 用于登陆");
                 }
                 db.SaveChanges();
-                return new HttpResponseMessage(HttpStatusCode.OK)
+                return new
                 {
-                    Content = new StringContent("{\"jsonStatus\": 1, \"message\": send verify code success}", Encoding.UTF8, "application/json")
+                    jsonStatus = 0,
+                    result = "send mobile:" + mobile + " verify code: " + code + "success"
                 };
             }
         }
@@ -56,15 +58,24 @@ namespace MeiHi.API.Controllers
         /// <summary>
         /// 一定是 已经入库的用户调用才会成功
         /// </summary>
-        /// <param name="registerUserModel"></param>
+        /// <param name="mobile">手机号</param>
+        /// <param name="verifyCode">验证码</param>
+        /// <param name="device">ios ws andrio</param>
+        /// <param name="version">手机版本</param>
+        /// <param name="downFromAppId">从哪里下载的</param>
         /// <returns></returns>
         [Route("register_user")]
-        [AcceptVerbs("POST")]
-        public HttpResponseMessage RegisterUser([FromBody]RegisterUserModel registerUserModel)
+        [HttpGet]
+        public object RegisterUser(
+            string mobile,
+            string verifyCode,
+            string device,
+            string version,
+            int downFromAppId)
         {
             using (var db = new MeiHiEntities())
             {
-                var reg = db.User.SingleOrDefault(r => r.Mobile == registerUserModel.Mobile && r.VerifyCode == registerUserModel.VerifyCode);
+                var reg = db.User.SingleOrDefault(r => r.Mobile == mobile && r.VerifyCode == verifyCode);
 
                 if (reg == null)
                 {
@@ -88,13 +99,13 @@ namespace MeiHi.API.Controllers
                 reg.DateModified = DateTime.Now;
 
                 string salt = Guid.NewGuid().ToString();
-                string hashedToken = Helper.Helper.GenerateHashWithSalt(registerUserModel.Mobile, salt);
+                string hashedToken = Helper.Helper.GenerateHashWithSalt(mobile, salt);
                 reg.Token = hashedToken;
-                reg.Device = registerUserModel.Device;
-                reg.DownloadFromApplicationId = registerUserModel.DownloadFromApplicationId;
+                reg.Device = device;
+                reg.DownloadFromApplicationId = downFromAppId;
                 reg.FullName = string.IsNullOrEmpty(reg.FullName) ? "美嗨用户" + reg.UserId : reg.FullName;
                 reg.Salt = salt;
-                reg.Version = registerUserModel.Version;
+                reg.Version = version;
                 db.SaveChanges();
 
                 return new HttpResponseMessage(HttpStatusCode.OK)
@@ -104,12 +115,13 @@ namespace MeiHi.API.Controllers
             }
         }
 
-        [Route("user_logout"), HttpPost]
-        public object LogOut([FromBody]LoginModel loginModel)
+        [Route("user_logout")]
+        [HttpGet]
+        public object LogOut(string mobile, string token)
         {
             using (var db = new MeiHiEntities())
             {
-                var user = db.User.Where(a => a.Mobile == loginModel.Mobile && a.Token == loginModel.Token).FirstOrDefault();
+                var user = db.User.Where(a => a.Mobile == mobile && a.Token == token).FirstOrDefault();
 
                 if (user != null)
                 {

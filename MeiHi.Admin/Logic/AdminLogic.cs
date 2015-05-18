@@ -30,14 +30,25 @@ namespace MeiHi.Admin.Logic
             }
         }
 
+        public static int GetAdminIdFromAdminName(string adminName)
+        {
+            using (var db = new MeiHiEntities())
+            {
+                if (string.IsNullOrEmpty(adminName))
+                {
+                    return 0;
+                }
 
+                return db.Admin.Where(a => a.UserName == adminName).FirstOrDefault().AdminId;
+            }
+        }
         public static bool Logon(string userName, string password, out int adminId)
         {
             adminId = 0;
 
             using (MeiHiEntities db = new MeiHiEntities())
             {
-                var admin = db.Admin.SingleOrDefault(r => r.UserName == userName && r.Password==password);
+                var admin = db.Admin.SingleOrDefault(r => r.Mobile == userName && r.Password==password);
                 if (admin != null)
                 {
                     adminId = admin.AdminId;
