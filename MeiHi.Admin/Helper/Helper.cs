@@ -4,11 +4,13 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Web;
+using System.Security.Cryptography;
 
 namespace MeiHi.Admin.Helper
 {
     public class Helper
     {
+        
         public static string FromByteArrayToString(byte[] array)
         {
             StringBuilder output = new StringBuilder("");

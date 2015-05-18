@@ -34,16 +34,20 @@ namespace MeiHi.Admin.ViewModels
 
     public class AdminModel
     {
-        public int UserId { get; set; }
+        [Display(Name = "用户Id")]
+        public int AdminId { get; set; }
 
+        [Display(Name = "用户名")]
         public string UserName { get; set; }
-
+        [Display(Name = "密码")]
+        public string Password { get; set; }
+        [Display(Name = "移动电话")]
         public string Mobile { get; set; }
-
+        [Display(Name = "是否有效")]
         public bool Avaliable { get; set; }
-
+        [Display(Name = "角色")]
         public List<string> RoleNmes { get; set; }
-
+        [Display(Name = "权限")]
         public List<string> PermissionNames { get; set; }
     }
 

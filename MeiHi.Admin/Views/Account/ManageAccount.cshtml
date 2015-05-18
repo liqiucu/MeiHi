@@ -26,7 +26,7 @@
     {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.UserId)
+                @Html.DisplayFor(modelItem => item.AdminId)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.UserName)
@@ -40,19 +40,19 @@
             <td>
                 @if (item.RoleNmes != null && item.RoleNmes.Count > 0)
                 {
-                    @Html.DisplayFor(modelItem => string.Join(",", item.RoleNmes))
+                    <label>@string.Join(",", item.RoleNmes)</label>
                 }
             </td>
             <td>
                 @if (item.PermissionNames != null && item.PermissionNames.Count > 0)
                 {
-                    @Html.DisplayFor(modelItem => string.Join(",", item.PermissionNames))
+                    <label>@string.Join(",", item.PermissionNames)</label>
                 }
             </td>
             <td>
-                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                @Html.ActionLink("修改", "EditAccount", new { adminId = item.AdminId }) |
+                @Html.ActionLink("详情", "AccountDetail", new { adminId = item.AdminId }) |
+                @Html.ActionLink("删除", "DeleteAccount", new { adminId = item.AdminId })
             </td>
         </tr>
     }

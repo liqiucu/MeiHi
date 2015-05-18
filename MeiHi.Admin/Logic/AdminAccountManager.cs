@@ -84,7 +84,7 @@ namespace MeiHi.Admin.Logic
                     {
                         temp.Add(new AdminModel()
                         {
-                            UserId = item.AdminId,
+                            AdminId = item.AdminId,
                             UserName = item.UserName,
                             Mobile = item.Mobile,
                             Avaliable = item.Avaliable,

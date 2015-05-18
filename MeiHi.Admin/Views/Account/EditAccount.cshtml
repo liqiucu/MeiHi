@@ -1,19 +1,19 @@
-﻿@model MeiHi.Admin.ViewModels.CreateAdminModel
+﻿@model MeiHi.Admin.ViewModels.EditAdminModel
 
 @{
-    ViewBag.Title = "创建后台管理账户";
+    ViewBag.Title = "账号修改";
 }
 
-<h2>创建后台管理账户</h2>
+<h2>账号修改</h2>
 
-
-@using (Html.BeginForm("SaveAccount", "Account", FormMethod.Post))
+@using (Html.BeginForm("UpdateAccount", "Account", FormMethod.Post))
 {
     @Html.AntiForgeryToken()
 
     <div class="form-horizontal">
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <input type="hidden" name="AdminId" id="AdminId" value="@Model.AdminId"/>
         <div class="form-group">
             @Html.LabelFor(model => model.UserName, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
@@ -41,8 +41,10 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Avaliable, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Avaliable)
-                @Html.ValidationMessageFor(model => model.Avaliable, "", new { @class = "text-danger" })
+                <div class="checkbox">
+                    @Html.EditorFor(model => model.Avaliable)
+                    @Html.ValidationMessageFor(model => model.Avaliable, "", new { @class = "text-danger" })
+                </div>
             </div>
         </div>
 
@@ -51,8 +53,8 @@
             <div class="col-md-10">
                 @foreach (var item in Model.Roles)
                 {
-                    <input type="checkbox" value="@item.Value" name="Role" />
-                    <label >@item.Text</label>
+                    <input type="checkbox" value="@item.Value" name="Role" checked="@item.Selected" />
+                    <label>@item.Text</label>
                 }
             </div>
         </div>
@@ -62,22 +64,22 @@
             <div class="col-md-10">
                 @foreach (var item in Model.Permissions)
                 {
-                    <input type="checkbox" value="@item.Value" name="Permission" />
-                    <label >@item.Text</label>
+                    <input type="checkbox" value="@item.Value" name="Permission" checked="@item.Selected" />
+                    <label>@item.Text</label>
                 }
             </div>
         </div>
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="提交" class="btn btn-default" />
+                <input type="submit" value="Save" class="btn btn-default" />
             </div>
         </div>
     </div>
 }
 
 <div>
-    @Html.ActionLink("返回账户列表", "ManageAccount", "Account")
+    @Html.ActionLink("返回账号列表", "ManageAccount")
 </div>
 
 @section Scripts {

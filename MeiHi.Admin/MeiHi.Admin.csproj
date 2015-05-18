@@ -270,6 +270,8 @@
     <Content Include="Views\Shop\OfflineShopManage.cshtml" />
     <Content Include="Views\Account\ManageAccount.cshtml" />
     <Content Include="Views\Account\CreateAccount.cshtml" />
+    <Content Include="Views\Account\EditAccount.cshtml" />
+    <Content Include="Views\Account\AccountDetail.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
