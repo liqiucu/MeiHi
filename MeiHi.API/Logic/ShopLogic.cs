@@ -11,34 +11,77 @@ namespace MeiHi.API.Logic
 {
     public static class ShopLogic
     {
+        private static readonly object CacheLockObjectGetAllShops = new object();
 
-        public static ShopModel ConvertToShopModel(Shop shop, string startCoordinates = "")
+        public static List<Shop> GetAllShops()
         {
-            return new ShopModel()
+            using (var db = new MeiHiEntities())
             {
-                Contract = shop.Contract,
-                Coordinates = shop.Coordinates,
-                DetailAddress = shop.DetailAddress,
-                Phone = shop.Phone,
-                PurchaseNotes = shop.PurchaseNotes,
-                ShopTag = shop.ShopTag,
-                ShopId = shop.ShopId,
-                DiscountRate = GetDiscountRate(shop.ShopId),
-                BranchStoreCount = GetBranchStoreCount(shop.ParentShopId),
-                RegionName = GetRegionName(shop.RegionID, shop.ShopId),
-                ShopImageUrl = GetShopImageUrl(shop.ProductBrandId),
-                Rate = GetShopRate(shop.ShopId),
-                ProductBrandCount = GetProductBrandCount(shop.ProductBrandId),
-                Distance = string.IsNullOrEmpty(startCoordinates) ? 0 : HttpUtils.CalOneShop(startCoordinates, shop.Coordinates),
-                Services = GetServices(shop.ShopId)
-            };
+                var shops = HttpRuntime.Cache.Get("AllShops") as List<Shop>;
+
+                if (shops == null)
+                {
+                    lock (CacheLockObjectGetAllShops)
+                    {
+                        shops = db.Shop.Where(a => a.IsOnline == true).ToList();
+                        HttpRuntime.Cache.Insert("AllShops", shops, null,
+                           DateTime.Now.AddSeconds(600), TimeSpan.Zero);
+                    }
+                }
+
+                return shops;
+            }
         }
+
+        private static readonly object CacheLockObjectGetUserCommentsByShopId = new object();
+
+        public static List<UserComments> GetUserCommentsByShopId(long shopId)
+        {
+            using (var db = new MeiHiEntities())
+            {
+                var userComments = HttpRuntime.Cache.Get("GetUserCommentsByShopId" + shopId) as List<UserComments>;
+
+                if (userComments == null)
+                {
+                    lock (CacheLockObjectGetUserCommentsByShopId)
+                    {
+                        userComments = db.UserComments.Where(a => a.ShopId == shopId && a.Display == true).ToList();
+                        HttpRuntime.Cache.Insert("GetUserCommentsByShopId" + shopId, userComments, null,
+                           DateTime.Now.AddSeconds(600), TimeSpan.Zero);
+                    }
+                }
+
+                return userComments;
+            }
+        }
+
+        //private static readonly object CacheLockObjectGetUserCommentsByServiceId = new object();
+
+        //public static List<UserComments> GetUserCommentsByServiceId(long serviceId)
+        //{
+        //    using (var db = new MeiHiEntities())
+        //    {
+        //        var userComments = HttpRuntime.Cache.Get("GetUserCommentsByShopId" + shopId) as List<UserComments>;
+
+        //        if (userComments == null)
+        //        {
+        //            lock (CacheLockObjectGetUserCommentsByServiceId)
+        //            {
+        //                userComments = db.UserComments.Where(a => a.ShopId == shopId).ToList();
+        //                HttpRuntime.Cache.Insert("GetUserCommentsByShopId" + shopId, userComments, null,
+        //                   DateTime.Now.AddSeconds(600), TimeSpan.Zero);
+        //            }
+        //        }
+
+        //        return userComments;
+        //    }
+        //}
 
         public static decimal GetShopRate(long shopId)
         {
             using (var db = new MeiHiEntities())
             {
-                var temp = db.UserComments.Where(a => a.ShopId == shopId);
+                var temp = GetUserCommentsByShopId(shopId);
 
                 if (temp != null && temp.Count() > 0)
                 {
@@ -181,7 +224,7 @@ namespace MeiHi.API.Logic
             }
         }
 
-        public static List<UserCommentsModel> GetAllUserCommentsByShopId(long shopId, int page,int size)
+        public static List<UserCommentsModel> GetAllUserCommentsByShopId(long shopId, int page, int size)
         {
             using (var db = new MeiHiEntities())
             {
@@ -220,7 +263,7 @@ namespace MeiHi.API.Logic
         {
             using (var db = new MeiHiEntities())
             {
-                var comments = db.UserComments.Where(a => a.Display == true).OrderByDescending(a=>a.DateCreated).Skip((page - 1) * size).Take(size);
+                var comments = db.UserComments.Where(a => a.Display == true).OrderByDescending(a => a.DateCreated).Skip((page - 1) * size).Take(size);
 
                 if (comments != null && comments.Count() > 0)
                 {
@@ -286,7 +329,7 @@ namespace MeiHi.API.Logic
             }
         }
 
-        public static List<UserCommentsModel> GetAllUserCommentsByServiceId(long serviceId,int page,int size)
+        public static List<UserCommentsModel> GetAllUserCommentsByServiceId(long serviceId, int page, int size)
         {
             using (var db = new MeiHiEntities())
             {
@@ -324,7 +367,7 @@ namespace MeiHi.API.Logic
         {
             using (var db = new MeiHiEntities())
             {
-                var services = db.Service.Where(a => a.ShopId == ShopId);
+                var services = GetServicesByShopId(ShopId);
                 if (services != null && services.Count() > 0)
                 {
                     var lowestDiscountRate = services.OrderBy(a => a.CMUnitCost / a.OriginalUnitCost).FirstOrDefault();
@@ -340,6 +383,27 @@ namespace MeiHi.API.Logic
             }
         }
 
+        private static readonly object CacheLockObjectGetServicesByShopId = new object();
+        public static List<Service> GetServicesByShopId(long shopId)
+        {
+            using (var db = new MeiHiEntities())
+            {
+                var services = HttpRuntime.Cache.Get("AllService" + shopId) as List<Service>;
+
+                if (services == null)
+                {
+                    lock (CacheLockObjectGetServicesByShopId)
+                    {
+                        services = db.Service.Where(a => a.ShopId == shopId).ToList();
+                        HttpRuntime.Cache.Insert("AllService" + services, services, null,
+                           DateTime.Now.AddSeconds(600), TimeSpan.Zero);
+                    }
+
+                }
+
+                return services;
+            }
+        }
 
         public static string GetRegionName(int regionId, long shopId)
         {

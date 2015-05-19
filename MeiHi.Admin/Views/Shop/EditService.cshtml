@@ -1,18 +1,16 @@
 ﻿@model MeiHi.Admin.Models.Service.CreateServiceModel
 
 @{
-    ViewBag.Title = "EditService";
+    ViewBag.Title = "编辑服务";
 }
 
-<h2>ServiceId:@Model.ServiceId</h2>
-
+<h2>服务ID:@Model.ServiceId</h2>
 
 @using (Html.BeginForm("SaveService", "Shop", FormMethod.Post, new { enctype = "multipart/form-data", id = "form2" }))
 {
     @Html.AntiForgeryToken()
 
     <div class="form-horizontal">
-        <h4>EditServiceModel</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <input type="hidden" name="ServiceId" id="ServiceId" value="@Model.ServiceId" />
@@ -54,7 +52,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Detail, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Detail, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.TextAreaFor(model => model.Detail, 10,200,new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.Detail, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -78,7 +76,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Designer, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Designer, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.TextAreaFor(model => model.Designer,10,200, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.Designer, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -93,14 +91,14 @@
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-default" />
+                <input type="submit" value="保存" class="btn btn-default" />
             </div>
         </div>
     </div>
 }
 
 <div>
-    @Html.ActionLink("Back to List", "ShowServicesByShopId", new { shopId = Model.ShopId })
+    @Html.ActionLink("返回服务管理", "ShowServicesByShopId", new { shopId = Model.ShopId })
 </div>
 
 @section Scripts {

@@ -17,13 +17,7 @@ namespace MeiHi.Admin.Controllers
             {
                 var adds = db.Add;
 
-                if (adds == null || adds.Count() == 0)
-                {
-                    throw new Exception("广告位不存在");
-                }
-
                 List<AdvertisingModel> result = new List<AdvertisingModel>();
-
 
                 foreach (var add in adds)
                 {

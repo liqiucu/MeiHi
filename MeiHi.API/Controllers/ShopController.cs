@@ -11,6 +11,7 @@ using MeiHi.API.Helper;
 using Newtonsoft.Json;
 using System.Web.Caching;
 using MeiHi.API.Logic;
+using System.Web;
 
 namespace MeiHi.API.Controllers
 {
@@ -139,7 +140,7 @@ namespace MeiHi.API.Controllers
         {
             using (var db = new MeiHiEntities())
             {
-                var shop = db.Shop.Where(a => a.ShopId == shopId).FirstOrDefault();
+                var shop = db.Shop.FirstOrDefault(a => a.ShopId == shopId);
                 if (shop != null)
                 {
                     var shopModel = new ShopModel()
@@ -355,7 +356,8 @@ namespace MeiHi.API.Controllers
             {
                 using (var db = new MeiHiEntities())
                 {
-                    var shops = db.Shop.Where(a => a.IsOnline == true).ToList();
+                    var shops = ShopLogic.GetAllShops();
+
                     var shopResults = new List<ShopModel>();
 
                     for (int j = 0; j < shops.Count(); j++)
@@ -366,7 +368,7 @@ namespace MeiHi.API.Controllers
                             ShopId = shops[j].ShopId,
                             Title = shops[j].Title,
                             DiscountRate = ShopLogic.GetDiscountRate(shops[j].ShopId),
-                            RegionName = shops[j].Region.Name,// ShopLogic.GetRegionName(shops[j].RegionID, shops[j].ShopId),
+                            RegionName = shops[j].Region.Name,
                             ShopImageUrl = shops[j].ShopBrandImages.FirstOrDefault().url,
                             Rate = ShopLogic.GetShopRate(shops[j].ShopId),
                             ParentShopId = shops[j].ParentShopId,
@@ -381,7 +383,7 @@ namespace MeiHi.API.Controllers
                     return new
                     {
                         jsonStatus = 1,
-                        resut = shopResults
+                        resut = "店铺信息预加载成功"
                     };
                 }
             }

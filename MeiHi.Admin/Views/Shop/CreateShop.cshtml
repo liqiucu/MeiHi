@@ -1,16 +1,15 @@
 ﻿@model MeiHi.Admin.Models.CreateShopMpdel
 
 @{
-    ViewBag.Title = "CreateShop";
+    ViewBag.Title = "创建店铺";
 }
-<h2>CreateShop</h2>
+<h2>创建店铺</h2>
 <script src="~/Scripts/Shop/Shop.js"></script>
 @using (Html.BeginForm("SaveShop", "Shop", FormMethod.Post, new { enctype = "multipart/form-data", id = "form2" }))
 {
     @Html.AntiForgeryToken()
 
     <div class="form-horizontal">
-        <h4>CreateShopMpdel</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <div class="form-group">
@@ -29,7 +28,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.DetailAddress, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.DetailAddress, new { htmlAttributes = new { @class = "form-control", @id = "text_", @onchange = "searchByStationName();" } })
+                @Html.TextAreaFor(model => model.DetailAddress,10,200, new { htmlAttributes = new { @class = "form-control", @id = "text_", @onchange = "searchByStationName();" } })
                 @Html.ValidationMessageFor(model => model.DetailAddress, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -80,7 +79,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Comment, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Comment, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.TextAreaFor(model => model.Comment,10,200, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.Comment, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -113,7 +112,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.PurchaseNotes, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.PurchaseNotes, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.TextAreaFor(model => model.PurchaseNotes,10,200, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.PurchaseNotes, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -129,12 +128,12 @@
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default" />
+                <input type="submit" value="提交" class="btn btn-default" />
             </div>
         </div>
     </div>
 }
 
 <div>
-    @Html.ActionLink("Back to List", "ShopManege")
+    @Html.ActionLink("返回店铺管理", "ShopManege")
 </div>

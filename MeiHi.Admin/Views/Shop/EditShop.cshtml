@@ -40,7 +40,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.DetailAddress, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.DetailAddress, new { htmlAttributes = new { @class = "form-control", @id = "text_", @onchange = "searchByStationName();" } })
+                @Html.TextAreaFor(model => model.DetailAddress,10,200, new { htmlAttributes = new { @class = "form-control", @id = "text_", @onchange = "searchByStationName();" } })
                 @Html.ValidationMessageFor(model => model.DetailAddress, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -91,7 +91,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Comment, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Comment, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.TextAreaFor(model => model.Comment,10,200, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.Comment, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -136,7 +136,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.PurchaseNotes, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.PurchaseNotes, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.TextAreaFor(model => model.PurchaseNotes,10,200, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.PurchaseNotes, "", new { @class = "text-danger" })
             </div>
         </div>

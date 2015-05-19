@@ -47,7 +47,7 @@ namespace MeiHi.Admin.Controllers
         public ActionResult OfflineShopManage(int page = 1)
         {
             ShopModel shopmodel = new ShopModel();
-            shopmodel.Lists = ShopLogic.GetShops(page, 10);
+            shopmodel.Lists = ShopLogic.GetShops(page, 10, false);
             return View(shopmodel);
         }
 

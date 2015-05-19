@@ -357,11 +357,10 @@ namespace MeiHi.Admin.Controllers
                         RoleId = item.RoleId,
                         RoleName = item.Name,
                         ParentRoleId = item.ParentRoleId,
-                        ParentRoleName = db.Role.FirstOrDefault(a => a.RoleId == item.ParentRoleId.Value).Name
+                        ParentRoleName = db.Role.FirstOrDefault(a => a.RoleId == item.ParentRoleId.Value) != null ? db.Role.FirstOrDefault(a => a.RoleId == item.ParentRoleId.Value).Name : null
                     };
 
                     roleModes.Add(roleMode);
-
                 }
 
                 return View(roleModes);
