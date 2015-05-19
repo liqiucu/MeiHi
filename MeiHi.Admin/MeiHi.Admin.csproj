@@ -180,6 +180,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\AdvertisingController.cs" />
     <Compile Include="Controllers\CommonController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ShopController.cs" />
@@ -205,6 +206,7 @@
     <Compile Include="Logic\CommonLogic.cs" />
     <Compile Include="Logic\ShopLogic.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\Advertising\AdvertisingModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\Service\ServiceModel.cs" />
     <Compile Include="Models\Shops\ProductBrandModel.cs" />
@@ -272,10 +274,15 @@
     <Content Include="Views\Account\CreateAccount.cshtml" />
     <Content Include="Views\Account\EditAccount.cshtml" />
     <Content Include="Views\Account\AccountDetail.cshtml" />
+    <Content Include="Views\Account\RoleManage.cshtml" />
+    <Content Include="Views\Account\CreateRole.cshtml" />
+    <Content Include="Views\Account\EditRole.cshtml" />
+    <Content Include="Views\Advertising\ShowAdvertising.cshtml" />
+    <Content Include="Views\Advertising\CreateAdd.cshtml" />
+    <Content Include="Views\Advertising\EditAdd.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\Advertising\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

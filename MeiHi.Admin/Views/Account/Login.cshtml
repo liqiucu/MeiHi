@@ -13,7 +13,7 @@
                 <h4>后台管理平台登陆</h4>
                 <hr />
                 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                if (ViewBag.FirstLogin == null || ViewBag.FirstLogin != true)
+                if (ViewBag.permissionnotenough != null || ViewBag.permissionnotenough == true)
                 {
                     <label class="text-danger">权限不足请重新登陆</label>
                 }

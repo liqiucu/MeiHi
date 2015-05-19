@@ -19,25 +19,34 @@ namespace MeiHi.Admin
         public override void OnAuthorization(AuthorizationContext filterContext)
         {
             if (filterContext.HttpContext.Session["AdminId"] != null)
-            { 
+            {
                 bool hasPermission = false;
                 int adminId = (int)filterContext.HttpContext.Session["AdminId"];
-                
+
                 if (!string.IsNullOrEmpty(RoleName) && !string.IsNullOrEmpty(PermissionName))
+                {
                     hasPermission = AdminLogic.HasRole(adminId, RoleName) && AdminLogic.HasPermission(adminId, PermissionName);
+                }
                 else if (!string.IsNullOrEmpty(RoleName))
+                {
                     hasPermission = AdminLogic.HasRole(adminId, RoleName);
+                }
                 else if (!string.IsNullOrEmpty(PermissionName))
+                {
                     hasPermission = AdminLogic.HasPermission(adminId, PermissionName);
-                else 
+                }
+                else
+                {
                     hasPermission = true;
+                }
 
                 if (!hasPermission)
                 {
                     if (!filterContext.HttpContext.Response.IsRequestBeingRedirected)
                     {
-                        filterContext.Result = new RedirectResult(Constants.AdminSite.AdminUrl);
-                        
+                        filterContext.Result = new RedirectResult(Constants.AdminSite.AdminLoginUrl);
+                        filterContext.HttpContext.Session["permissionnotenough"] = true;
+
                         return;
                     }
                 }

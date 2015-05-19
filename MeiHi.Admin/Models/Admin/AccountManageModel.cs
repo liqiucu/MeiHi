@@ -18,11 +18,39 @@ namespace MeiHi.Admin.ViewModels
 
     public class RoleModel
     {
+        [Display(Name = "角色ID")]
         public int RoleId { get; set; }
-
+        [Display(Name = "父角色ID")]
+        public int? ParentRoleId { get; set; }
+        [Display(Name = "父角色名")]
+        public string ParentRoleName { get; set; }
+        [Display(Name = "角色名")]
         public string RoleName { get; set; }
-
+        [Display(Name = "权限列表")]
         public List<string> PermissionNames { get; set; }
+    }
+
+    public class CreateRoleModel
+    {
+        public int ParentRoleId { get; set; }
+        [Display(Name = "父角色")]
+        public List<SelectListItem> ParentRoleList { get; set; }
+        [Display(Name = "角色名")]
+        public string RoleName { get; set; }
+        [Display(Name = "权限列表")]
+        public List<SelectListItem> Permissions { get; set; }
+    }
+
+    public class EditRoleModel
+    {
+        public int RoleId { get; set; }
+        public int ParentRoleId { get; set; }
+        [Display(Name = "父角色")]
+        public List<SelectListItem> ParentRoleList { get; set; }
+        [Display(Name = "角色名")]
+        public string RoleName { get; set; }
+        [Display(Name = "权限列表")]
+        public List<SelectListItem> Permissions { get; set; }
     }
 
     public class PermissionModel

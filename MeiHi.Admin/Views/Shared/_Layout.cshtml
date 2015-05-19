@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-    <title>@ViewBag.Title - My ASP.NET Application</title>
+    <title>@ViewBag.Title - 美嗨科技有限公司</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
@@ -62,35 +62,36 @@
     <div class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
             <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                @Html.ActionLink("MeiHi后台管理首页", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+                @Html.ActionLink("美嗨后台管理系统", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav nav-tabs">
                     <li class="dropdown">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                            店铺 <span class="caret"></span>
+                            权限及店铺 <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu">
                             <li class="dropdown-submenu">
-                                <a>发布店铺</a>
+                                <a>权限模块</a>
                                 <ul class="dropdown-menu">
                                     <li>
-                                        @Html.ActionLink("发布店铺", "CreateShop", "Shop")
+                                        @Html.ActionLink("账号管理", "ManageAccount", "Account")
+                                    </li>
+                                    <li>
+                                        @Html.ActionLink("角色管理", "RoleManage", "Account")
+                                    </li>
+                                    <li>
+                                        @Html.ActionLink("权限管理", "PermissionManage", "Account")
                                     </li>
                                 </ul>
                             </li>
-                            <li class="divider"></li>
                             <li class="dropdown-submenu">
-                                <a>店铺管理</a>
+                                <a>店铺模块</a>
                                 <ul class="dropdown-menu">
                                     <li>
-                                        @Html.ActionLink("已上架", "ShopManege", "Shop")
-                                        @Html.ActionLink("已下架", "OfflineShopManage", "Shop")
+                                        @Html.ActionLink("发布店铺", "CreateShop", "Shop")
+                                        @Html.ActionLink("上架店铺管理", "ShopManege", "Shop")
+                                        @Html.ActionLink("下架店铺管理", "OfflineShopManage", "Shop")
                                     </li>
                                 </ul>
                             </li>
@@ -116,7 +117,7 @@
                     </li>
                     <li class="dropdown">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                            广告 <span class="caret"></span>
+                            APP广告 <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu">
                             <li>@Html.ActionLink("编辑APP首页广告", "ShowAdvertising", "Advertising")</li>
@@ -138,6 +139,12 @@
         </div>
     </div>
     <div class="container body-content">
+        @if (Session["UserName"] != null)
+        {
+            @Session["UserName"]  <label>,</label>
+            @Html.ActionLink("LogOff", "LogOff", "Account");
+        }
+        <hr />
         @RenderBody()
         <hr />
         <footer>

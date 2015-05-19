@@ -19,7 +19,12 @@ namespace MeiHi.Admin.Controllers
         [AllowAnonymous]
         public ActionResult Login()
         {
-            ViewBag.FirstLogin = true;
+            if (HttpContext.Session["permissionnotenough"] != null)
+            {
+                HttpContext.Session["permissionnotenough"] = null;
+                ViewBag.permissionnotenough = true;
+            }
+
             return View();
         }
 
@@ -30,18 +35,22 @@ namespace MeiHi.Admin.Controllers
         {
             int adminId = 0;
 
-            if (ModelState.IsValid && AdminLogic.Logon(model.UserName, model.Password, out adminId))
+            using (var db = new MeiHiEntities())
             {
-                Session["AdminId"] = adminId;
-                return RedirectToAction("Shop", "ShopManege");
-            }
+                if (ModelState.IsValid && AdminLogic.Logon(model.UserName, model.Password, out adminId))
+                {
+                    Session["AdminId"] = adminId;
 
-            ModelState.AddModelError("", "The user name or password provided is incorrect.");
-            return View(model);
+                    Session["UserName"] = db.Admin.FirstOrDefault(a => a.AdminId == adminId).UserName;
+                    return RedirectToAction("Index", "Home");
+                }
+
+                ModelState.AddModelError("", "The user name or password provided is incorrect.");
+                return View(model);
+            }
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        [HttpGet]
         public ActionResult LogOff()
         {
             Session.Clear();
@@ -50,7 +59,7 @@ namespace MeiHi.Admin.Controllers
         }
 
         [HttpGet]
-        //[Auth(RoleName = "管理员")]
+        [Auth(RoleName = "管理员")]
         public ActionResult ManageAccount(int? page)
         {
             AccountManageModel amm = new AccountManageModel();
@@ -60,6 +69,7 @@ namespace MeiHi.Admin.Controllers
         }
 
         [HttpPost]
+        [Auth(RoleName = "管理员")]
         public ActionResult UpdateAccount(EditAdminModel model, string[] Role, string[] Permission)
         {
             using (var db = new MeiHiEntities())
@@ -117,6 +127,7 @@ namespace MeiHi.Admin.Controllers
         }
 
         [HttpGet]
+        [Auth(RoleName = "管理员")]
         public ActionResult DeleteAccount(int adminId)
         {
             using (var db = new MeiHiEntities())
@@ -137,6 +148,7 @@ namespace MeiHi.Admin.Controllers
         }
 
         [HttpGet]
+        [Auth(RoleName = "管理员")]
         public ActionResult AccountDetail(int adminId)
         {
             using (var db = new MeiHiEntities())
@@ -164,6 +176,7 @@ namespace MeiHi.Admin.Controllers
         }
 
         [HttpGet]
+        [Auth(RoleName = "管理员")]
         public ActionResult EditAccount(int adminId)
         {
             using (var db = new MeiHiEntities())
@@ -196,7 +209,7 @@ namespace MeiHi.Admin.Controllers
 
                 List<SelectListItem> listRoles = new List<SelectListItem>();
 
-                foreach (var item in db.Role.Where(a => a.Name != "管理员"))
+                foreach (var item in db.Role)//.Where(a => a.Name != "管理员"))
                 {
                     SelectListItem temp = new SelectListItem()
                     {
@@ -231,13 +244,13 @@ namespace MeiHi.Admin.Controllers
         }
 
         [HttpGet]
-        //[Auth(RoleName = "管理员")]
+        [Auth(RoleName = "管理员")]
         public ActionResult CreateAccount()
         {
             using (var db = new MeiHiEntities())
             {
                 CreateAdminModel adminModel = new CreateAdminModel();
-                var roles = db.Role.Where(a => a.Name != "管理员");
+                var roles = db.Role;//.Where(a => a.Name != "管理员");
 
                 List<SelectListItem> listRoles = new List<SelectListItem>();
                 foreach (var item in roles)
@@ -269,7 +282,7 @@ namespace MeiHi.Admin.Controllers
         }
 
         [HttpPost]
-        //[Auth(RoleName = "管理员")]
+        [Auth(RoleName = "管理员")]
         public ActionResult SaveAccount(CreateAdminModel adminModel, string[] Role, string[] Permission)
         {
             using (var db = new MeiHiEntities())
@@ -324,5 +337,226 @@ namespace MeiHi.Admin.Controllers
                 return RedirectToAction("ManageAccount", "Account");
             }
         }
+
+        #region Role manage
+
+        [HttpGet]
+        [Auth(RoleName = "管理员")]
+        public ActionResult RoleManage()
+        {
+            using (var db = new MeiHiEntities())
+            {
+                var roles = db.Role;//.Where(a => a.Name != "管理员");
+                List<RoleModel> roleModes = new List<RoleModel>();
+
+                foreach (var item in roles)
+                {
+                    RoleModel roleMode = new RoleModel()
+                    {
+                        PermissionNames = item.RolePermission != null && item.RolePermission.Count > 0 ? item.RolePermission.Select(a => a.Permission.Name).ToList() : null,
+                        RoleId = item.RoleId,
+                        RoleName = item.Name,
+                        ParentRoleId = item.ParentRoleId,
+                        ParentRoleName = db.Role.FirstOrDefault(a => a.RoleId == item.ParentRoleId.Value).Name
+                    };
+
+                    roleModes.Add(roleMode);
+
+                }
+
+                return View(roleModes);
+            }
+        }
+
+        [HttpGet]
+        [Auth(RoleName = "管理员")]
+        public ActionResult CreateRole()
+        {
+            using (var db = new MeiHiEntities())
+            {
+                var roles = new List<SelectListItem>();
+
+                foreach (var item in db.Role)
+                {
+                    roles.Add(new SelectListItem()
+                    {
+                        Text = item.Name,
+                        Value = item.RoleId.ToString()
+                    });
+                }
+                var permissions = new List<SelectListItem>();
+                foreach (var item in db.Permission)
+                {
+                    SelectListItem temp = new SelectListItem()
+                    {
+                        Text = item.Name,
+                        Value = item.PermissionId.ToString()
+                    };
+                    permissions.Add(temp);
+                }
+
+                CreateRoleModel roleMode = new CreateRoleModel()
+                {
+                    ParentRoleList = roles,
+                    Permissions = permissions
+                };
+
+                return View(roleMode);
+            }
+        }
+
+        [HttpPost]
+        [Auth(RoleName = "管理员")]
+        public ActionResult SaveRole(CreateRoleModel model, string[] Permission)
+        {
+            using (var db = new MeiHiEntities())
+            {
+                var role = new Role()
+                {
+                    Name = model.RoleName,
+                    DateCreated = DateTime.Now,
+                    DateModified = DateTime.Now,
+                    ParentRoleId = model.ParentRoleId
+                };
+
+                db.Role.Add(role);
+                db.SaveChanges();
+
+                var roleId = db.Role.FirstOrDefault(a => a.Name == model.RoleName).RoleId;
+
+                if (Permission != null)
+                {
+                    foreach (var item in Permission)
+                    {
+                        RolePermission rolePermission = new RolePermission()
+                        {
+                            RoleId = roleId,
+                            PermissionId = int.Parse(item),
+                            DateCreated = DateTime.Now
+                        };
+
+                        db.RolePermission.Add(rolePermission);
+                    }
+
+                    db.SaveChanges();
+                }
+
+                return RedirectToAction("RoleManage");
+            }
+        }
+
+        [HttpGet]
+        [Auth(RoleName = "管理员")]
+        public ActionResult DeleteRole(int roleId)
+        {
+            using (var db = new MeiHiEntities())
+            {
+                var role = db.Role.FirstOrDefault(a => a.RoleId == roleId);
+
+                if (role == null)
+                {
+                    throw new Exception("角色不存在");
+                }
+
+                AdminLogic.DeleteRoleTree(role.RoleId);
+
+                return RedirectToAction("RoleManage");
+            }
+        }
+
+        [HttpGet]
+        [Auth(RoleName = "管理员")]
+        public ActionResult EditRole(int roleId)
+        {
+            using (var db = new MeiHiEntities())
+            {
+                var role = db.Role.FirstOrDefault(a => a.RoleId == roleId);
+                if (role == null)
+                {
+                    throw new Exception("角色不存在");
+                }
+                var roles = new List<SelectListItem>();
+
+                foreach (var item in db.Role)
+                {
+                    roles.Add(new SelectListItem()
+                    {
+                        Text = item.Name,
+                        Value = item.RoleId.ToString()
+                    });
+                }
+
+                roles.FirstOrDefault(a => a.Value == role.ParentRoleId.ToString()).Selected = true;
+                var permissions = new List<SelectListItem>();
+
+                foreach (var item in db.Permission)
+                {
+                    SelectListItem temp = new SelectListItem()
+                    {
+                        Text = item.Name,
+                        Value = item.PermissionId.ToString()
+                    };
+                    permissions.Add(temp);
+                }
+
+                if (role.RolePermission != null)
+                {
+                    foreach (var item in role.RolePermission)
+                    {
+                        permissions.First(a => a.Value == item.PermissionId.ToString()).Selected = true;
+                    }
+                }
+
+                var editRole = new EditRoleModel()
+                {
+                    RoleId = roleId,
+                    ParentRoleList = roles,
+                    Permissions = permissions,
+                    RoleName = role.Name
+                };
+
+                return View(editRole);
+            }
+        }
+
+        [HttpPost]
+        [Auth(RoleName = "管理员")]
+        public ActionResult UpdateRole(EditRoleModel model, string[] Permission)
+        {
+            using (var db = new MeiHiEntities())
+            {
+                var role = db.Role.FirstOrDefault(a => a.RoleId == model.RoleId);
+                if (role == null)
+                {
+                    throw new Exception("角色不存在");
+                }
+
+                role.Name = model.RoleName;
+                role.DateModified = DateTime.Now;
+                role.ParentRoleId = model.ParentRoleId;
+
+                if (Permission != null)
+                {
+                    db.RolePermission.RemoveRange(role.RolePermission);
+
+                    foreach (var item in Permission)
+                    {
+                        RolePermission rolePermission = new RolePermission()
+                        {
+                            RoleId = role.RoleId,
+                            PermissionId = int.Parse(item),
+                            DateCreated = DateTime.Now
+                        };
+
+                        db.RolePermission.Add(rolePermission);
+                    }
+                }
+
+                db.SaveChanges();
+
+                return RedirectToAction("RoleManage");
+            }
+        }
+        #endregion
     }
 }

@@ -1,0 +1,50 @@
+﻿@model IEnumerable<MeiHi.Admin.ViewModels.RoleModel>
+
+@{
+    ViewBag.Title = "角色管理";
+}
+
+<h2>角色管理</h2>
+
+<p>
+    @Html.ActionLink("创建新角色", "CreateRole")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.RoleId)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ParentRoleId)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ParentRoleName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.RoleName)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.RoleId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ParentRoleId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ParentRoleName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RoleName)
+            </td>
+            <td>
+                @Html.ActionLink("编辑", "EditRole", new { roleId = item.RoleId }) |
+                @Html.ActionLink("删除", "DeleteRole", new { roleId = item.RoleId })
+            </td>
+        </tr>
+    }
+</table>

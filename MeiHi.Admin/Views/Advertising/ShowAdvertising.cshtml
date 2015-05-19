@@ -1,0 +1,44 @@
+﻿@model IEnumerable<MeiHi.Admin.Models.Advertising.AdvertisingModel>
+
+@{
+    ViewBag.Title = "广告管理";
+}
+
+<h2>广告管理</h2>
+
+<p>
+    @Html.ActionLink("创建广告", "CreateAdd")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Title)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Url)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Avaliable)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Url)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Avaliable)
+            </td>
+            <td>
+                @Html.ActionLink("编辑", "EditAdd", new { addId = item.AddId }) |
+                @Html.ActionLink("删除", "DeleteAdd", new { addId = item.AddId })
+            </td>
+        </tr>
+    }
+</table>

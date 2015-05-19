@@ -75,7 +75,7 @@ namespace MeiHi.Admin.Logic
         {
             using (var access = new MeiHiEntities())
             {
-                var admins = access.Admin.Where(a => a.AdminRole.FirstOrDefault(b => b.Role.Name == "管理员") == null).OrderBy(a => a.AdminId).Skip((page - 1) * pageSize).Take(pageSize);
+                var admins = access.Admin.OrderBy(a => a.AdminId).Skip((page - 1) * pageSize).Take(pageSize);//.Where(a => a.AdminRole.FirstOrDefault(b => b.Role.Name == "管理员") == null)
                 List<AdminModel> temp = new List<AdminModel>();
 
                 if (admins != null)
