@@ -1,0 +1,46 @@
+﻿@model IEnumerable<MeiHi.Admin.Models.RecommandShopModel>
+
+@{
+    ViewBag.Title = "推荐店铺列表";
+}
+
+<h2>推荐店铺列表</h2>
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.ShopId)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ShopName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Region)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.LastModifyTime)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ShopId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ShopName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Region)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LastModifyTime)
+            </td>
+            <td>
+                @Html.ActionLink("不推荐", "DeleteRecommandShop", new { shopId = item.ShopId })
+            </td>
+        </tr>
+    }
+</table>

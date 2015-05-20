@@ -19,9 +19,9 @@ namespace MeiHi.Admin.Controllers
         [AllowAnonymous]
         public ActionResult Login()
         {
-            if (HttpContext.Session["permissionnotenough"] != null)
+            if (Session["permissionnotenough"] != null)
             {
-                HttpContext.Session["permissionnotenough"] = null;
+                Session["permissionnotenough"] = null;
                 ViewBag.permissionnotenough = true;
             }
 
@@ -40,8 +40,13 @@ namespace MeiHi.Admin.Controllers
                 if (ModelState.IsValid && AdminLogic.Logon(model.UserName, model.Password, out adminId))
                 {
                     Session["AdminId"] = adminId;
-
                     Session["UserName"] = db.Admin.FirstOrDefault(a => a.AdminId == adminId).UserName;
+
+                    if (Session["ReturnUrl"] != null)
+                    {
+                        return Redirect(Session["ReturnUrl"].ToString());
+                    }
+
                     return RedirectToAction("Index", "Home");
                 }
 
@@ -57,6 +62,8 @@ namespace MeiHi.Admin.Controllers
             FormsAuthentication.SignOut();
             return RedirectToAction("Login", "Account");
         }
+
+        #region 账号管理
 
         [HttpGet]
         [Auth(RoleName = "管理员")]
@@ -338,7 +345,9 @@ namespace MeiHi.Admin.Controllers
             }
         }
 
-        #region Role manage
+        #endregion
+
+        #region 角色管理
 
         [HttpGet]
         [Auth(RoleName = "管理员")]
@@ -554,6 +563,132 @@ namespace MeiHi.Admin.Controllers
                 db.SaveChanges();
 
                 return RedirectToAction("RoleManage");
+            }
+        }
+        #endregion
+
+        #region 权限管理
+        [HttpGet]
+        [Auth(RoleName = "管理员")]
+        public ActionResult PermissionManage()
+        {
+            using (var db = new MeiHiEntities())
+            {
+                var permissions = db.Permission;
+                List<PermissionModel> permissionModes = new List<PermissionModel>();
+
+                foreach (var item in permissions)
+                {
+                    var roleMode = new PermissionModel()
+                    {
+                        Description = item.Description,
+                        Group = item.Group,
+                        PermissionId = item.PermissionId,
+                        LastMidifyTime = item.DateModified,
+                        PermissionName = item.Name
+                    };
+
+                    permissionModes.Add(roleMode);
+                }
+
+                return View(permissionModes);
+            }
+        }
+
+        [HttpGet]
+        [Auth(RoleName = "管理员")]
+        public ActionResult CreatePermission()
+        {
+            var permission = new PermissionModel();
+            return View(permission);
+        }
+
+        [HttpPost]
+        [Auth(RoleName = "管理员")]
+        public ActionResult SavePermission(PermissionModel model)
+        {
+            using (var db = new MeiHiEntities())
+            {
+                var permission = new Permission()
+                {
+                    DateCreated = DateTime.Now,
+                    DateModified = DateTime.Now,
+                    Description = model.Description,
+                    Group = model.Group,
+                    Name = model.PermissionName
+                };
+
+                db.Permission.Add(permission);
+                db.SaveChanges();
+
+                return RedirectToAction("PermissionManage");
+            }
+        }
+
+        [HttpGet]
+        [Auth(RoleName = "管理员")]
+        public ActionResult DeletePermission(int permissionId)
+        {
+            using (var db = new MeiHiEntities())
+            {
+                var permission = db.Permission.FirstOrDefault(a => a.PermissionId == permissionId);
+                if (permission != null)
+                {
+                    db.AdminPermission.RemoveRange(permission.AdminPermission);
+                    db.RolePermission.RemoveRange(permission.RolePermission);
+
+                    db.Permission.Remove(permission);
+                    db.SaveChanges();
+                }
+
+                return RedirectToAction("PermissionManage");
+            }
+        }
+
+        [HttpGet]
+        [Auth(RoleName = "管理员")]
+        public ActionResult EditPermission(int permissionId)
+        {
+            using (var db = new MeiHiEntities())
+            {
+                var permission = db.Permission.FirstOrDefault(a => a.PermissionId == permissionId);
+
+                if (permission == null)
+                {
+                    throw new Exception("权限ID：" + permissionId + " 不存在");
+                }
+
+                var model = new PermissionModel()
+                {
+                    Description = permission.Description,
+                    Group = permission.Group,
+                    PermissionId = permission.PermissionId,
+                    PermissionName = permission.Name
+                };
+                return View(model);
+            }
+        }
+
+        [HttpPost]
+        [Auth(RoleName = "管理员")]
+        public ActionResult UpdateRole(PermissionModel model)
+        {
+            using (var db = new MeiHiEntities())
+            {
+                var permission = db.Permission.FirstOrDefault(a => a.PermissionId == model.PermissionId);
+
+                if (permission == null)
+                {
+                    throw new Exception("权限ID：" + model.PermissionId + " 不存在");
+                }
+
+                permission.Group = model.Group;
+                permission.Description = model.Description;
+                permission.Name = model.PermissionName;
+                permission.DateModified = DateTime.Now;
+                db.SaveChanges();
+
+                return RedirectToAction("PermissionManage");
             }
         }
         #endregion

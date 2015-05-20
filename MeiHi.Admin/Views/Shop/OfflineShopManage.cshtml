@@ -31,7 +31,7 @@
             联系人
         </th>
         <th>
-            是否热门
+            是否热门推荐
         </th>
         <th>
             是否上架
@@ -72,10 +72,10 @@
                 @Html.DisplayFor(modelItem => item.Comment)
             </td>
             <td>
-                @Html.ActionLink("Service", "ShowServicesByShopId", new { shopId = item.ShopId }) |
-                @Html.ActionLink("Edit", "EditShop", new { shopId = item.ShopId }) |
-                @Html.ActionLink("Details", "ShopDetail", new { shopId = item.ShopId }) |
-                @Html.ActionLink("Delete", "DeleteShop", new { shopId = item.ShopId })
+                @Html.ActionLink("服务", "ShowServicesByShopId", new { shopId = item.ShopId }) |
+                @Html.ActionLink("编辑", "EditShop", new { shopId = item.ShopId }) |
+                @Html.ActionLink("详情", "ShopDetail", new { shopId = item.ShopId }) |
+                @Html.ActionLink("删除", "DeleteShop", new { shopId = item.ShopId })
             </td>
         </tr>
     }

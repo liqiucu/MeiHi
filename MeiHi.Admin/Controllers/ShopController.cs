@@ -38,6 +38,62 @@ namespace MeiHi.Admin.Controllers
         }
 
         /// <summary>
+        /// 热门首页店铺
+        /// </summary>
+        /// <param name="shop"></param>
+        /// <returns></returns>
+        [HttpGet]
+        [Auth(PermissionName = "店铺维护管理")]
+        public ActionResult RecommandShopManege()
+        {
+            using (var db = new MeiHiEntities())
+            {
+                List<RecommandShopModel> models = new List<RecommandShopModel>();
+
+                foreach (var item in db.Shop.Where(a => a.IsHot))
+                {
+                    var shop = db.Shop.FirstOrDefault(a => a.ShopId == item.ShopId);
+
+                    if (shop == null)
+                    {
+                        throw new Exception("店铺不存在 shopid：" + item.ShopId);
+                    }
+
+                    var model = new RecommandShopModel()
+                    {
+                        LastModifyTime = item.DateModified,
+                        ShopId = item.ShopId,
+                        Region = shop.Region.Name,
+                        ShopName = shop.Title
+                    };
+                    models.Add(model);
+                }
+
+                return View(models);
+            }
+        }
+
+        [HttpGet]
+        [Auth(PermissionName = "店铺维护管理")]
+        public ActionResult DeleteRecommandShop(long shopId)
+        {
+            using (var db = new MeiHiEntities())
+            {
+                var shop = db.Shop.FirstOrDefault(a => a.ShopId == shopId);
+
+                if (shop == null)
+                {
+                    throw new Exception("店铺不存在 shopid:" + shopId);
+                }
+
+                shop.IsHot = false;
+                db.SaveChanges();
+
+                return RedirectToAction("RecommandShopManege");
+            }
+        }
+
+        /// <summary>
         /// 店铺下架管理
         /// </summary>
         /// <param name="shop"></param>
@@ -123,6 +179,18 @@ namespace MeiHi.Admin.Controllers
                     });
 
                     db.SaveChanges();
+                    //var shopId = ShopLogic.GetShopIdByShopName(model.Title);
+                    //if (model.IsHot)
+                    //{
+                    //    db.RecommandShop.Add(new RecommandShop()
+                    //    {
+                    //        DateCreated = DateTime.Now,
+                    //        DateModified = DateTime.Now,
+                    //        RecommandShopId = shopId
+                    //    });
+
+                    //    db.Shop.FirstOrDefault(a=>a.ShopId==shopId).RecommandShop
+                    //}
 
                     foreach (var file in shopProductFile)
                     {
@@ -138,7 +206,6 @@ namespace MeiHi.Admin.Controllers
                                 DateCreated = DateTime.Now,
                                 url = "http://" + Request.Url.Authority + tempUploadShopPath + System.IO.Path.GetFileName(file.FileName)
                             });
-
                         }
                     }
 
@@ -260,14 +327,30 @@ namespace MeiHi.Admin.Controllers
                     shop.DetailAddress = model.DetailAddress;
                     shop.DateModified = DateTime.Now;
 
+                    //var recommandShop = db.RecommandShop.FirstOrDefault(a => a.RecommandShopId == model.ShopId);
+
+                    //if (model.IsHot && recommandShop == null)
+                    //{
+                    //    db.RecommandShop.Add(new RecommandShop()
+                    //    {
+                    //        DateCreated = DateTime.Now,
+                    //        DateModified = DateTime.Now,
+                    //        RecommandShopId = model.ShopId
+                    //    });
+                    //}
+
+                    //if (!model.IsHot && recommandShop != null)
+                    //{
+                    //    db.RecommandShop.Remove(shop.RecommandShop);
+                    //}
+
                     db.SaveChanges();
                 }
 
                 return RedirectToAction("ShopManege");
             }
-            catch (DbEntityValidationException ex)
+            catch (Exception ex)
             {
-
                 throw ex;
             }
         }

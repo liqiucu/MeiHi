@@ -11,6 +11,7 @@ namespace MeiHi.Admin.Controllers
     public class AdvertisingController : Controller
     {
         // GET: Advertising
+        [Auth(PermissionName = "广告位管理")]
         public ActionResult ShowAdvertising()
         {
             using (var db = new MeiHiEntities())
@@ -35,6 +36,7 @@ namespace MeiHi.Admin.Controllers
         }
 
         [HttpGet]
+        [Auth(PermissionName = "广告位管理")]
         public ActionResult CreateAdd()
         {
             var model = new AdvertisingModel();
@@ -42,6 +44,7 @@ namespace MeiHi.Admin.Controllers
         }
 
         [HttpPost]
+        [Auth(PermissionName = "广告位管理")]
         public ActionResult SaveAdd(AdvertisingModel model)
         {
             using (var db = new MeiHiEntities())
@@ -63,6 +66,7 @@ namespace MeiHi.Admin.Controllers
         }
 
         [HttpGet]
+        [Auth(PermissionName = "广告位管理")]
         public ActionResult EditAdd(long addId)
         {
             using (var db = new MeiHiEntities())
@@ -87,6 +91,7 @@ namespace MeiHi.Admin.Controllers
         }
 
         [HttpGet]
+        [Auth(PermissionName = "广告位管理")]
         public ActionResult UpdateAdd(AdvertisingModel model)
         {
             using (var db = new MeiHiEntities())
@@ -109,6 +114,7 @@ namespace MeiHi.Admin.Controllers
         }
 
         [HttpGet]
+        [Auth(PermissionName = "广告位管理")]
         public ActionResult DeleteAdd(long addId)
         {
             using (var db = new MeiHiEntities())

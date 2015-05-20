@@ -46,7 +46,7 @@ namespace MeiHi.Admin.Logic
         {
             using (var access = new MeiHiEntities())
             {
-                var shops = access.Shop.Where(a => a.IsOnline == isOnline).OrderBy(a => a.ShopId).Skip((page - 1) * pageSize).Take(pageSize);
+                var shops = access.Shop.Where(a => a.IsOnline == isOnline).OrderByDescending(a => a.IsHot).Skip((page - 1) * pageSize).Take(pageSize);
                 List<ShopListDetailModel> shopLists = new List<ShopListDetailModel>();
                 foreach (var item in shops)
                 {

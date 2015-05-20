@@ -210,6 +210,7 @@
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\Service\ServiceModel.cs" />
     <Compile Include="Models\Shops\ProductBrandModel.cs" />
+    <Compile Include="Models\Shops\RecommandShopModel.cs" />
     <Compile Include="Models\Shops\ShopModel.cs" />
     <Compile Include="Models\Shops\ProductBrandImages.cs" />
     <Compile Include="Models\Shops\ServiceForShopDetailModel.cs" />
@@ -280,6 +281,10 @@
     <Content Include="Views\Advertising\ShowAdvertising.cshtml" />
     <Content Include="Views\Advertising\CreateAdd.cshtml" />
     <Content Include="Views\Advertising\EditAdd.cshtml" />
+    <Content Include="Views\Account\PermissionManage.cshtml" />
+    <Content Include="Views\Account\CreatePermission.cshtml" />
+    <Content Include="Views\Account\EditPermission.cshtml" />
+    <Content Include="Views\Shop\RecommandShopManege.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

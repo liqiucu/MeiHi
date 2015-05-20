@@ -53,13 +53,6 @@ namespace MeiHi.Admin.ViewModels
         public List<SelectListItem> Permissions { get; set; }
     }
 
-    public class PermissionModel
-    {
-        public int PermissionId { get; set; }
-
-        public string PermissionName { get; set; }
-    }
-
     public class AdminModel
     {
         [Display(Name = "用户Id")]
@@ -127,5 +120,22 @@ namespace MeiHi.Admin.ViewModels
 
         [Display(Name = "权限列表")]
         public List<SelectListItem> Permissions { get; set; }
+    }
+
+    public class PermissionModel
+    {
+        [Display(Name = "权限ID")]
+        public int PermissionId { get; set; }
+        [Required(ErrorMessage = "权限名称必须填写")]
+        [Display(Name = "权限名称")]
+        public string PermissionName { get; set; }
+        [Required(ErrorMessage = "权限描述必须填写")]
+        [Display(Name = "权限描述")]
+        public string Description { get; set; }
+        [Required(ErrorMessage = "权限组别必须填写")]
+        [Display(Name = "权限组别")]
+        public string Group { get; set; }
+        [Display(Name = "最后修改")]
+        public DateTime LastMidifyTime { get; set; }
     }
 }

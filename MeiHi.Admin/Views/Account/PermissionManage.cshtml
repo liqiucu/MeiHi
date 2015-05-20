@@ -1,0 +1,56 @@
+﻿@model IEnumerable<MeiHi.Admin.ViewModels.PermissionModel>
+
+@{
+    ViewBag.Title = "权限管理";
+}
+
+<h2>权限管理</h2>
+
+<p>
+    @Html.ActionLink("创建权限", "CreatePermission")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.PermissionId)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PermissionName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Description)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Group)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.LastMidifyTime)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.PermissionId)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PermissionName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Description)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Group)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.LastMidifyTime)
+        </td>
+        <td>
+            @Html.ActionLink("编辑", "EditPermission", new { permissionId=item.PermissionId }) |
+            @Html.ActionLink("删除", "DeletePermission", new { permissionId = item.PermissionId })
+        </td>
+    </tr>
+}
+
+</table>
