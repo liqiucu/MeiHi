@@ -19,6 +19,7 @@ namespace MeiHi.Model
         public long ShopId { get; set; }
         public System.DateTime DateCreated { get; set; }
         public System.DateTime DateModified { get; set; }
+        public string ShopUserName { get; set; }
     
         public virtual Shop Shop { get; set; }
     }
