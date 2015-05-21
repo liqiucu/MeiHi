@@ -25,24 +25,22 @@ namespace MeiHi.API.Controllers
         {
             using (var db = new MeiHiEntities())
             {
-                var recmmondShops = db.RecommandShop.Take(10);
+                //var recmmondShops = db.RecommandShop.Take(10);
 
-                if (recmmondShops == null || recmmondShops.Count() == 0)
-                {
-                    return new
-                    {
-                        jsonStatus = 0,
-                        result = "没有推荐店铺"
-                    };
-                }
+                //if (recmmondShops == null || recmmondShops.Count() == 0)
+                //{
+                //    return new
+                //    {
+                //        jsonStatus = 0,
+                //        result = "没有推荐店铺"
+                //    };
+                //}
 
-                var shops = from a in db.Shop
-                            where recmmondShops.Select(b => b.RecommandShopId).Contains(a.ShopId)
-                            select a;
+                var recommandShops = db.Shop.Where(a => a.IsHot == true && a.IsOnline == true).Take(10);
 
                 var results = new List<ShopModel>();
-                
-                foreach (var item in shops)
+
+                foreach (var item in recommandShops)
                 {
                     var shopModel = new ShopModel()
                     {
@@ -223,22 +221,22 @@ namespace MeiHi.API.Controllers
         [AllowAnonymous]
         public object GetAllShopComments(long shopId, int page, int size)
         {
-                var temp = ShopLogic.GetAllUserCommentsByShopId(shopId, page,size);
+            var temp = ShopLogic.GetAllUserCommentsByShopId(shopId, page, size);
 
-                if (temp != null && temp.Count > 0)
-                {
-                    return new
-                    {
-                        jsonStatus = 1,
-                        resut = temp
-                    };
-                }
-
+            if (temp != null && temp.Count > 0)
+            {
                 return new
                 {
                     jsonStatus = 1,
-                    resut = "没有店铺评论"
+                    resut = temp
                 };
+            }
+
+            return new
+            {
+                jsonStatus = 1,
+                resut = "没有店铺评论"
+            };
         }
 
         /// <summary>
@@ -284,12 +282,12 @@ namespace MeiHi.API.Controllers
             {
                 var shop = db.Shop.Where(a => a.ShopId == shopId).FirstOrDefault();//ShopLogic.GetShopProductBrandImages(shopId);
 
-                if (shop != null && shop.ShopBrandImages != null && shop.ShopBrandImages.Count>0)
+                if (shop != null && shop.ShopBrandImages != null && shop.ShopBrandImages.Count > 0)
                 {
                     return new
                     {
                         jsonStatus = 1,
-                        resut = shop.ShopBrandImages.Select(a=>a.url)
+                        resut = shop.ShopBrandImages.Select(a => a.url)
                     };
                 }
 
