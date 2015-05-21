@@ -15,8 +15,9 @@ namespace MeiHi.Model
     public partial class ShopUser
     {
         public long ShopUserId { get; set; }
-        public int Password { get; set; }
+        public string Password { get; set; }
         public long ShopId { get; set; }
+        public string ShopUserName { get; set; }
         public System.DateTime DateCreated { get; set; }
         public System.DateTime DateModified { get; set; }
     

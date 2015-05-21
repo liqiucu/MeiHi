@@ -25,18 +25,16 @@ namespace MeiHi.API.Controllers
         {
             using (var db = new MeiHiEntities())
             {
-                //var recmmondShops = db.RecommandShop.Take(10);
-
-                //if (recmmondShops == null || recmmondShops.Count() == 0)
-                //{
-                //    return new
-                //    {
-                //        jsonStatus = 0,
-                //        result = "没有推荐店铺"
-                //    };
-                //}
-
                 var recommandShops = db.Shop.Where(a => a.IsHot == true && a.IsOnline == true).Take(10);
+
+                if (recommandShops == null || recommandShops.Count() == 0)
+                {
+                    return new
+                    {
+                        jsonStatus = 0,
+                        result = "没有推荐店铺"
+                    };
+                }
 
                 var results = new List<ShopModel>();
 

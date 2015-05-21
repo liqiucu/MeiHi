@@ -18,6 +18,7 @@ using MeiHi.Admin.Logic;
 using System.Data.Entity.Validation;
 using MeiHi.Admin.Models.Service;
 using System.IO;
+using MeiHi.Admin.Helper;
 
 namespace MeiHi.Admin.Controllers
 {
@@ -179,18 +180,20 @@ namespace MeiHi.Admin.Controllers
                     });
 
                     db.SaveChanges();
-                    //var shopId = ShopLogic.GetShopIdByShopName(model.Title);
-                    //if (model.IsHot)
-                    //{
-                    //    db.RecommandShop.Add(new RecommandShop()
-                    //    {
-                    //        DateCreated = DateTime.Now,
-                    //        DateModified = DateTime.Now,
-                    //        RecommandShopId = shopId
-                    //    });
-
-                    //    db.Shop.FirstOrDefault(a=>a.ShopId==shopId).RecommandShop
-                    //}
+                    var shopId = ShopLogic.GetShopIdByShopName(model.Title);
+                    if (model.IsOnline)
+                    {
+                        //send username and password to shop then shop can verify the  booking
+                        LuoSiMaoTextMessage.SendShopText(model.Phone);
+                        db.ShopUser.Add(new ShopUser()
+                        {
+                            DateCreated = DateTime.Now,
+                            DateModified = DateTime.Now,
+                            ShopId = shopId,
+                            ShopUserName = model.Phone,
+                            Password = model.Phone.Substring(model.Phone.Length - 6)
+                        });
+                    }
 
                     foreach (var file in shopProductFile)
                     {
@@ -202,7 +205,7 @@ namespace MeiHi.Admin.Controllers
 
                             db.ShopBrandImages.Add(new ShopBrandImages()
                             {
-                                ShopId = ShopLogic.GetShopIdByShopName(model.Title),
+                                ShopId = shopId,
                                 DateCreated = DateTime.Now,
                                 url = "http://" + Request.Url.Authority + tempUploadShopPath + System.IO.Path.GetFileName(file.FileName)
                             });
