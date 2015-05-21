@@ -7,70 +7,105 @@ using System.Web;
 
 namespace MeiHi.API.ViewModels
 {
-    //public class UserInfoModel
-    //{
-    //    public long UserId { get; set; }
-    //    public string Mobile { get; set; }
-    //    public int SchoolId { get; set; }
-    //    public string SchoolName { get; set; }
-    //    public string FullName { get; set; }
-    //    public string DateOfBirth { get; set; }
-    //    public string Gender { get; set; }
-    //    public string Tall { get; set; }
-    //    public string RegionId { get; set; }
-    //    public string RegionName { get; set; }
-    //    public string ProfilePhoto { get; set; }
-    //    public string QQ { get; set; }
-    //    public string Email { get; set; }
-    //    public string Major { get; set; }
-    //    public string WorkExperience { get; set; }
-    //    public decimal Balance { get; set; }
-    //    public string AccountNo { get; set; }
-    //    public string AccountName { get; set; }
-    //    public string BankId { get; set; }
-    //    public string BankName { get; set; }
-    //    public List<api_get_user_job_applied_Result> CVs { get; set; }
-        
-    //}
-
     public class UpdateUserInfo
     {
-        [Required(ErrorMessage = "请输入手机号")]
+        /// <summary>
+        /// 美嗨号
+        /// </summary>
+        public long UserId { get; set; }
+        /// <summary>
+        /// 移动电话
+        /// </summary>
         public string Mobile { get; set; }
-        [Required(ErrorMessage = "请选择学校")]
-        public int? SchoolId { get; set; }
-        [Required(ErrorMessage = "请输入姓名")]
+        /// <summary>
+        /// 名字
+        /// </summary>
         public string FullName { get; set; }
-        public DateTime? DateOfBirth { get; set; }
-        public string Gender { get; set; }
-        public int? Tall { get; set; }
-        public int? RegionId { get; set; }
-        public string QQ { get; set; }
-        public string Email { get; set; }
-        public string Major { get; set; }
-        public string WorkExperience { get; set; }
-        public bool RequireCVs { get; set; }
 
+        /// <summary>
+        /// 性别
+        /// </summary>
+        public Nullable<int> Gender { get; set; }
+
+        /// <summary>
+        /// 头像
+        /// </summary>
+        public string ProfilePhoto { get; set; }
+        /// <summary>
+        /// 余额
+        /// </summary>
+        public decimal Balance { get; set; }
+        /// <summary>
+        /// 设备型号
+        /// </summary>
+        public string Device { get; set; }
+        /// <summary>
+        /// 型号版本
+        /// </summary>
+        public string Version { get; set; }
+        /// <summary>
+        /// 从哪里下载的
+        /// </summary>
+        public Nullable<int> DownloadFromApplicationId { get; set; }
+        /// <summary>
+        /// 头发长度 1 长发 2 中长发 3短发
+        /// </summary>
+        public Nullable<int> HairOfLegth { get; set; }
+        /// <summary>
+        /// 地址
+        /// </summary>
+        public string Address { get; set; }
+        /// <summary>
+        /// 生日
+        /// </summary>
+        public Nullable<System.DateTime> BirthDay { get; set; }
+        /// <summary>
+        /// token 用来登陆验证
+        /// </summary>
+        public string Token { get; set; }
+        /// <summary>
+        /// 美嗨登陆验证码
+        /// </summary>
+        public string VerifyCode { get; set; }
+
+        /// <summary>
+        /// 用户评论数
+        /// </summary>
+        public int UserCommentCount { get; set; }
+
+        /// <summary>
+        /// 美嗨券数
+        /// </summary>
+        public int MeiHiBookingVerifyCodeCount { get; set; }
+
+        /// <summary>
+        /// 是否已经登陆
+        /// </summary>
+        public bool IsLogin { get; set; }
     }
 
-    public class RequireCVModel
+    public class UserHomeModel
     {
-        public bool RequireCVs { get; set; }
+        /// <summary>
+        /// 用户美嗨号
+        /// </summary>
+        public long UserId { get; set; }
 
-    }
+        public string UserImageUrl { get; set; }
 
-    public class PagingModel
-    {
-        public int PageIndex { get; set; }
-        public int PageSize { get; set; }
+        public string MeiHiUserName { get; set; }
 
-    }
+        public decimal Balance { get; set; }
 
-    public class CashOutModel
-    {
-        [Required(ErrorMessage = "请输入体现金额")]
-        public decimal? Amount { get; set; }
+        /// <summary>
+        /// 用户评论数
+        /// </summary>
+        public int UserCommentCount { get; set; }
 
+        /// <summary>
+        /// 美嗨券数
+        /// </summary>
+        public int MeiHiBookingVerifyCodeCount { get; set; }
     }
 
     public class CreateBankAccountModel
@@ -78,26 +113,5 @@ namespace MeiHi.API.ViewModels
         public string AccountName { get; set; }
         public string AccountNo { get; set; }
         public int BankId { get; set; }
-    }
-
-    public class JobApplyModel
-    {
-        public int JobTypeId  { get; set; }
-    }
-
-    public class JobComplainModel
-    {
-        public int JobTypeId { get; set; }
-        public int StatusId { get; set; }
-        public string Description { get; set; }
-    }
-
-    public class ChangePasswordModel
-    {
-        [Required(ErrorMessage = "请输入旧密码")]
-        public string OldPassword { get; set; }
-        [Required(ErrorMessage = "请输入新密码")]
-        public string NewPassword { get; set; }
-
     }
 }

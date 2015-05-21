@@ -181,10 +181,10 @@ namespace MeiHi.Admin.Controllers
 
                     db.SaveChanges();
                     var shopId = ShopLogic.GetShopIdByShopName(model.Title);
-                    if (model.IsOnline)
-                    {
+
+                    //if (model.IsOnline)
+                    //{
                         //send username and password to shop then shop can verify the  booking
-                        LuoSiMaoTextMessage.SendShopText(model.Phone);
                         db.ShopUser.Add(new ShopUser()
                         {
                             DateCreated = DateTime.Now,
@@ -193,7 +193,8 @@ namespace MeiHi.Admin.Controllers
                             ShopUserName = model.Phone,
                             Password = model.Phone.Substring(model.Phone.Length - 6)
                         });
-                    }
+                        LuoSiMaoTextMessage.SendShopText(model.Phone);
+                    //}
 
                     foreach (var file in shopProductFile)
                     {
