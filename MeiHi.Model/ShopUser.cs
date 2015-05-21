@@ -20,7 +20,6 @@ namespace MeiHi.Model
         public string ShopUserName { get; set; }
         public System.DateTime DateCreated { get; set; }
         public System.DateTime DateModified { get; set; }
-        public string ShopUserName { get; set; }
     
         public virtual Shop Shop { get; set; }
     }

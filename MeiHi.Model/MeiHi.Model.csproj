@@ -124,9 +124,6 @@
     <Compile Include="ShopUser.cs">
       <DependentUpon>MeiHiAccess.tt</DependentUpon>
     </Compile>
-    <Compile Include="sysdiagrams.cs">
-      <DependentUpon>MeiHiAccess.tt</DependentUpon>
-    </Compile>
     <Compile Include="User.cs">
       <DependentUpon>MeiHiAccess.tt</DependentUpon>
     </Compile>
@@ -150,13 +147,11 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="App.Config" />
     <EntityDeploy Include="MeiHiAccess.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>MeiHiAccess.Designer.cs</LastGenOutput>
     </EntityDeploy>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.Config" />
     <None Include="MeiHiAccess.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>MeiHiAccess.edmx</DependentUpon>
