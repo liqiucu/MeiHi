@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="MeiHiModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+      <Schema Namespace="MeiHiModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012.Azure" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Add">
           <Key>
             <PropertyRef Name="AddId" />
@@ -741,7 +741,8 @@
             <End Role="UserFavorites" EntitySet="UserFavorites" />
           </AssociationSet>
         </EntityContainer>
-      </Schema></edmx:StorageModels>
+      </Schema>
+    </edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="MeiHiModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -1005,22 +1006,12 @@
             <PropertyRef Name="ShopUserId" />
           </Key>
           <Property Name="ShopUserId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Password" Type="Int32" Nullable="false" />
+          <Property Name="Password" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="ShopId" Type="Int64" Nullable="false" />
+          <Property Name="ShopUserName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="DateCreated" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="DateModified" Type="DateTime" Nullable="false" Precision="3" />
           <NavigationProperty Name="Shop" Relationship="Self.FK_ShopUser_Shop" FromRole="ShopUser" ToRole="Shop" />
-          <Property Name="ShopUserName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-        </EntityType>
-        <EntityType Name="sysdiagrams">
-          <Key>
-            <PropertyRef Name="diagram_id" />
-          </Key>
-          <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="principal_id" Type="Int32" Nullable="false" />
-          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="version" Type="Int32" />
-          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
         </EntityType>
         <EntityType Name="User">
           <Key>
@@ -1434,7 +1425,6 @@
           <EntitySet Name="Shop" EntityType="Self.Shop" />
           <EntitySet Name="ShopBrandImages" EntityType="Self.ShopBrandImages" />
           <EntitySet Name="ShopUser" EntityType="Self.ShopUser" />
-          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" />
           <EntitySet Name="User" EntityType="Self.User" />
           <EntitySet Name="UserComments" EntityType="Self.UserComments" />
           <EntitySet Name="UserCommentSharedImg" EntityType="Self.UserCommentSharedImg" />
@@ -1786,10 +1776,10 @@
           <EntitySetMapping Name="ShopUser">
             <EntityTypeMapping TypeName="MeiHiModel.ShopUser">
               <MappingFragment StoreEntitySet="ShopUser">
-                <ScalarProperty Name="ShopUserName" ColumnName="ShopUserName" />
                 <ScalarProperty Name="ShopUserId" ColumnName="ShopUserId" />
                 <ScalarProperty Name="Password" ColumnName="Password" />
                 <ScalarProperty Name="ShopId" ColumnName="ShopId" />
+                <ScalarProperty Name="ShopUserName" ColumnName="ShopUserName" />
                 <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
                 <ScalarProperty Name="DateModified" ColumnName="DateModified" />
               </MappingFragment>
