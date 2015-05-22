@@ -1,4 +1,5 @@
-﻿using MeiHi.Model;
+﻿using MeiHi.API.Models;
+using MeiHi.Model;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -106,6 +107,65 @@ namespace MeiHi.API.ViewModels
         /// 美嗨券数
         /// </summary>
         public int MeiHiBookingVerifyCodeCount { get; set; }
+    }
+
+    public class UserFavority
+    {
+        public long UserId { get; set; }
+
+        public List<ShopModel> FavorityShops { get; set; }
+
+        public List<FavorityService> FavorityServices { get; set; }
+    }
+
+    public class FavorityService
+    {
+        public long ShopId { get; set; }
+        public long ServiceId { get; set; }
+
+        public string ShopName { get; set; }
+
+        public string ShopTitleImage { get; set; }
+
+        public int MyProperty { get; set; }
+    }
+
+    public class UserDetailModel
+    {
+        /// <summary>
+        /// 用户美嗨号
+        /// </summary>
+        public long UserId { get; set; }
+
+        public string UserImageUrl { get; set; }
+
+        public string MeiHiUserName { get; set; }
+
+        /// <summary>
+        /// 0 男 1 女
+        /// </summary>
+        public int? Gender { get; set; }
+
+        /// <summary>
+        /// 1 2 3
+        /// </summary>
+        public int? HairLenth { get; set; }
+
+        public string Address { get; set; }
+
+        public DateTime? BirthDay { get; set; }
+
+    }
+
+    public class UserComment
+    {
+        public long UserId { get; set; }
+
+        public string ServiceName { get; set; }
+
+        public string Comment { get; set; }
+
+        public int Rate { get; set; }
     }
 
     public class CreateBankAccountModel

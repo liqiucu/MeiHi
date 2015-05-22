@@ -184,8 +184,10 @@
     <Compile Include="Helper\Utils.cs" />
     <Compile Include="Helper\WaterMark.cs" />
     <Compile Include="Helper\WGS2GCJ.cs" />
+    <Compile Include="Logic\BookingLogic.cs" />
     <Compile Include="Logic\ShopLogic.cs" />
     <Compile Include="Logic\UserLogic.cs" />
+    <Compile Include="Models\Booking\UserMeiHiTicketsModel.cs" />
     <Compile Include="Models\MeiHiDistanceModelJsonTypes\MeiHiDistanceModel.cs" />
     <Compile Include="Models\MeiHiDistanceModelJsonTypes\Copyright.cs" />
     <Compile Include="Models\MeiHiDistanceModelJsonTypes\Distance.cs" />
@@ -199,7 +201,7 @@
     <Compile Include="Models\Shop\ShopDetailModel.cs" />
     <Compile Include="Models\Shop\ShopListModel.cs" />
     <Compile Include="Models\Shop\ShopModel.cs" />
-    <Compile Include="Models\UserComments\UserCommentsModel.cs" />
+    <Compile Include="Models\User\UserCommentsModel.cs" />
     <Compile Include="Models\User\Register.cs" />
     <Compile Include="Models\User\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
