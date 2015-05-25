@@ -6,7 +6,7 @@ using System.Net;
 using System.Text;
 using System.Web;
 using Newtonsoft.Json;
-using MeiHi.API.Models;
+//using MeiHi.API.ViewModels;
 
 namespace MeiHi.API.Helper
 {

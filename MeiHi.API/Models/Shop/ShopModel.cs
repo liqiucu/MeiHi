@@ -4,9 +4,8 @@ using System.Linq;
 using System.Web;
 using MeiHi.Model;
 using System.Runtime.Serialization;
-using MeiHi.API.Models.UserComments;
 
-namespace MeiHi.API.Models
+namespace MeiHi.API.ViewModels
 {
     public class ShopModel
     {

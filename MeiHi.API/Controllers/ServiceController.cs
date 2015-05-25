@@ -5,13 +5,12 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using MeiHi.Model;
-using MeiHi.API.Models;
+using MeiHi.API.ViewModels;
 using System.Threading.Tasks;
 using MeiHi.API.Helper;
 using Newtonsoft.Json;
 using System.Web.Caching;
 using MeiHi.API.Logic;
-using MeiHi.API.Models.Service;
 
 namespace MeiHi.API.Controllers
 {

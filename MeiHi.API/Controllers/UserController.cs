@@ -1,23 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Web.Http;
-using MeiHi.Model;
-using MeiHi.API.ViewModels;
+﻿using MeiHi.API.Helper;
 using MeiHi.API.Logic;
+using MeiHi.API.ViewModels;
+using MeiHi.CommonDll.Helper;
+using MeiHi.Model;
+using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
+using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web;
-using System.IO;
-using System.Drawing;
-using MeiHi.API.Helper;
-using System.Text;
-using MeiHi.API.Models.UserComments;
-using MeiHi.API.Models.Booking;
+using System.Web.Http;
 
 namespace MeiHi.API.Controllers
 {
+    [RoutePrefix("user")]
     public class UserController : ApiController
     {
         [HttpGet]
@@ -151,7 +149,6 @@ namespace MeiHi.API.Controllers
             {
                 using (var db = new MeiHiEntities())
                 {
-
                     // 设置上传目录
                     string tempPath = "/upload/temp/";
                     var provider = new MultipartFormDataStreamProvider(HttpContext.Current.Server.MapPath(tempPath));
@@ -199,27 +196,18 @@ namespace MeiHi.API.Controllers
                         };
                     }
 
-                    string extension = ".jpg";
-                    string newPath = "/upload/user/" + userId + "/";
-                    string fileName = Guid.NewGuid().ToString();
+                    var userProfilePhotoImage = ImageHelper.SaveImage(
+                            Request.RequestUri.Authority,
+                            "/upload/user/" + userId + "/",
+                            bodyparts);
 
-                    if (!Directory.Exists(HttpContext.Current.Server.MapPath(newPath)))
+                    if (!string.IsNullOrEmpty(user.ProfilePhoto))
                     {
-                        Directory.CreateDirectory(HttpContext.Current.Server.MapPath(newPath));
+
+                        ImageHelper.DeleteImageFromDataBaseAndPhyclePath(user.ProfilePhoto, "/upload/user/" + userId + "/");
                     }
 
-                    var filePhysicalPath = HttpContext.Current.Server.MapPath(newPath + fileName + extension);
-                    File.Move(bodyparts.FileData[0].LocalFileName, filePhysicalPath);
-                    Image image = Image.FromFile(filePhysicalPath);
-
-                    using (var resized = ImageHelper.ResizeImage(image, 100, 100))
-                    {
-                        //save the resized image as a jpeg with a quality of 90
-                        ImageHelper.SaveJpeg(HttpContext.Current.Server.MapPath(newPath + fileName + "_100_100" + extension), resized, 100);
-                    }
-
-                    image.Dispose();
-                    user.ProfilePhoto = newPath + fileName + extension;
+                    user.ProfilePhoto = userProfilePhotoImage.FirstOrDefault();
                     user.DateModified = DateTime.Now;
                     db.SaveChanges();
 
@@ -284,7 +272,7 @@ namespace MeiHi.API.Controllers
         {
             using (var db = new MeiHiEntities())
             {
-                var tickets = db.Booking.Where(a => a.UserId == userId && a.IsBilling && !a.IsUsed);
+                var tickets = db.Booking.Where(a => a.UserId == userId && a.IsBilling);
 
                 if (tickets == null || tickets.Count() == 0)
                 {
@@ -298,6 +286,7 @@ namespace MeiHi.API.Controllers
                 UserMeiHiTicketsModel model = new UserMeiHiTicketsModel();
                 model.NotUsedConsumeMeiHiTickets = new List<MeiHiTicketModel>();
                 model.CalceledConsumeMeiHiTickets = new List<MeiHiTicketModel>();
+                model.UsedConsumeMeiHiTickets = new List<MeiHiTicketModel>();
                 model.UserId = userId;
 
                 foreach (var item in tickets)
@@ -314,22 +303,39 @@ namespace MeiHi.API.Controllers
                         ShopName = item.ShopName
                     };
 
-                    if (!item.Cancel)
+                    if (item.IsUsed)
                     {
-                        temp.Comment = "已付款但未使用";
-                        model.NotUsedConsumeMeiHiTickets.Add(temp);
+                        temp.IsUsed = true;
+                        model.UsedConsumeMeiHiTickets.Add(temp);
                     }
-
-                    if (item.Cancel && !item.CancelSuccess)
+                    else
                     {
-                        temp.Comment = "已付款并已经申请退款";
-                        model.CalceledConsumeMeiHiTickets.Add(temp);
-                    }
+                        if (!item.Cancel)
+                        {
+                            temp.Comment = "已付款但未使用未退款";
+                            temp.Cancel = false;
+                            temp.IsUsed = false;
+                            temp.CancelSuccess = false;
+                            model.NotUsedConsumeMeiHiTickets.Add(temp);
+                        }
 
-                    if (item.Cancel && item.CancelSuccess)
-                    {
-                        temp.Comment = "已付款并退款成功";
-                        model.CalceledConsumeMeiHiTickets.Add(temp);
+                        if (item.Cancel && !item.CancelSuccess)
+                        {
+                            temp.Comment = "已付款并已经申请退款";
+                            temp.IsUsed = false;
+                            temp.Cancel = true;
+                            temp.CancelSuccess = false;
+                            model.CalceledConsumeMeiHiTickets.Add(temp);
+                        }
+
+                        if (item.Cancel && item.CancelSuccess)
+                        {
+                            temp.Comment = "申请退款成功";
+                            temp.CancelSuccess = true;
+                            temp.Cancel = true;
+                            temp.IsUsed = false;
+                            model.CalceledConsumeMeiHiTickets.Add(temp);
+                        }
                     }
                 }
 
@@ -341,8 +347,73 @@ namespace MeiHi.API.Controllers
             }
         }
 
+        /// <summary>
+        /// 0是阿里 1是微信
+        /// </summary>
+        /// <param name="account"></param>
+        /// <param name="type"></param>
+        /// <returns></returns>
         [ApiAuthorize]
-        [Route("get_getNotPayedBookings")]
+        [Route("apply_cancelbooking")]
+        [HttpPost]
+        public object ApplyCancelTicket(
+            long userId,
+            string verityCode, 
+            string account, 
+            int type)
+        {
+            using (var db = new MeiHiEntities())
+            {
+                var user = db.User.FirstOrDefault(a => a.UserId == userId);
+
+                if (user == null)
+                {
+                    return new
+                    {
+                        jsonStatus = 0,
+                        resut = "获取用户信息失败"
+                    };
+                }
+
+                var booking = user.Booking.FirstOrDefault(
+                        a => a.VerifyCode == verityCode
+                        && a.UserId == userId
+                        && a.IsBilling == true
+                        && a.IsUsed == false
+                        && a.Cancel == false);
+
+                if (booking == null)
+                {
+                    return new
+                    {
+                        jsonStatus = 0,
+                        resut = "获取用户订单信息失败"
+                    };
+                }
+
+                booking.Cancel = true;
+
+                if (type == 0)
+                {
+                    booking.AlipayAccount = account;
+                }
+                else if (type == 1)
+                {
+                    booking.WeiXinAccount = account;
+                }
+
+                db.SaveChanges();
+
+                return new
+                {
+                    jsonStatus = 1,
+                    resut = "申请退款成功,退款将在次日到账"
+                };
+            }
+        }
+
+        [ApiAuthorize]
+        [Route("get_NotPayedBookings")]
         [HttpGet]
         public object GetNotPayedBookings(long userId)
         {
@@ -385,8 +456,14 @@ namespace MeiHi.API.Controllers
             }
         }
 
+        /// <summary>
+        /// 订单号和服务对应唯一的 一个
+        /// </summary>
+        /// <param name="bookingId"></param>
+        /// <param name="serviceName"></param>
+        /// <returns></returns>
         [ApiAuthorize]
-        [Route("get_getNotPayedBooking")]
+        [Route("get_NotPayedBooking")]
         [HttpGet]
         public object GetNotPayedBooking(long bookingId, string serviceName)
         {
@@ -399,7 +476,7 @@ namespace MeiHi.API.Controllers
                     return new
                     {
                         jsonStatus = 0,
-                        resut = "订单异常了 订单号：" + bookingId + " 服务名：" + serviceName + " 支付状态：" + booking.IsBilling
+                        resut = "订单异常了,订单号：" + bookingId + " 服务名：" + serviceName
                     };
                 }
 
@@ -408,7 +485,7 @@ namespace MeiHi.API.Controllers
                     return new
                     {
                         jsonStatus = 0,
-                        resut = "表坑我, 这单已经支付了"
+                        resut = "这单已经支付了"
                     };
                 }
 
@@ -431,6 +508,224 @@ namespace MeiHi.API.Controllers
                 {
                     jsonStatus = 1,
                     resut = model
+                };
+            }
+        }
+
+        [ApiAuthorize]
+        [Route("get_UserFavorites")]
+        [HttpGet]
+        public object GetUserFavorites(long userId, string region)
+        {
+            using (var db = new MeiHiEntities())
+            {
+                var user = db.User.FirstOrDefault(a => a.UserId == userId);
+
+                if (user == null)
+                {
+                    return new
+                    {
+                        jsonStatus = 0,
+                        resut = "没有获取到该用户信息"
+                    };
+                }
+
+                var shops = new List<ShopModel>();
+                var services = new List<ServiceModel>();
+
+                if (user.UserFavorites != null)
+                {
+                    var shopTemp = user.UserFavorites.Where(a => a.ShopId > 0);
+
+                    foreach (var item in shopTemp)
+                    {
+                        shops.Add(new ShopModel()
+                        {
+                            Coordinates = item.Shop.Coordinates,
+                            ShopId = item.Shop.ShopId,
+                            Title = item.Shop.Title,
+                            DiscountRate = ShopLogic.GetDiscountRate(item.Shop.ShopId),
+                            RegionName = ShopLogic.GetRegionName(item.Shop.RegionID, item.Shop.ShopId),
+                            ShopImageUrl = item.Shop.ShopBrandImages.Count > 0
+                                            ? item.Shop.ShopBrandImages.FirstOrDefault().url
+                                            : null,
+                            Rate = ShopLogic.GetShopRate(item.Shop.ShopId),
+                            Distance = HttpUtils.CalOneShop(region, item.Shop.Coordinates)
+                        });
+                    }
+
+                    var serviceTemp = user.UserFavorites.Where(a => a.ServiceId > 0);
+
+                    foreach (var item in serviceTemp)
+                    {
+                        services.Add(new ServiceModel()
+                        {
+                            ServiceId = item.ServiceId.Value,
+                            Title = item.Service.Title,
+                            TitleUrl = item.Service.TitleUrl,
+                            CMUnitCost = item.Service.CMUnitCost,
+                            OriginalUnitCost = item.Service.OriginalUnitCost
+                        });
+                    }
+                }
+
+                var model = new UserFavoritesModel()
+                {
+                    UserId = userId,
+                    FavoritieSerivces = services,
+                    FavoritieShops = shops
+                };
+
+                return new
+                {
+                    jsonStatus = 1,
+                    resut = model
+                };
+            }
+        }
+
+        [ApiAuthorize]
+        [Route("get_userAccountInfo")]
+        [HttpGet]
+        public object GetUserAccountInfo(long userId)
+        {
+            using (var db = new MeiHiEntities())
+            {
+                var user = db.User.FirstOrDefault(a => a.UserId == userId);
+
+                if (user == null)
+                {
+                    return new
+                    {
+                        jsonStatus = 0,
+                        resut = "没有获取到该用户信息"
+                    };
+                }
+
+                var useraccountinfo = new UserAccountInfoModel()
+                {
+                    Balance = user.Balance,
+                    Mobile = user.Mobile,
+                    UserId = user.UserId
+                };
+
+                return new
+                {
+                    jsonStatus = 1,
+                    resut = useraccountinfo
+                };
+            }
+        }
+
+        [Route("post_UserSuggest")]
+        [HttpPost]
+        [AllowAnonymous]
+        public object PostUserSuggest(string content, string contract)
+        {
+            using (var db = new MeiHiEntities())
+            {
+                if (string.IsNullOrEmpty(content) || string.IsNullOrEmpty(contract))
+                {
+                    return new
+                    {
+                        jsonStatus = 0,
+                        resut = "不能为空"
+                    };
+                }
+
+                db.UserSuggest.Add(new UserSuggest()
+                {
+                    Content = content,
+                    Contract = contract,
+                    DateCreated = DateTime.Now
+                });
+
+                db.SaveChanges();
+
+                return new
+                {
+                    jsonStatus = 1,
+                    resut = "提议成功"
+                };
+            }
+        }
+
+        [ApiAuthorize]
+        [Route("post_usercomment")]
+        [HttpPost]
+        public async Task<object> PostUserComment(long userId, string content, int rate, long serviceId, long shopId)
+        {
+            try
+            {
+                // 设置上传目录
+                string tempPath = "/upload/temp/";
+                var provider = new MultipartFormDataStreamProvider(HttpContext.Current.Server.MapPath(tempPath));
+
+                // 接收数据，并保存文件
+                var bodyparts = await Request.Content.ReadAsMultipartAsync(provider);
+
+                if (string.IsNullOrEmpty(content) || serviceId == 0 || shopId == 0 || userId == 0)
+                {
+                    return new
+                    {
+                        jsonStatus = 0,
+                        resut = "参数异常"
+                    };
+                }
+
+                using (var db = new MeiHiEntities())
+                {
+                    var comment = new UserComments()
+                    {
+                        Comment = content,
+                        DateCreated = DateTime.Now,
+                        DateModified = DateTime.Now,
+                        Display = true,
+                        Rate = rate,
+                        ServiceId = serviceId,
+                        ShopId = shopId,
+                        ServiceName = db.Service.First(a => a.ServiceId == serviceId).Title,
+                        UserId = userId,
+                        UserCommentSharedImg = new List<UserCommentSharedImg>()
+                    };
+
+                    if (bodyparts != null
+                        && bodyparts != null
+                        && bodyparts.FileData != null
+                        && bodyparts.FileData.Count > 0)
+                    {
+                        var sharesImageUrls = ImageHelper.SaveImage(
+                            Request.RequestUri.Authority,
+                            "/upload/user/" + userId + "/comments/",
+                            bodyparts);
+
+                        foreach (var url in sharesImageUrls)
+                        {
+                            comment.UserCommentSharedImg.Add(new UserCommentSharedImg()
+                            {
+                                DateCreated = DateTime.Now,
+                                DateModified = DateTime.Now,
+                                ImgUrl = url
+                            });
+                        }
+                    }
+
+                    db.UserComments.Add(comment);
+                    db.SaveChanges();
+
+                    return new
+                    {
+                        jsonStatus = 1,
+                        resut = "评论成功"
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new
+                {
+                    jsonStatus = 0,
+                    resut = ex.Message
                 };
             }
         }

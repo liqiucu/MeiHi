@@ -5,8 +5,8 @@ using System.Text;
 using System.Web.Mvc;
 using System.Web;
 using MeiHi.Model;
-using MeiHi.Admin.Helper;
 using MeiHi.Admin.Logic;
+using MeiHi.CommonDll.Helper;
 
 namespace MeiHi.Admin
 {

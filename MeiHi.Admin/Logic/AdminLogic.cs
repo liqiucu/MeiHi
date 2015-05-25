@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Security;
-using MeiHi.Admin.Helper;
 using MeiHi.Model;
 
 namespace MeiHi.Admin.Logic
@@ -17,11 +16,14 @@ namespace MeiHi.Admin.Logic
             using (MeiHiEntities db = new MeiHiEntities())
             {
                 var admin = db.Admin.FirstOrDefault(a => a.AdminId == adminId);
+
                 if (admin == null)
                 {
                     return false;
                 }
+
                 var role = db.Role.FirstOrDefault(a => a.Name == roleName);
+
                 if (role == null)
                 {
                     return false;

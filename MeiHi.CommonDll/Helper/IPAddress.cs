@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MeiHi.Admin.Helper
+namespace MeiHi.CommonDll.Helper
 {
     public sealed class IPAddr
     {

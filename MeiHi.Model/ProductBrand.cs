@@ -14,11 +14,12 @@ namespace MeiHi.Model
     
     public partial class ProductBrand
     {
-        public string ProductBrandId { get; set; }
+        public long ProductBrandId { get; set; }
         public string ProductUrl { get; set; }
         public string ProductName { get; set; }
         public System.DateTime DateCreated { get; set; }
-        public System.DateTime DateModified { get; set; }
-        public int Id { get; set; }
+        public long ShopId { get; set; }
+    
+        public virtual Shop Shop { get; set; }
     }
 }

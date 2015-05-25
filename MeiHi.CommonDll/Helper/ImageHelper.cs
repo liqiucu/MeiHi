@@ -1,18 +1,116 @@
-﻿ using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Imaging;  using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.IO;
+using System.Web;
+using System.Net.Http;
 
-namespace MeiHi.API.Helper
+namespace MeiHi.CommonDll.Helper
 {
     /// <summary>
     /// Provides various image untilities, such as high quality resizing and the ability to save a JPEG.
     /// </summary>
     public static class ImageHelper
-    {    
+    {
+        public static List<string> SaveImage(string lootUrl, string folder, HttpPostedFileBase[] images)
+        {
+            try
+            {
+                List<string> results = new List<string>();
+
+                if (!Directory.Exists(HttpContext.Current.Server.MapPath(folder)))
+                {
+                    Directory.CreateDirectory(HttpContext.Current.Server.MapPath(folder));
+                }
+
+                foreach (var file in images)
+                {
+                    if (file != null)
+                    {
+                        string fileName = Guid.NewGuid().ToString() + ".jpeg";
+
+                        var filePhysicalPath = HttpContext.Current.Server.MapPath(folder + fileName);
+                        file.SaveAs(filePhysicalPath);
+
+                        Image image = Image.FromFile(filePhysicalPath);
+
+                        using (var resized = ImageHelper.ResizeImage(image, 100, 100))
+                        {
+                            ImageHelper.SaveJpeg(HttpContext.Current.Server.MapPath(folder + "100X100_" + fileName), resized, 100);
+                        }
+
+                        image.Dispose();
+                        results.Add("http://" + lootUrl + folder + "100X100_" + fileName);
+                    }
+                }
+
+                return results;
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public static List<string> SaveImage(string lootUrl, string folder, MultipartFormDataStreamProvider bodyparts)
+        {
+            try
+            {
+                List<string> results = new List<string>();
+
+                if (!Directory.Exists(HttpContext.Current.Server.MapPath(folder)))
+                {
+                    Directory.CreateDirectory(HttpContext.Current.Server.MapPath(folder));
+                }
+
+                foreach (var item in bodyparts.FileData)
+                {
+                    string fileName = Guid.NewGuid().ToString() + ".jpeg";
+
+                    var filePhysicalPath = HttpContext.Current.Server.MapPath(folder + fileName);
+                    File.Move(item.LocalFileName, filePhysicalPath);
+                    Image image = Image.FromFile(filePhysicalPath);
+
+                    using (var resized = ImageHelper.ResizeImage(image, 100, 100))
+                    {
+                        ImageHelper.SaveJpeg(HttpContext.Current.Server.MapPath(folder + "100X100_" + fileName), resized, 100);
+                    }
+
+                    image.Dispose();
+
+                    results.Add("http://" + lootUrl + folder + "100X100_" + fileName);
+                }
+
+                return results;
+            }
+            catch (System.Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public static void DeleteImageFromDataBaseAndPhyclePath(string fullName, string folder)
+        {
+            var temp1 = fullName.Split('/');
+            var temp2 = temp1[temp1.Length - 1];
+            var temp3 = temp2.Split('_')[1];
+            //var fileName = temp2.Split('.')[0];
+
+            string filePhycleName100 = HttpContext.Current.Server.MapPath(folder + temp2);
+            string filePhycleName = HttpContext.Current.Server.MapPath(folder + temp3);
+
+            if (File.Exists(filePhycleName100))
+            {
+                File.Delete(filePhycleName100);
+            }
+
+            if (File.Exists(filePhycleName))
+            {
+                File.Delete(filePhycleName);
+            }
+        }
+
         /// <summary>
         /// A quick lookup for getting image encoders
         /// </summary>
@@ -139,6 +237,6 @@ namespace MeiHi.API.Helper
             }
 
             return foundCodec;
-        } 
+        }
     }
 }

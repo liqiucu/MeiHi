@@ -1,6 +1,4 @@
-﻿using MeiHi.API.Models;
-using MeiHi.Model;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -155,17 +153,6 @@ namespace MeiHi.API.ViewModels
 
         public DateTime? BirthDay { get; set; }
 
-    }
-
-    public class UserComment
-    {
-        public long UserId { get; set; }
-
-        public string ServiceName { get; set; }
-
-        public string Comment { get; set; }
-
-        public int Rate { get; set; }
     }
 
     public class CreateBankAccountModel

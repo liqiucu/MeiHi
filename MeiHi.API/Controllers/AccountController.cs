@@ -9,6 +9,7 @@ using System.Web.Http;
 using MeiHi.Model;
 using MeiHi.API.Helper;
 using MeiHi.API.ViewModels;
+using MeiHi.CommonDll.Helper;
 
 namespace MeiHi.API.Controllers
 {
@@ -27,7 +28,7 @@ namespace MeiHi.API.Controllers
             using (var db = new MeiHiEntities())
             {
                 var reg = db.User.SingleOrDefault(r => r.Mobile == mobile);
-                var code = Helper.Helper.GenerateRandomNumber(100000, 999999).ToString();
+                var code = CommonHelper.GenerateRandomNumber(100000, 999999).ToString();
                 if (reg == null)
                 {
                     reg = new User()
@@ -99,7 +100,7 @@ namespace MeiHi.API.Controllers
                 reg.DateModified = DateTime.Now;
 
                 string salt = Guid.NewGuid().ToString();
-                string hashedToken = Helper.Helper.GenerateHashWithSalt(mobile, salt);
+                string hashedToken = CommonHelper.GenerateHashWithSalt(mobile, salt);
                 reg.Token = hashedToken;
                 reg.Device = device;
                 reg.DownloadFromApplicationId = downFromAppId;

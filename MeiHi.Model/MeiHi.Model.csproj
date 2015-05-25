@@ -124,6 +124,9 @@
     <Compile Include="ShopUser.cs">
       <DependentUpon>MeiHiAccess.tt</DependentUpon>
     </Compile>
+    <Compile Include="sysdiagrams.cs">
+      <DependentUpon>MeiHiAccess.tt</DependentUpon>
+    </Compile>
     <Compile Include="User.cs">
       <DependentUpon>MeiHiAccess.tt</DependentUpon>
     </Compile>

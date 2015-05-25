@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.IO;
 using System.Net;
 
-namespace MeiHi.API.Helper
+namespace MeiHi.CommonDll.Helper
 {
     public class Utils
     {

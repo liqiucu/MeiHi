@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace MeiHi.API.Models.UserComments
+namespace MeiHi.API.ViewModels
 {
     public class UserCommentsModel
     {

@@ -18,7 +18,7 @@ using MeiHi.Admin.Logic;
 using System.Data.Entity.Validation;
 using MeiHi.Admin.Models.Service;
 using System.IO;
-using MeiHi.Admin.Helper;
+using MeiHi.CommonDll.Helper;
 
 namespace MeiHi.Admin.Controllers
 {
@@ -111,61 +111,21 @@ namespace MeiHi.Admin.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Auth(PermissionName = "店铺维护管理")]
-        public ActionResult SaveShop(CreateShopMpdel model, HttpPostedFileBase[] ProductBrandFile, HttpPostedFileBase[] shopProductFile)
+        public ActionResult SaveShop(
+            CreateShopMpdel model,
+            HttpPostedFileBase[] ProductBrandFile,
+            HttpPostedFileBase[] shopProductFile)
         {
             try
             {
                 using (var db = new MeiHiEntities())
                 {
-                    string productBrandId = Guid.NewGuid().ToString();
-
-                    foreach (HttpPostedFileBase file in ProductBrandFile)
-                    {
-                        if (file != null)
-                        {
-                            string tempUploadPath = "/upload/product/";
-
-                            if (!Directory.Exists(HttpContext.Server.MapPath(tempUploadPath)))
-                            {
-                                Directory.CreateDirectory(HttpContext.Server.MapPath(tempUploadPath));
-                            }
-
-                            string path = System.IO.Path.Combine(HttpContext.Server.MapPath(tempUploadPath), System.IO.Path.GetFileName(file.FileName));
-                            file.SaveAs(path);
-
-                            db.ProductBrand.Add(new ProductBrand()
-                            {
-
-                                ProductUrl = "http://" + Request.Url.Authority + tempUploadPath + System.IO.Path.GetFileName(file.FileName),
-                                ProductBrandId = productBrandId,
-                                DateCreated = DateTime.Now,
-                                DateModified = DateTime.Now
-                            });
-                        }
-                    }
-
-                    db.SaveChanges();
-
-                    string tempPath = "";
-                    string tempUploadShopPath = "/upload/shop/";
-
-                    if (shopProductFile != null && shopProductFile.FirstOrDefault() != null)
-                    {
-                        if (!Directory.Exists(HttpContext.Server.MapPath(tempUploadShopPath)))
-                        {
-                            Directory.CreateDirectory(HttpContext.Server.MapPath(tempUploadShopPath));
-                        }
-
-                        tempPath = System.IO.Path.Combine(Server.MapPath(tempUploadShopPath), System.IO.Path.GetFileName(shopProductFile[0].FileName));
-                    }
-
-                    db.Shop.Add(new Shop()
+                    var shop = new Shop()
                     {
                         RegionID = model.RegionId,
                         ShopTag = model.ShopTag,
                         Comment = model.Comment,
                         PurchaseNotes = model.PurchaseNotes,
-                        ProductBrandId = productBrandId,
                         Phone = model.Phone,
                         ParentShopId = ShopLogic.GetParentShopId(model.ParentShopName),
                         IsOnline = model.IsOnline,
@@ -173,52 +133,54 @@ namespace MeiHi.Admin.Controllers
                         Contract = model.Contract,
                         Coordinates = model.Coordinates,
                         Title = model.Title,
-                        ImageUrl = tempPath,
                         DetailAddress = model.DetailAddress,
                         DateCreated = DateTime.Now,
                         DateModified = DateTime.Now
+                    };
+
+                    shop.ShopUser.Add(new ShopUser()
+                    {
+                        DateCreated = DateTime.Now,
+                        DateModified = DateTime.Now,
+                        ShopUserName = model.Phone,
+                        Password = model.Phone.Substring(model.Phone.Length - 6)
                     });
 
-                    db.SaveChanges();
-                    var shopId = ShopLogic.GetShopIdByShopName(model.Title);
+                    var productBrandImages = ImageHelper.SaveImage(
+                         Request.Url.Authority,
+                         "/upload/shops/" + model.Title + "/product/",
+                         ProductBrandFile);
 
-                    //if (model.IsOnline)
-                    //{
-                        //send username and password to shop then shop can verify the  booking
-                        db.ShopUser.Add(new ShopUser()
-                        {
-                            DateCreated = DateTime.Now,
-                            DateModified = DateTime.Now,
-                            ShopId = shopId,
-                            ShopUserName = model.Phone,
-                            Password = model.Phone.Substring(model.Phone.Length - 6)
-                        });
-                        LuoSiMaoTextMessage.SendShopText(model.Phone);
-                    //}
-
-                    foreach (var file in shopProductFile)
+                    foreach (var file in productBrandImages)
                     {
-                        if (file != null)
+                        shop.ProductBrand.Add(new ProductBrand()
                         {
-                            string path = System.IO.Path.Combine(Server.MapPath(tempUploadShopPath), System.IO.Path.GetFileName(file.FileName));
-
-                            file.SaveAs(path);
-
-                            db.ShopBrandImages.Add(new ShopBrandImages()
-                            {
-                                ShopId = shopId,
-                                DateCreated = DateTime.Now,
-                                url = "http://" + Request.Url.Authority + tempUploadShopPath + System.IO.Path.GetFileName(file.FileName)
-                            });
-                        }
+                            ProductUrl = file,
+                            DateCreated = DateTime.Now
+                        });
                     }
 
+                    var shopBrandImages = ImageHelper.SaveImage(
+                          Request.Url.Authority,
+                          "/upload/shops/" + model.Title + "/shop/",
+                          shopProductFile);
+
+                    foreach (var file in shopBrandImages)
+                    {
+                        shop.ShopBrandImages.Add(new ShopBrandImages()
+                        {
+                            url = file,
+                            DateCreated = DateTime.Now
+                        });
+                    }
+
+                    db.Shop.Add(shop);
                     db.SaveChanges();
                 }
 
                 return RedirectToAction("ShopManege");
             }
-            catch (DbEntityValidationException ex)
+            catch (Exception ex)
             {
                 throw ex;
             }
@@ -234,92 +196,76 @@ namespace MeiHi.Admin.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Auth(PermissionName = "店铺维护管理")]
-        public ActionResult UpdateShop(EditShopMpdel model, HttpPostedFileBase[] ProductBrandFile, HttpPostedFileBase[] shopProductFile)
+        public ActionResult UpdateShop(
+            EditShopMpdel model,
+            HttpPostedFileBase[] ProductBrandFile,
+            HttpPostedFileBase[] shopProductFile)
         {
             try
             {
                 using (var db = new MeiHiEntities())
                 {
                     var shop = db.Shop.Where(a => a.ShopId == model.ShopId).FirstOrDefault();
+
                     if (shop == null)
                     {
                         throw new Exception("the shop not exist shopId:" + model.ShopId);
                     }
 
-                    string productBrandId = shop.ProductBrandId;
-                    //ProductBrand 产品
+                    //产品
                     if (ProductBrandFile != null && ProductBrandFile.FirstOrDefault() != null)
                     {
-                        var productBrands = db.ProductBrand.Where(a => a.ProductBrandId == productBrandId);
-
-                        foreach (var item in productBrands)
+                        foreach (var item in shop.ProductBrand)
                         {
-                            db.ProductBrand.Remove(item);
+                            ImageHelper.DeleteImageFromDataBaseAndPhyclePath(item.ProductUrl, "/upload/shops/" + shop.Title + "/product/");
                         }
 
-                        foreach (var file in ProductBrandFile)
+                        db.ProductBrand.RemoveRange(shop.ProductBrand);
+
+                        var productBrandImages = ImageHelper.SaveImage(
+                               Request.Url.Authority,
+                               "/upload/shops/" + model.Title + "/product/",
+                               ProductBrandFile);
+
+                        foreach (var file in productBrandImages)
                         {
-                            string tempUploadPath = "/upload/product/";
-
-                            if (!Directory.Exists(HttpContext.Server.MapPath(tempUploadPath)))
+                            shop.ProductBrand.Add(new ProductBrand()
                             {
-                                Directory.CreateDirectory(HttpContext.Server.MapPath(tempUploadPath));
-                            }
-                            string path = System.IO.Path.Combine(Server.MapPath(tempUploadPath), System.IO.Path.GetFileName(file.FileName));
-                            file.SaveAs(path);
-
-                            db.ProductBrand.Add(new ProductBrand()
-                            {
-                                ProductUrl = "http://" + Request.Url.Authority + tempUploadPath + System.IO.Path.GetFileName(file.FileName),
-                                ProductBrandId = productBrandId,
-                                DateCreated = DateTime.Now,
-                                DateModified = DateTime.Now
+                                ProductUrl = file,
+                                DateCreated = DateTime.Now
                             });
                         }
-
-                        db.SaveChanges();
                     }
 
-                    string tempPath = shop.ImageUrl;
-                    //ShopBrandImages 店铺
+                    //店面
                     if (shopProductFile != null && shopProductFile.FirstOrDefault() != null)
                     {
-                        string tempUploadPath = "/upload/shop/";
-
-                        if (!Directory.Exists(HttpContext.Server.MapPath(tempUploadPath)))
-                        {
-                            Directory.CreateDirectory(HttpContext.Server.MapPath(tempUploadPath));
-                        }
-
-                        tempPath = System.IO.Path.Combine(Server.MapPath(tempUploadPath), System.IO.Path.GetFileName(shopProductFile[0].FileName));
-
                         foreach (var item in shop.ShopBrandImages)
                         {
-                            db.ShopBrandImages.Remove(item);
+                            ImageHelper.DeleteImageFromDataBaseAndPhyclePath(item.url, "/upload/shops/" + shop.Title + "/shop/");
                         }
 
-                        foreach (var file in shopProductFile)
+                        db.ShopBrandImages.RemoveRange(shop.ShopBrandImages);
+
+                        var shopBrandImages = ImageHelper.SaveImage(
+                          Request.Url.Authority,
+                          "/upload/shops/" + model.Title + "/shop/",
+                          shopProductFile);
+
+                        foreach (var file in shopBrandImages)
                         {
-                            string path = System.IO.Path.Combine(Server.MapPath(tempUploadPath), System.IO.Path.GetFileName(file.FileName));
-
-                            file.SaveAs(path);
-
-                            db.ShopBrandImages.Add(new ShopBrandImages()
+                            shop.ShopBrandImages.Add(new ShopBrandImages()
                             {
-                                ShopId = ShopLogic.GetShopIdByShopName(model.Title),
-                                DateCreated = DateTime.Now,
-                                url = "http://" + Request.Url.Authority + tempUploadPath + System.IO.Path.GetFileName(file.FileName)
+                                url = file,
+                                DateCreated = DateTime.Now
                             });
                         }
-
-                        db.SaveChanges();
                     }
 
                     shop.RegionID = model.RegionId;
                     shop.ShopTag = model.ShopTag;
                     shop.Comment = model.Comment;
                     shop.PurchaseNotes = model.PurchaseNotes;
-                    shop.ProductBrandId = productBrandId;
                     shop.Phone = model.Phone;
                     shop.ParentShopId = ShopLogic.GetParentShopId(model.ParentShopName);
                     shop.IsOnline = model.IsOnline;
@@ -327,26 +273,8 @@ namespace MeiHi.Admin.Controllers
                     shop.Contract = model.Contract;
                     shop.Coordinates = model.Coordinates;
                     shop.Title = model.Title;
-                    shop.ImageUrl = tempPath;
                     shop.DetailAddress = model.DetailAddress;
                     shop.DateModified = DateTime.Now;
-
-                    //var recommandShop = db.RecommandShop.FirstOrDefault(a => a.RecommandShopId == model.ShopId);
-
-                    //if (model.IsHot && recommandShop == null)
-                    //{
-                    //    db.RecommandShop.Add(new RecommandShop()
-                    //    {
-                    //        DateCreated = DateTime.Now,
-                    //        DateModified = DateTime.Now,
-                    //        RecommandShopId = model.ShopId
-                    //    });
-                    //}
-
-                    //if (!model.IsHot && recommandShop != null)
-                    //{
-                    //    db.RecommandShop.Remove(shop.RecommandShop);
-                    //}
 
                     db.SaveChanges();
                 }
@@ -396,7 +324,10 @@ namespace MeiHi.Admin.Controllers
                         Title = shop.Title,
                         ShopTag = shop.ShopTag,
                         ParentShopName = ShopLogic.GetShopNameByShopId(shop.ParentShopId.Value),
-                        ProductBrandList = ShopLogic.GetProductBrandImages(shop.ProductBrandId),
+                        ProductBrandList = shop.ProductBrand != null
+                                            && shop.ProductBrand.Count > 0
+                                            ? shop.ProductBrand.Select(a => a.ProductUrl).ToList()
+                                            : null,
                         ShopProductList = shop.ShopBrandImages != null
                                             && shop.ShopBrandImages.Count > 0
                                             ? shop.ShopBrandImages.Select(a => a.url).ToList()
@@ -435,7 +366,10 @@ namespace MeiHi.Admin.Controllers
                         ShopTag = shop.ShopTag,
                         ParentShopName = ShopLogic.GetShopNameByShopId(shop.ParentShopId.Value),
                         RegionName = shop.Region.Name,
-                        ProductBrandList = ShopLogic.GetProductBrandImages(shop.ProductBrandId),
+                        ProductBrandList = shop.ProductBrand != null
+                                            && shop.ProductBrand.Count > 0
+                                            ? shop.ProductBrand.Select(a => a.ProductUrl).ToList()
+                                            : null,
                         ShopProductList = shop.ShopBrandImages != null
                                             && shop.ShopBrandImages.Count > 0
                                             ? shop.ShopBrandImages.Select(a => a.url).ToList()
@@ -467,9 +401,30 @@ namespace MeiHi.Admin.Controllers
                     }
 
                     access.Service.RemoveRange(shop.Service);
-                    access.ShopBrandImages.RemoveRange(shop.ShopBrandImages);
                     access.ShopUser.RemoveRange(shop.ShopUser);
-                    access.ProductBrand.RemoveRange(access.ProductBrand.Where(a => a.ProductBrandId == shop.ProductBrandId));
+
+                    if (shop.ProductBrand != null && shop.ProductBrand.Count > 0)
+                    {
+
+                        foreach (var item in shop.ProductBrand)
+                        {
+                            ImageHelper.DeleteImageFromDataBaseAndPhyclePath(item.ProductUrl, "/upload/shops/" + shop.Title + "/product/");
+                        }
+                        access.ProductBrand.RemoveRange(shop.ProductBrand);
+
+                    }
+
+                    if (shop.ShopBrandImages != null && shop.ShopBrandImages.Count > 0)
+                    {
+
+                        foreach (var item in shop.ShopBrandImages)
+                        {
+                            ImageHelper.DeleteImageFromDataBaseAndPhyclePath(item.url, "/upload/shops/" + shop.Title + "/shop/");
+                        }
+                        access.ShopBrandImages.RemoveRange(shop.ShopBrandImages);
+
+                    }
+
                     access.UserComments.RemoveRange(shop.UserComments);
                     access.UserFavorites.RemoveRange(shop.UserFavorites);
                     access.Shop.Remove(shop);
@@ -480,36 +435,70 @@ namespace MeiHi.Admin.Controllers
             return RedirectToAction("ShopManege");
         }
 
+        [HttpGet]
+        [Auth(PermissionName = "店铺维护管理")]
+        public ActionResult DropDownShop(long shopId)
+        {
+            using (var access = new MeiHiEntities())
+            {
+                var shop = access.Shop.Where(a => a.ShopId == shopId).FirstOrDefault();
+
+                if (shop != null)
+                {
+                    shop.IsOnline = false;
+                    access.SaveChanges();
+                }
+            }
+
+            return RedirectToAction("ShopManege");
+        }
+
+        [HttpGet]
+        [Auth(PermissionName = "店铺维护管理")]
+        public ActionResult SetUpShop(long shopId)
+        {
+            using (var access = new MeiHiEntities())
+            {
+                var shop = access.Shop.Where(a => a.ShopId == shopId).FirstOrDefault();
+
+                if (shop != null)
+                {
+                    shop.IsOnline = true;
+                    access.SaveChanges();
+                }
+            }
+
+            return RedirectToAction("OfflineShopManage");
+        }
+
         #region service
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Auth(PermissionName = "店铺维护管理")]
-        public ActionResult SaveService(CreateServiceModel model, HttpPostedFileBase[] serviceTitleUrl)
+        public ActionResult SaveService(
+            CreateServiceModel model,
+            HttpPostedFileBase[] serviceTitleUrl)
         {
             try
             {
                 using (var db = new MeiHiEntities())
                 {
                     var service = db.Service.Where(a => a.ServiceId == model.ServiceId).FirstOrDefault();
-                    string tempUploadServicePath = "/upload/service/";
 
-                    if (!Directory.Exists(HttpContext.Server.MapPath(tempUploadServicePath)))
-                    {
-                        Directory.CreateDirectory(HttpContext.Server.MapPath(tempUploadServicePath));
-                    }
 
                     if (service == null)
                     {
                         service = new Service();
-                        foreach (var file in serviceTitleUrl)
+
+                        if (serviceTitleUrl != null && serviceTitleUrl.Count() > 0)
                         {
-                            if (file != null)
-                            {
-                                string path = System.IO.Path.Combine(Server.MapPath(tempUploadServicePath), System.IO.Path.GetFileName(file.FileName));
-                                file.SaveAs(path);
-                                service.TitleUrl = "http://" + Request.Url.Authority + tempUploadServicePath + System.IO.Path.GetFileName(file.FileName);
-                            }
+                            var serviceImageUrl = ImageHelper.SaveImage(
+                                Request.Url.Authority,
+                                "/upload/shops/" + ShopLogic.GetShopNameByShopId(model.ShopId) + "/service/",
+                                serviceTitleUrl);
+                            service.TitleUrl = serviceImageUrl[0];
                         }
+
                         service.ServiceTypeId = model.ServiceTypeId;
                         service.CMUnitCost = model.CMUnitCost;
                         service.Designer = model.Designer;
@@ -524,15 +513,20 @@ namespace MeiHi.Admin.Controllers
                     }
                     else
                     {
-                        foreach (var file in serviceTitleUrl)
+                        if (serviceTitleUrl != null && serviceTitleUrl.Count() > 0)
                         {
-                            if (file != null)
-                            {
-                                string path = System.IO.Path.Combine(Server.MapPath(tempUploadServicePath), System.IO.Path.GetFileName(file.FileName));
-                                file.SaveAs(path);
-                                service.TitleUrl = "http://" + Request.Url.Authority + tempUploadServicePath + System.IO.Path.GetFileName(file.FileName);
-                            }
+                            var serviceImageUrl = ImageHelper.SaveImage(
+                                Request.Url.Authority,
+                                "/upload/shops/" + service.Shop.Title + "/service/",
+                                serviceTitleUrl);
+
+                            ImageHelper.DeleteImageFromDataBaseAndPhyclePath(
+                                service.TitleUrl,
+                                "/upload/shops/" + service.Shop.Title + "/service/");
+
+                            service.TitleUrl = serviceImageUrl[0];
                         }
+
                         service.ServiceTypeId = model.ServiceTypeId;
                         service.CMUnitCost = model.CMUnitCost;
                         service.Designer = model.Designer;
@@ -679,6 +673,13 @@ namespace MeiHi.Admin.Controllers
 
                 if (service != null)
                 {
+                    if (!string.IsNullOrEmpty(service.TitleUrl))
+                    {
+                        ImageHelper.DeleteImageFromDataBaseAndPhyclePath(
+                                 service.TitleUrl,
+                                 "/upload/shops/" + service.Shop.Title + "/service/");
+                    }
+
                     access.UserComments.RemoveRange(service.UserComments);
                     access.UserFavorites.RemoveRange(service.UserFavorites);
                     access.Booking.RemoveRange(service.Booking);

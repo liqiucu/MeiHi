@@ -31,7 +31,7 @@ namespace MeiHi.Model
         public bool CancelSuccess { get; set; }
         public string AlipayAccount { get; set; }
         public string WeiXinAccount { get; set; }
-        public long VerifyCode { get; set; }
+        public string VerifyCode { get; set; }
         public System.DateTime DateCreated { get; set; }
         public System.DateTime DateModified { get; set; }
     

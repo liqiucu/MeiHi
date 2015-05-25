@@ -5,7 +5,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using MeiHi.Model;
-using MeiHi.API.Models;
+using MeiHi.API.ViewModels;
 using System.Threading.Tasks;
 using MeiHi.API.Helper;
 using Newtonsoft.Json;
@@ -46,10 +46,13 @@ namespace MeiHi.API.Controllers
                         ShopId = item.ShopId,
                         Title = item.Title,
                         DiscountRate = ShopLogic.GetDiscountRate(item.ShopId),
-                        RegionName = ShopLogic.GetRegionName(item.RegionID, item.ShopId),
-                        ShopImageUrl = ShopLogic.GetShopImageUrl(item.ProductBrandId),
                         Rate = ShopLogic.GetShopRate(item.ShopId),
-                        Distance = HttpUtils.CalOneShop(region, item.Coordinates)
+                        Distance = HttpUtils.CalOneShop(region, item.Coordinates),
+                        RegionName = item.Region.Name,
+                        ShopImageUrl = item != null
+                                        && item.ShopBrandImages != null
+                                        ? item.ShopBrandImages.FirstOrDefault().url
+                                        : null
                     };
 
                     results.Add(shopModel);
@@ -147,8 +150,11 @@ namespace MeiHi.API.Controllers
                         ShopTag = shop.ShopTag,
                         ShopId = shop.ShopId,
                         Title = shop.Title,
-                        ShopImageUrl = ShopLogic.GetShopImageUrl(shop.ProductBrandId),
-                        ProductBrandCount = ShopLogic.GetProductBrandCount(shop.ProductBrandId),
+                        ShopImageUrl = shop.ShopBrandImages != null
+                                        && shop.ShopBrandImages.Count > 0
+                                        ? shop.ShopBrandImages.FirstOrDefault().url
+                                        : null,
+                        ProductBrandCount = shop.ProductBrand.Count,
                         Services = ShopLogic.GetServices(shop.ShopId)
                     };
                     return new
@@ -188,7 +194,7 @@ namespace MeiHi.API.Controllers
                         DetailAddress = shop.DetailAddress,
                         Phone = shop.Phone,
                         ShopId = shop.ShopId,
-                        ProductBrandImages = ShopLogic.GetProductBrandImages(shopId),
+                        ProductBrandImages = shop.ProductBrand.Select(a=>a.ProductUrl).ToList(),
                         PurchaseNotes = shop.PurchaseNotes,
                         ParentShopId = shop.ParentShopId,//当要调用Show_BranchShops时候传递ParentShopId
                         BranchStoreCount = ShopLogic.GetBranchStoreCount(shop.ParentShopId),//如果查询出来有分店 那么就需要调用 接口Show_BranchShops

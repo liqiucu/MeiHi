@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MeiHi.API.Helper
+namespace MeiHi.CommonDll.Helper
 {
     //
     // Copyright (C) 1000 - 9999 Somebody Anonymous

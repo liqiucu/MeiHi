@@ -1,11 +1,10 @@
-﻿using MeiHi.API.Models;
+﻿using MeiHi.API.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using MeiHi.Model;
 using MeiHi.API.Helper;
-using MeiHi.API.Models.UserComments;
 
 namespace MeiHi.API.Logic
 {
@@ -92,47 +91,47 @@ namespace MeiHi.API.Logic
             }
         }
 
-        public static string GetShopImageUrl(string ProductBrandId)
-        {
-            using (var db = new MeiHiEntities())
-            {
-                if (string.IsNullOrEmpty(ProductBrandId))
-                {
-                    return "";
-                }
-                var temp = db.ProductBrand.Where(a => a.ProductBrandId == ProductBrandId).FirstOrDefault();
-                if (temp != null)
-                {
-                    return temp.ProductUrl;
-                }
-                return "";
-            }
-        }
+        //public static string GetShopImageUrl(string ProductBrandId)
+        //{
+        //    using (var db = new MeiHiEntities())
+        //    {
+        //        if (string.IsNullOrEmpty(ProductBrandId))
+        //        {
+        //            return "";
+        //        }
+        //        var temp = db.ProductBrand.Where(a => a.ProductBrandId == ProductBrandId).FirstOrDefault();
+        //        if (temp != null)
+        //        {
+        //            return temp.ProductUrl;
+        //        }
+        //        return "";
+        //    }
+        //}
 
         /// <summary>
         /// 品牌照片数量
         /// </summary>
         /// <param name="ProductBrandId"></param>
         /// <returns></returns>
-        public static int GetProductBrandCount(string ProductBrandId)
-        {
-            using (var db = new MeiHiEntities())
-            {
-                if (string.IsNullOrEmpty(ProductBrandId))
-                {
-                    return 0;
-                }
+        //public static int GetProductBrandCount(string ProductBrandId)
+        //{
+        //    using (var db = new MeiHiEntities())
+        //    {
+        //        if (string.IsNullOrEmpty(ProductBrandId))
+        //        {
+        //            return 0;
+        //        }
 
-                var temp = db.ProductBrand.Where(a => a.ProductBrandId == ProductBrandId);
+        //        var temp = db.ProductBrand.Where(a => a.ProductBrandId == ProductBrandId);
 
-                if (temp != null && temp.Count() > 0)
-                {
-                    return temp.Count();
-                }
+        //        if (temp != null && temp.Count() > 0)
+        //        {
+        //            return temp.Count();
+        //        }
 
-                return 0;
-            }
-        }
+        //        return 0;
+        //    }
+        //}
 
         /// <summary>
         /// 每个店铺的服务列表，按照服务类型名称分组
@@ -420,27 +419,27 @@ namespace MeiHi.API.Logic
             }
         }
 
-        public static List<string> GetProductBrandImages(long shopId)
-        {
-            using (var db = new MeiHiEntities())
-            {
-                var shop = db.Shop.Where(a => a.ShopId == shopId).FirstOrDefault();
+        //public static List<string> GetProductBrandImages(long shopId)
+        //{
+        //    using (var db = new MeiHiEntities())
+        //    {
+        //        var shop = db.Shop.Where(a => a.ShopId == shopId).FirstOrDefault();
 
-                if (shop != null)
-                {
-                    if (!string.IsNullOrEmpty(shop.ProductBrandId))
-                    {
-                        var lists = db.ProductBrand.Where(a => a.ProductBrandId == shop.ProductBrandId);
+        //        if (shop != null)
+        //        {
+        //            if (!string.IsNullOrEmpty(shop.ProductBrandId))
+        //            {
+        //                var lists = db.ProductBrand.Where(a => a.ProductBrandId == shop.ProductBrandId);
 
-                        if (lists != null && lists.Count() > 0)
-                        {
-                            return lists.Select(a => a.ProductUrl).ToList();
-                        }
-                    }
-                }
+        //                if (lists != null && lists.Count() > 0)
+        //                {
+        //                    return lists.Select(a => a.ProductUrl).ToList();
+        //                }
+        //            }
+        //        }
 
-                return null;
-            }
-        }
+        //        return null;
+        //    }
+        //}
     }
 }

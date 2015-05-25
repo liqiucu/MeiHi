@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace MeiHi.API.Models
+namespace MeiHi.API.ViewModels
 {
     public class ServiceForShopDetailModel
     {

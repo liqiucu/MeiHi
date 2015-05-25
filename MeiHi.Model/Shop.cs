@@ -17,6 +17,7 @@ namespace MeiHi.Model
         public Shop()
         {
             this.Booking = new HashSet<Booking>();
+            this.ProductBrand = new HashSet<ProductBrand>();
             this.Service = new HashSet<Service>();
             this.ShopBrandImages = new HashSet<ShopBrandImages>();
             this.ShopUser = new HashSet<ShopUser>();
@@ -31,7 +32,6 @@ namespace MeiHi.Model
         public string Phone { get; set; }
         public string Contract { get; set; }
         public bool IsOnline { get; set; }
-        public string ProductBrandId { get; set; }
         public string PurchaseNotes { get; set; }
         public string Coordinates { get; set; }
         public bool IsHot { get; set; }
@@ -40,9 +40,9 @@ namespace MeiHi.Model
         public System.DateTime DateCreated { get; set; }
         public System.DateTime DateModified { get; set; }
         public string Title { get; set; }
-        public string ImageUrl { get; set; }
     
         public virtual ICollection<Booking> Booking { get; set; }
+        public virtual ICollection<ProductBrand> ProductBrand { get; set; }
         public virtual RecommandShop RecommandShop { get; set; }
         public virtual Region Region { get; set; }
         public virtual ICollection<Service> Service { get; set; }

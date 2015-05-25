@@ -7,7 +7,7 @@ using System.Text;
 using System.Web;
 using System.Xml;
 
-namespace MeiHi.Admin.Helper
+namespace MeiHi.CommonDll.Helper
 {
     public class TextMessage
     {

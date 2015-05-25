@@ -5,7 +5,7 @@ using System.Drawing.Imaging;
 using System.Drawing.Drawing2D;
 using System.IO;
 
-namespace MeiHi.API.Helper
+namespace MeiHi.CommonDll.Helper
 {
     public class WaterMark
     {

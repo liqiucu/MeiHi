@@ -5,7 +5,7 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Net;
 
-namespace MeiHi.API.Helper
+namespace MeiHi.CommonDll.Helper
 {
     /// <summary>
     /// Thumbnail 的摘要说明。

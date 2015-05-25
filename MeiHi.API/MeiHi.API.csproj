@@ -49,6 +49,10 @@
       <HintPath>..\packages\EntityFramework.6.1.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=4.0.8.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Newtonsoft.Json.5.0.6\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -73,10 +77,6 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <Private>True</Private>
-      <HintPath>..\ChouMei.API\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
-    </Reference>
     <Reference Include="System.Net.Http">
     </Reference>
     <Reference Include="System.Net.Http.WebRequest">
@@ -161,6 +161,8 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\BookingController.cs" />
+    <Compile Include="Controllers\HairStyleController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\MeiHiHomeController.cs" />
     <Compile Include="Controllers\ServiceController.cs" />
@@ -171,39 +173,23 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Helper\Constants.cs" />
-    <Compile Include="Helper\DodgeTextMessage.cs" />
-    <Compile Include="Helper\Extensions.cs" />
-    <Compile Include="Helper\Helper.cs" />
     <Compile Include="Helper\HttpUtils.cs" />
-    <Compile Include="Helper\ImageHelper.cs" />
-    <Compile Include="Helper\IPAddress.cs" />
-    <Compile Include="Helper\LuoSiMaoTextMessage.cs" />
-    <Compile Include="Helper\TextMessage.cs" />
-    <Compile Include="Helper\Thumbnail.cs" />
-    <Compile Include="Helper\Utils.cs" />
-    <Compile Include="Helper\WaterMark.cs" />
-    <Compile Include="Helper\WGS2GCJ.cs" />
     <Compile Include="Logic\BookingLogic.cs" />
     <Compile Include="Logic\ShopLogic.cs" />
     <Compile Include="Logic\UserLogic.cs" />
     <Compile Include="Models\Booking\UserMeiHiTicketsModel.cs" />
-    <Compile Include="Models\MeiHiDistanceModelJsonTypes\MeiHiDistanceModel.cs" />
-    <Compile Include="Models\MeiHiDistanceModelJsonTypes\Copyright.cs" />
-    <Compile Include="Models\MeiHiDistanceModelJsonTypes\Distance.cs" />
-    <Compile Include="Models\MeiHiDistanceModelJsonTypes\Duration.cs" />
-    <Compile Include="Models\MeiHiDistanceModelJsonTypes\Element.cs" />
-    <Compile Include="Models\MeiHiDistanceModelJsonTypes\Info.cs" />
-    <Compile Include="Models\MeiHiDistanceModelJsonTypes\Result.cs" />
-    <Compile Include="Models\Shop\ProductBrandImages.cs" />
+    <Compile Include="Models\Entity\RegionModel.cs" />
+    <Compile Include="Models\HairStyle\HairStyleModel.cs" />
     <Compile Include="Models\Service\ServiceForShopDetailModel.cs" />
     <Compile Include="Models\Service\ServiceModel.cs" />
     <Compile Include="Models\Shop\ShopDetailModel.cs" />
     <Compile Include="Models\Shop\ShopListModel.cs" />
     <Compile Include="Models\Shop\ShopModel.cs" />
+    <Compile Include="Models\User\UserAccountInfoModel.cs" />
     <Compile Include="Models\User\UserCommentsModel.cs" />
     <Compile Include="Models\User\Register.cs" />
     <Compile Include="Models\User\User.cs" />
+    <Compile Include="Models\User\UserFavoritesModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -273,6 +259,10 @@
     <None Include="Project_Readme.html" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\MeiHi.CommonDll\MeiHi.CommonDll.csproj">
+      <Project>{a3ab6301-136c-4bae-9027-c3d0aad05d43}</Project>
+      <Name>MeiHi.CommonDll</Name>
+    </ProjectReference>
     <ProjectReference Include="..\MeiHi.Model\MeiHi.Model.csproj">
       <Project>{6e143717-be86-4dae-a353-c230572bb564}</Project>
       <Name>MeiHi.Model</Name>
@@ -296,7 +286,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>30665</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:30665/</IISUrl>
+          <IISUrl>http://localhost:33333/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

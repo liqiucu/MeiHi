@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace MeiHi.API.Models.Booking
+namespace MeiHi.API.ViewModels
 {
     public class UserMeiHiTicketsModel
     {
@@ -12,6 +12,8 @@ namespace MeiHi.API.Models.Booking
         public List<MeiHiTicketModel> NotUsedConsumeMeiHiTickets { get; set; }
 
         public List<MeiHiTicketModel> CalceledConsumeMeiHiTickets { get; set; }
+
+        public List<MeiHiTicketModel> UsedConsumeMeiHiTickets { get; set; }
     }
 
     public class MeiHiTicketModel
@@ -63,12 +65,11 @@ namespace MeiHi.API.Models.Booking
         /// <summary>
         /// 美嗨券
         /// </summary>
-        public long VerifyCode { get; set; }
+        public string VerifyCode { get; set; }
 
         public DateTime DateModified { get; set; }
     }
-    //var temp = Guid.NewGuid().ToString().Replace("-", string.Empty);
-    //        var barcode = Regex.Replace(temp, "[a-zA-Z]", string.Empty).Substring(0, 12);
+
     public class NotPayedBookingModel
     {
         public long BookingId { get; set; }

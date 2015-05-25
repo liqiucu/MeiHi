@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="MeiHiModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012.Azure" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+      <Schema Namespace="MeiHiModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Add">
           <Key>
             <PropertyRef Name="AddId" />
@@ -110,14 +110,13 @@
         </EntityType>
         <EntityType Name="ProductBrand">
           <Key>
-            <PropertyRef Name="Id" />
+            <PropertyRef Name="ProductBrandId" />
           </Key>
-          <Property Name="ProductBrandId" Type="nvarchar" MaxLength="50" Nullable="false" />
-          <Property Name="ProductUrl" Type="nvarchar" MaxLength="500" />
+          <Property Name="ProductBrandId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ProductUrl" Type="nvarchar" MaxLength="500" Nullable="false" />
           <Property Name="ProductName" Type="nvarchar" MaxLength="50" />
           <Property Name="DateCreated" Type="datetime" Nullable="false" />
-          <Property Name="DateModified" Type="datetime" Nullable="false" />
-          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ShopId" Type="bigint" Nullable="false" />
         </EntityType>
         <EntityType Name="Province">
           <Key>
@@ -204,7 +203,6 @@
           <Property Name="Phone" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="Contract" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="IsOnline" Type="bit" Nullable="false" />
-          <Property Name="ProductBrandId" Type="nvarchar" MaxLength="50" />
           <Property Name="PurchaseNotes" Type="nvarchar" MaxLength="2000" />
           <Property Name="Coordinates" Type="nvarchar" MaxLength="50" />
           <Property Name="IsHot" Type="bit" Nullable="false" />
@@ -213,7 +211,6 @@
           <Property Name="DateCreated" Type="datetime" Nullable="false" />
           <Property Name="DateModified" Type="datetime" Nullable="false" />
           <Property Name="Title" Type="nvarchar" MaxLength="50" />
-          <Property Name="ImageUrl" Type="nvarchar" MaxLength="500" />
         </EntityType>
         <EntityType Name="ShopBrandImages">
           <Key>
@@ -231,9 +228,19 @@
           <Property Name="ShopUserId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Password" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="ShopId" Type="bigint" Nullable="false" />
-          <Property Name="ShopUserName" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="DateCreated" Type="datetime" Nullable="false" />
           <Property Name="DateModified" Type="datetime" Nullable="false" />
+          <Property Name="ShopUserName" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="principal_id" Type="int" Nullable="false" />
+          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="version" Type="int" />
+          <Property Name="definition" Type="varbinary(max)" />
         </EntityType>
         <EntityType Name="User">
           <Key>
@@ -406,6 +413,18 @@
             </Principal>
             <Dependent Role="HairStyle">
               <PropertyRef Name="HairStyleTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProductBrand_Shop">
+          <End Role="Shop" Type="Self.Shop" Multiplicity="1" />
+          <End Role="ProductBrand" Type="Self.ProductBrand" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Shop">
+              <PropertyRef Name="ShopId" />
+            </Principal>
+            <Dependent Role="ProductBrand">
+              <PropertyRef Name="ShopId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -634,6 +653,7 @@
           <EntitySet Name="Shop" EntityType="Self.Shop" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ShopBrandImages" EntityType="Self.ShopBrandImages" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ShopUser" EntityType="Self.ShopUser" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserComments" EntityType="Self.UserComments" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserCommentSharedImg" EntityType="Self.UserCommentSharedImg" Schema="dbo" store:Type="Tables" />
@@ -671,6 +691,10 @@
           <AssociationSet Name="FK_HairStyle_HairStyleType" Association="Self.FK_HairStyle_HairStyleType">
             <End Role="HairStyleType" EntitySet="HairStyleType" />
             <End Role="HairStyle" EntitySet="HairStyle" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProductBrand_Shop" Association="Self.FK_ProductBrand_Shop">
+            <End Role="Shop" EntitySet="Shop" />
+            <End Role="ProductBrand" EntitySet="ProductBrand" />
           </AssociationSet>
           <AssociationSet Name="FK_RecommandShop_Shop" Association="Self.FK_RecommandShop_Shop">
             <End Role="Shop" EntitySet="Shop" />
@@ -864,14 +888,14 @@
         </EntityType>
         <EntityType Name="ProductBrand">
           <Key>
-            <PropertyRef Name="Id" />
+            <PropertyRef Name="ProductBrandId" />
           </Key>
-          <Property Name="ProductBrandId" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="ProductUrl" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="ProductBrandId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ProductUrl" Type="String" MaxLength="500" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="ProductName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="DateCreated" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="DateModified" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ShopId" Type="Int64" Nullable="false" />
+          <NavigationProperty Name="Shop" Relationship="Self.FK_ProductBrand_Shop" FromRole="ProductBrand" ToRole="Shop" />
         </EntityType>
         <EntityType Name="Province">
           <Key>
@@ -972,7 +996,6 @@
           <Property Name="Phone" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Contract" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="IsOnline" Type="Boolean" Nullable="false" />
-          <Property Name="ProductBrandId" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="PurchaseNotes" Type="String" MaxLength="2000" FixedLength="false" Unicode="true" />
           <Property Name="Coordinates" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="IsHot" Type="Boolean" Nullable="false" />
@@ -981,8 +1004,8 @@
           <Property Name="DateCreated" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="DateModified" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="Title" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="ImageUrl" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Booking" Relationship="Self.FK_Booking_Shop" FromRole="Shop" ToRole="Booking" />
+          <NavigationProperty Name="ProductBrand" Relationship="Self.FK_ProductBrand_Shop" FromRole="Shop" ToRole="ProductBrand" />
           <NavigationProperty Name="RecommandShop" Relationship="Self.FK_RecommandShop_Shop" FromRole="Shop" ToRole="RecommandShop" />
           <NavigationProperty Name="Region" Relationship="Self.FK_Shop_Region" FromRole="Shop" ToRole="Region" />
           <NavigationProperty Name="Service" Relationship="Self.FK_Service_Shop" FromRole="Shop" ToRole="Service" />
@@ -1008,10 +1031,20 @@
           <Property Name="ShopUserId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Password" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="ShopId" Type="Int64" Nullable="false" />
-          <Property Name="ShopUserName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="DateCreated" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="DateModified" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ShopUserName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <NavigationProperty Name="Shop" Relationship="Self.FK_ShopUser_Shop" FromRole="ShopUser" ToRole="Shop" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="principal_id" Type="Int32" Nullable="false" />
+          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="version" Type="Int32" />
+          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
         </EntityType>
         <EntityType Name="User">
           <Key>
@@ -1209,6 +1242,18 @@
             </Principal>
             <Dependent Role="RolePermission">
               <PropertyRef Name="PermissionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProductBrand_Shop">
+          <End Role="Shop" Type="Self.Shop" Multiplicity="1" />
+          <End Role="ProductBrand" Type="Self.ProductBrand" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Shop">
+              <PropertyRef Name="ShopId" />
+            </Principal>
+            <Dependent Role="ProductBrand">
+              <PropertyRef Name="ShopId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1425,6 +1470,7 @@
           <EntitySet Name="Shop" EntityType="Self.Shop" />
           <EntitySet Name="ShopBrandImages" EntityType="Self.ShopBrandImages" />
           <EntitySet Name="ShopUser" EntityType="Self.ShopUser" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" />
           <EntitySet Name="User" EntityType="Self.User" />
           <EntitySet Name="UserComments" EntityType="Self.UserComments" />
           <EntitySet Name="UserCommentSharedImg" EntityType="Self.UserCommentSharedImg" />
@@ -1466,6 +1512,10 @@
           <AssociationSet Name="FK_RolePermission_Permission" Association="Self.FK_RolePermission_Permission">
             <End Role="Permission" EntitySet="Permission" />
             <End Role="RolePermission" EntitySet="RolePermission" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProductBrand_Shop" Association="Self.FK_ProductBrand_Shop">
+            <End Role="Shop" EntitySet="Shop" />
+            <End Role="ProductBrand" EntitySet="ProductBrand" />
           </AssociationSet>
           <AssociationSet Name="FK_Region_Province" Association="Self.FK_Region_Province">
             <End Role="Province" EntitySet="Province" />
@@ -1655,8 +1705,7 @@
                 <ScalarProperty Name="ProductUrl" ColumnName="ProductUrl" />
                 <ScalarProperty Name="ProductName" ColumnName="ProductName" />
                 <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
-                <ScalarProperty Name="DateModified" ColumnName="DateModified" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="ShopId" ColumnName="ShopId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1750,7 +1799,6 @@
                 <ScalarProperty Name="Phone" ColumnName="Phone" />
                 <ScalarProperty Name="Contract" ColumnName="Contract" />
                 <ScalarProperty Name="IsOnline" ColumnName="IsOnline" />
-                <ScalarProperty Name="ProductBrandId" ColumnName="ProductBrandId" />
                 <ScalarProperty Name="PurchaseNotes" ColumnName="PurchaseNotes" />
                 <ScalarProperty Name="Coordinates" ColumnName="Coordinates" />
                 <ScalarProperty Name="IsHot" ColumnName="IsHot" />
@@ -1759,7 +1807,6 @@
                 <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
                 <ScalarProperty Name="DateModified" ColumnName="DateModified" />
                 <ScalarProperty Name="Title" ColumnName="Title" />
-                <ScalarProperty Name="ImageUrl" ColumnName="ImageUrl" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1779,9 +1826,20 @@
                 <ScalarProperty Name="ShopUserId" ColumnName="ShopUserId" />
                 <ScalarProperty Name="Password" ColumnName="Password" />
                 <ScalarProperty Name="ShopId" ColumnName="ShopId" />
-                <ScalarProperty Name="ShopUserName" ColumnName="ShopUserName" />
                 <ScalarProperty Name="DateCreated" ColumnName="DateCreated" />
                 <ScalarProperty Name="DateModified" ColumnName="DateModified" />
+                <ScalarProperty Name="ShopUserName" ColumnName="ShopUserName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sysdiagrams">
+            <EntityTypeMapping TypeName="MeiHiModel.sysdiagrams">
+              <MappingFragment StoreEntitySet="sysdiagrams">
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="definition" ColumnName="definition" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
