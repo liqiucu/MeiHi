@@ -104,9 +104,9 @@ namespace MeiHi.Admin.Controllers
             }
         }
 
-        [HttpGet]
+        [HttpPost]
         [Auth(PermissionName = "广告位管理")]
-        public ActionResult UpdateAdd(AdvertisingModel model)
+        public ActionResult UpdateAdd(AdvertisingModel model, HttpPostedFileBase[] addImages)
         {
             using (var db = new MeiHiEntities())
             {
@@ -119,10 +119,20 @@ namespace MeiHi.Admin.Controllers
                 add.Avaliable = model.Avaliable;
                 add.DateCreated = DateTime.Now;
                 add.Title = model.Title;
-                add.Url = model.Url;
+
+                if (addImages != null && addImages.Count() == 1)
+                {
+                    ImageHelper.DeleteImageFromDataBaseAndPhyclePath(add.Url, "/upload/home/add/");
+
+                    var serviceImageUrl = ImageHelper.SaveImage(
+                        Request.Url.Authority,
+                        "/upload/home/add/",
+                        addImages, 0, 0, 100);
+
+                    add.Url = serviceImageUrl[0];
+                }
 
                 db.SaveChanges();
-
                 return RedirectToAction("ShowAdvertising");
             }
         }
@@ -141,6 +151,7 @@ namespace MeiHi.Admin.Controllers
 
                 db.Add.Remove(add);
                 db.SaveChanges();
+                ImageHelper.DeleteImageFromDataBaseAndPhyclePath(add.Url, "/upload/home/add/");
                 return RedirectToAction("ShowAdvertising");
             }
         }

@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MeiHi.API.UnitTest", "MeiHi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MeiHi.CommonDll", "MeiHi.CommonDll\MeiHi.CommonDll.csproj", "{AAA39CB6-D270-4845-976A-A0AEB3E7DB8E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MeiHi.Shop", "MeiHi.Shop\MeiHi.Shop.csproj", "{4F09AD4F-F482-4891-8709-02188C16C5A1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{AAA39CB6-D270-4845-976A-A0AEB3E7DB8E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AAA39CB6-D270-4845-976A-A0AEB3E7DB8E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AAA39CB6-D270-4845-976A-A0AEB3E7DB8E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4F09AD4F-F482-4891-8709-02188C16C5A1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4F09AD4F-F482-4891-8709-02188C16C5A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4F09AD4F-F482-4891-8709-02188C16C5A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4F09AD4F-F482-4891-8709-02188C16C5A1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

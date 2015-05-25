@@ -7,7 +7,7 @@
 <h2>创建广告</h2>
 
 
-@using (Html.BeginForm("SaveAdd", "Advertising", FormMethod.Post))
+@using (Html.BeginForm("SaveAdd", "Advertising", FormMethod.Post,new { enctype = "multipart/form-data", id = "form2" }))
 {
     @Html.AntiForgeryToken()
 

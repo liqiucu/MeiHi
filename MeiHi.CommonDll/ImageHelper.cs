@@ -101,20 +101,23 @@ namespace MeiHi.CommonDll.Helper
         {
             var temp1 = fullName.Split('/');
             var temp2 = temp1[temp1.Length - 1];
-            var temp3 = temp2.Split('_')[1];
-            //var fileName = temp2.Split('.')[0];
+
+            if (temp2.Contains("_"))
+            {
+                var temp3 = temp2.Split('_')[1];
+                string filePhycleName = HttpContext.Current.Server.MapPath(folder + temp3);
+
+                if (File.Exists(filePhycleName))
+                {
+                    File.Delete(filePhycleName);
+                }
+            }
 
             string filePhycleName100 = HttpContext.Current.Server.MapPath(folder + temp2);
-            string filePhycleName = HttpContext.Current.Server.MapPath(folder + temp3);
 
             if (File.Exists(filePhycleName100))
             {
                 File.Delete(filePhycleName100);
-            }
-
-            if (File.Exists(filePhycleName))
-            {
-                File.Delete(filePhycleName);
             }
         }
 

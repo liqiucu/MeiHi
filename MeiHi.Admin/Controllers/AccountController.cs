@@ -669,6 +669,27 @@ namespace MeiHi.Admin.Controllers
             }
         }
 
+        [HttpGet]
+        [Auth(RoleName = "管理员")]
+        public ActionResult UpdatePermission(PermissionModel model)
+        {
+            using (var db = new MeiHiEntities())
+            {
+                var permission = db.Permission.FirstOrDefault(a => a.PermissionId == model.PermissionId);
+
+                if (permission != null)
+                {
+                    permission.DateModified=DateTime.Now;
+                    permission.Description = model.Description;
+                    permission.Group = model.Group;
+                    permission.Name = model.PermissionName;
+                    db.SaveChanges();
+                }
+
+                return RedirectToAction("PermissionManage");
+            }
+        }
+
         [HttpPost]
         [Auth(RoleName = "管理员")]
         public ActionResult UpdateRole(PermissionModel model)
