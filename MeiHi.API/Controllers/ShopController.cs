@@ -75,19 +75,15 @@ namespace MeiHi.API.Controllers
         [HttpGet]
         [Route("Show_NearestDistanceShop")]
         [AllowAnonymous]
-        public object GetNearestDistanceShops(int page = 1, int size = 20)
+        public object GetNearestDistanceShops(string region, int page = 1, int size = 20)
         {
 
             if (System.Web.HttpContext.Current.Session["Shops"] == null)
             {
-                return new
-                  {
-                      jsonStatus = 0,
-                      resut = "网络较慢，还没刷出店铺信息"
-                  };
+                CalDistance(region);
             }
-            var Shops = System.Web.HttpContext.Current.Session["Shops"] as List<ShopModel>;
 
+            var Shops = System.Web.HttpContext.Current.Session["Shops"] as List<ShopModel>;
             var shops = Shops.OrderBy(a => a.Distance).Skip((page - 1) * size).Take(size);
 
             return new
@@ -106,15 +102,11 @@ namespace MeiHi.API.Controllers
         [HttpGet]
         [Route("Show_LowestDiscountRateShops")]
         [AllowAnonymous]
-        public object GetLowestDiscountRateShops(int page = 1, int size = 20)
+        public object GetLowestDiscountRateShops(string region, int page = 1, int size = 20)
         {
             if (System.Web.HttpContext.Current.Session["Shops"] == null)
             {
-                return new
-                {
-                    jsonStatus = 0,
-                    resut = "网络较慢，还没刷出店铺信息"
-                };
+                CalDistance(region);
             }
 
             var Shops = System.Web.HttpContext.Current.Session["Shops"] as List<ShopModel>;
@@ -356,6 +348,15 @@ namespace MeiHi.API.Controllers
         {
             try
             {
+                if (System.Web.HttpContext.Current.Session["Shops"] != null)
+                {
+                    return new
+                    {
+                        jsonStatus = 1,
+                        resut = "店铺信息预加载成功"
+                    };
+                }
+
                 using (var db = new MeiHiEntities())
                 {
                     var shops = ShopLogic.GetAllShops();
@@ -396,7 +397,6 @@ namespace MeiHi.API.Controllers
                     jsonStatus = 0,
                     resut = ex
                 };
-                throw;
             }
         }
     }

@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using MeiHi.Model;
 using MeiHi.Admin.Models.Advertising;
+using MeiHi.CommonDll.Helper;
 
 namespace MeiHi.Admin.Controllers
 {
@@ -45,23 +46,36 @@ namespace MeiHi.Admin.Controllers
 
         [HttpPost]
         [Auth(PermissionName = "广告位管理")]
-        public ActionResult SaveAdd(AdvertisingModel model)
+        public ActionResult SaveAdd(AdvertisingModel model, HttpPostedFileBase[] addImages)
         {
             using (var db = new MeiHiEntities())
             {
-
-                var add = new Add()
+                if (addImages != null && addImages.Count() == 1)
                 {
-                    Avaliable = model.Avaliable,
-                    DateCreated = DateTime.Now,
-                    Title = model.Title,
-                    Url = model.Url
-                };
 
-                db.Add.Add(add);
-                db.SaveChanges();
+                    var add = new Add()
+                    {
+                        Avaliable = model.Avaliable,
+                        DateCreated = DateTime.Now,
+                        Title = model.Title
+                    };
 
-                return RedirectToAction("ShowAdvertising");
+                    var serviceImageUrl = ImageHelper.SaveImage(
+                        Request.Url.Authority,
+                        "/upload/home/add/",
+                        addImages, 0, 0, 100);
+
+                    add.Url = serviceImageUrl[0];
+
+                    db.Add.Add(add);
+                    db.SaveChanges();
+
+                    return RedirectToAction("ShowAdvertising");
+                }
+                else
+                {
+                    return RedirectToAction("ShowAdvertising");
+                }
             }
         }
 
@@ -85,7 +99,7 @@ namespace MeiHi.Admin.Controllers
                     Title = add.Title,
                     AddId = add.AddId
                 };
-                
+
                 return View(model);
             }
         }

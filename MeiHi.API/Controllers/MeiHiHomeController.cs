@@ -49,11 +49,11 @@ namespace MeiHi.API.Controllers
         [HttpGet]
         [Route("get_allregions")]
         [AllowAnonymous]
-        public object GetAllRegions()
+        public object GetAllRegionsByCityId(int cityId = 20)
         {
             using (var db = new MeiHiEntities())
             {
-                var regions = db.Region.Where(a => a.ParentRegionId == 20);
+                var regions = db.Region.Where(a => a.ParentRegionId == cityId);
 
                 List<RegionModel> models = new List<RegionModel>();
 
@@ -70,7 +70,7 @@ namespace MeiHi.API.Controllers
                 {
                     jsonStatus = 1,
                     resut = models
-                }; 
+                };
             }
         }
 
@@ -129,7 +129,7 @@ namespace MeiHi.API.Controllers
         [HttpGet]
         [Route("search_shops_byregion")]
         [AllowAnonymous]
-        public object SearchShopsByRegion(int regionId,string start)
+        public object SearchShopsByRegion(int regionId, string start)
         {
             using (var db = new MeiHiEntities())
             {
@@ -141,7 +141,7 @@ namespace MeiHi.API.Controllers
 
                     foreach (var item in temp)
                     {
-                        results.Add(new ShopModel() 
+                        results.Add(new ShopModel()
                         {
                             Coordinates = item.Coordinates,
                             ShopId = item.ShopId,

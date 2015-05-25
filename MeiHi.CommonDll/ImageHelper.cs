@@ -13,7 +13,7 @@ namespace MeiHi.CommonDll.Helper
     /// </summary>
     public static class ImageHelper
     {
-        public static List<string> SaveImage(string lootUrl, string folder, HttpPostedFileBase[] images)
+        public static List<string> SaveImage(string lootUrl, string folder, HttpPostedFileBase[] images, int width = 100, int length = 100, int quality = 100)
         {
             try
             {
@@ -33,15 +33,22 @@ namespace MeiHi.CommonDll.Helper
                         var filePhysicalPath = HttpContext.Current.Server.MapPath(folder + fileName);
                         file.SaveAs(filePhysicalPath);
 
-                        Image image = Image.FromFile(filePhysicalPath);
-
-                        using (var resized = ImageHelper.ResizeImage(image, 100, 100))
+                        if (width > 0 && length > 0)
                         {
-                            ImageHelper.SaveJpeg(HttpContext.Current.Server.MapPath(folder + "100X100_" + fileName), resized, 100);
-                        }
+                            Image image = Image.FromFile(filePhysicalPath);
 
-                        image.Dispose();
-                        results.Add("http://" + lootUrl + folder + "100X100_" + fileName);
+                            using (var resized = ImageHelper.ResizeImage(image, width, length))
+                            {
+                                ImageHelper.SaveJpeg(HttpContext.Current.Server.MapPath(folder + width.ToString() + "X" + length.ToString() + "_" + fileName), resized, quality);
+                            }
+
+                            image.Dispose();
+                            results.Add("http://" + lootUrl + folder + width.ToString() + "X" + length.ToString() + "_" + fileName);
+                        }
+                        else
+                        {
+                            results.Add("http://" + lootUrl + folder + fileName);
+                        }
                     }
                 }
 
