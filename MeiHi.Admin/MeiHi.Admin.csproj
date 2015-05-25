@@ -284,7 +284,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MeiHi.CommonDll\MeiHi.CommonDll.csproj">
-      <Project>{a3ab6301-136c-4bae-9027-c3d0aad05d43}</Project>
+      <Project>{aaa39cb6-d270-4845-976a-a0aeb3e7db8e}</Project>
       <Name>MeiHi.CommonDll</Name>
     </ProjectReference>
     <ProjectReference Include="..\MeiHi.Model\MeiHi.Model.csproj">
