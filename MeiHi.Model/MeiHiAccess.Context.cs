@@ -45,7 +45,6 @@ namespace MeiHi.Model
         public virtual DbSet<Shop> Shop { get; set; }
         public virtual DbSet<ShopBrandImages> ShopBrandImages { get; set; }
         public virtual DbSet<ShopUser> ShopUser { get; set; }
-        public virtual DbSet<sysdiagrams> sysdiagrams { get; set; }
         public virtual DbSet<User> User { get; set; }
         public virtual DbSet<UserComments> UserComments { get; set; }
         public virtual DbSet<UserCommentSharedImg> UserCommentSharedImg { get; set; }
