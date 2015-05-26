@@ -44,7 +44,7 @@ namespace MeiHi.Admin
                 {
                     if (!filterContext.HttpContext.Response.IsRequestBeingRedirected)
                     {
-                        filterContext.Result = new RedirectResult(Constants.AdminSite.AdminLoginUrl);
+                        filterContext.Result = new RedirectResult(Constants.AdminLoginUrl);
                         filterContext.HttpContext.Session["permissionnotenough"] = true;
                         filterContext.HttpContext.Session["ReturnUrl"] = filterContext.HttpContext.Request.Url.AbsoluteUri;
                         return;
@@ -55,7 +55,7 @@ namespace MeiHi.Admin
             {
                 if (filterContext.HttpContext.Request.IsAjaxRequest())
                 {
-                    filterContext.Result = new JavaScriptResult() { Script = "window.location = '" + Constants.AdminSite.AdminLoginUrl + "'" };
+                    filterContext.Result = new JavaScriptResult() { Script = "window.location = '" + Constants.AdminLoginUrl + "'" };
                     filterContext.HttpContext.Session["ReturnUrl"] = filterContext.HttpContext.Request.Url.AbsoluteUri;
                     return;
                 }
@@ -63,7 +63,7 @@ namespace MeiHi.Admin
                 {
                     if (!filterContext.HttpContext.Response.IsRequestBeingRedirected)
                     {
-                        filterContext.Result = new RedirectResult(Constants.AdminSite.AdminLoginUrl);
+                        filterContext.Result = new RedirectResult(Constants.AdminLoginUrl);
                         filterContext.HttpContext.Session["ReturnUrl"] = filterContext.HttpContext.Request.Url.AbsoluteUri;
                         return;
                     }

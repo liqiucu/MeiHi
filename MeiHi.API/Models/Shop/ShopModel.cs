@@ -98,5 +98,15 @@ namespace MeiHi.API.ViewModels
         public List<UserCommentsModel> UserComments { get; set; }
 
         public List<string> ProductBrandImages { get; set; }
+
+        public bool IsHot { get; set; }
+        public bool IsOnline { get; set; }
+    }
+
+    public class ShopDistanceModel
+    {
+        public long ShopId { get; set; }
+
+        public double Distance { get; set; }
     }
 }

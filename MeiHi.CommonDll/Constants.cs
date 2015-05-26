@@ -8,18 +8,20 @@ namespace MeiHi.CommonDll.Helper
 {
     public static class Constants
     {
-        public const string DateFormat = "yyyy-MM-dd";
-        public const string DateTimeFormat = "yyyy-MM-dd HH:mm:ss";
+        //public const string AdminUrl = "http://meihi.chinacloudsites.cn";
+        //public const string AdminLoginUrl = "http://meihi.chinacloudsites.cn/account/login";
+        //public const string AdminLogoutUrl = "http://meihi.chinacloudsites.cn/account/logout";
 
-        public static class AdminSite
-        {
-            //public const string AdminUrl = "http://meihi.chinacloudsites.cn"; //"http://localhost:37628/";
-            //public const string AdminLoginUrl = "http://meihi.chinacloudsites.cn/account/login";//"http://localhost:37628/account/login";
-            //public const string AdminLogoutUrl = "http://meihi.chinacloudsites.cn/account/logout";//"http://localhost:37628/account/logout";
+        public const string AdminUrl = "http://localhost:44444/";
+        public const string AdminLoginUrl = "http://localhost:44444/account/login";
+        public const string AdminLogoutUrl = "http://localhost:44444/account/logout";
 
-            public const string AdminUrl = "http://localhost:44444/";
-            public const string AdminLoginUrl = "http://localhost:44444/account/login";
-            public const string AdminLogoutUrl = "http://localhost:44444/account/logout";
-        }
+        //public const string ShoperUrl = "http://meihishoper.chinacloudsites.cn"; 
+        //public const string ShoperLoginUrl = "http://meihishoper.chinacloudsites.cn/account/login";
+        //public const string ShoperLogoutUrl = "http://meihishoper.chinacloudsites.cn/account/logout";
+
+        public const string ShoperUrl = "http://localhost:55555/";
+        public const string ShoperLoginUrl = "http://localhost:55555/account/login";
+        public const string ShoperLogoutUrl = "http://localhost:55555/account/logout";
     }
 }

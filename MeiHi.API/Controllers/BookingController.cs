@@ -233,7 +233,7 @@ namespace MeiHi.API.Controllers
             }
         }
 
-        public void SuccessCallPayApiReturnPage()
+        public void CallBackPage()
         {
 
         }

@@ -12,19 +12,41 @@ namespace MeiHi.API.Logic
     {
         private static readonly object CacheLockObjectGetAllShops = new object();
 
-        public static List<Shop> GetAllShops()
+        public static List<ShopModel> GetAllShopsFromCache()
         {
             using (var db = new MeiHiEntities())
             {
-                var shops = HttpRuntime.Cache.Get("AllShops") as List<Shop>;
+                var shops = HttpRuntime.Cache.Get("AllShops") as List<ShopModel>;
 
                 if (shops == null)
                 {
                     lock (CacheLockObjectGetAllShops)
                     {
-                        shops = db.Shop.Where(a => a.IsOnline == true).ToList();
+                        var temp = db.Shop.Where(a => a.IsOnline).ToList();
+
+                        shops = new List<ShopModel>();
+
+                        foreach (var item in temp)
+                        {
+                            var shopModel = new ShopModel()
+                            {
+                                Coordinates = item.Coordinates,
+                                ShopId = item.ShopId,
+                                Title = item.Title,
+                                DiscountRate = GetDiscountRate(item.ShopId),
+                                RegionName = item.Region.Name,
+                                ShopImageUrl = item.ShopBrandImages.FirstOrDefault().url,
+                                Rate = GetShopRate(item.ShopId),
+                                ParentShopId = item.ParentShopId,
+                                IsHot = item.IsHot,
+                                IsOnline = item.IsOnline
+                            };
+
+                            shops.Add(shopModel);
+                        }
+
                         HttpRuntime.Cache.Insert("AllShops", shops, null,
-                           DateTime.Now.AddSeconds(600), TimeSpan.Zero);
+                           DateTime.Now.AddSeconds(3600), TimeSpan.Zero);
                     }
                 }
 
