@@ -25,7 +25,8 @@ namespace MeiHi.API.Controllers
         {
             using (var db = new MeiHiEntities())
             {
-                var recommandShops = db.Shop.Where(a => a.IsHot == true && a.IsOnline == true).Take(10);
+                var shops = ShopLogic.GetAllShopsFromCache();
+                var recommandShops = shops.Where(a => a.IsHot == true && a.IsOnline == true).Take(10);
 
                 if (recommandShops == null || recommandShops.Count() == 0)
                 {
@@ -36,32 +37,10 @@ namespace MeiHi.API.Controllers
                     };
                 }
 
-                var results = new List<ShopModel>();
-
-                foreach (var item in recommandShops)
-                {
-                    var shopModel = new ShopModel()
-                    {
-                        Coordinates = item.Coordinates,
-                        ShopId = item.ShopId,
-                        Title = item.Title,
-                        DiscountRate = ShopLogic.GetDiscountRate(item.ShopId),
-                        Rate = ShopLogic.GetShopRate(item.ShopId),
-                        Distance = HttpUtils.CalOneShop(region, item.Coordinates),
-                        RegionName = item.Region.Name,
-                        ShopImageUrl = item != null
-                                        && item.ShopBrandImages != null
-                                        ? item.ShopBrandImages.FirstOrDefault().url
-                                        : null
-                    };
-
-                    results.Add(shopModel);
-                }
-
                 return new
                 {
                     jsonStatus = 1,
-                    resut = results
+                    resut = recommandShops
                 };
             }
         }
@@ -77,19 +56,28 @@ namespace MeiHi.API.Controllers
         [AllowAnonymous]
         public object GetNearestDistanceShops(string region, int page = 1, int size = 20)
         {
-
-            if (System.Web.HttpContext.Current.Session["Shops"] == null)
+            if (System.Web.HttpContext.Current.Session["ShopsDistance"] == null)
             {
                 CalDistance(region);
             }
 
-            var Shops = System.Web.HttpContext.Current.Session["Shops"] as List<ShopModel>;
-            var shops = Shops.OrderBy(a => a.Distance).Skip((page - 1) * size).Take(size);
+            var shops = ShopLogic.GetAllShopsFromCache();
+            var shopDistances = System.Web.HttpContext.Current.Session["ShopsDistance"] as List<ShopDistanceModel>;
+            var temp = shopDistances.OrderBy(a => a.Distance).Skip((page - 1) * size).Take(size);
+
+            var results = new List<ShopModel>();
+
+            foreach (var item in temp)
+            {
+                var result = shops.First(a => a.ShopId == item.ShopId);
+                result.Distance = item.Distance;
+                results.Add(result);
+            }
 
             return new
             {
                 jsonStatus = 1,
-                resut = shops
+                resut = results
             };
         }
 
@@ -104,19 +92,80 @@ namespace MeiHi.API.Controllers
         [AllowAnonymous]
         public object GetLowestDiscountRateShops(string region, int page = 1, int size = 20)
         {
-            if (System.Web.HttpContext.Current.Session["Shops"] == null)
+            if (System.Web.HttpContext.Current.Session["ShopsDistance"] == null)
             {
                 CalDistance(region);
             }
 
-            var Shops = System.Web.HttpContext.Current.Session["Shops"] as List<ShopModel>;
-            var shops = Shops.OrderBy(a => a.DiscountRate).Skip((page - 1) * size).Take(size);
+            var shops = ShopLogic.GetAllShopsFromCache();
+            var shopDistances = System.Web.HttpContext.Current.Session["ShopsDistance"] as List<ShopDistanceModel>;
+            var result = shops.OrderBy(a => a.DiscountRate).Skip((page - 1) * size).Take(size);
+
+            foreach (var item in result)
+            {
+                item.Distance = shopDistances.First(a => a.ShopId == item.ShopId).Distance;
+            }
 
             return new
             {
                 jsonStatus = 1,
-                resut = shops
+                resut = result
             };
+        }
+
+        /// <summary>
+        /// 计算所有店铺距离和折扣并且排序
+        /// </summary>
+        /// <param name="region">用户所在地的经纬度</param>
+        [AllowAnonymous]
+        [Route("shop_caldistance")]
+        [HttpGet]
+        public object CalDistance(string region)
+        {
+            try
+            {
+                if (System.Web.HttpContext.Current.Session["ShopsDistance"] != null)
+                {
+                    return new
+                    {
+                        jsonStatus = 1,
+                        resut = "成功获取店铺距离"
+                    };
+                }
+
+                using (var db = new MeiHiEntities())
+                {
+                    //加载缓存
+                    var shops = ShopLogic.GetAllShopsFromCache();
+                    var shopDistances = new List<ShopDistanceModel>();
+
+                    foreach (var item in shops)
+                    {
+                        shopDistances.Add(new ShopDistanceModel()
+                        {
+                            ShopId = item.ShopId,
+                            Distance = HttpUtils.CalOneShop(region, item.Coordinates)
+                        });
+                    }
+
+                    //每个用户的距离信息  放入临时session
+                    System.Web.HttpContext.Current.Session["ShopsDistance"] = shopDistances;
+
+                    return new
+                    {
+                        jsonStatus = 1,
+                        resut = "成功获取店铺距离"
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new
+                {
+                    jsonStatus = 0,
+                    resut = ex
+                };
+            }
         }
 
         /// <summary>
@@ -186,7 +235,7 @@ namespace MeiHi.API.Controllers
                         DetailAddress = shop.DetailAddress,
                         Phone = shop.Phone,
                         ShopId = shop.ShopId,
-                        ProductBrandImages = shop.ProductBrand.Select(a=>a.ProductUrl).ToList(),
+                        ProductBrandImages = shop.ProductBrand.Select(a => a.ProductUrl).ToList(),
                         PurchaseNotes = shop.PurchaseNotes,
                         ParentShopId = shop.ParentShopId,//当要调用Show_BranchShops时候传递ParentShopId
                         BranchStoreCount = ShopLogic.GetBranchStoreCount(shop.ParentShopId),//如果查询出来有分店 那么就需要调用 接口Show_BranchShops
@@ -334,69 +383,6 @@ namespace MeiHi.API.Controllers
                 };
 
                 throw;
-            }
-        }
-
-        /// <summary>
-        /// 计算所有店铺距离和折扣并且排序
-        /// </summary>
-        /// <param name="region">用户所在地的经纬度</param>
-        [AllowAnonymous]
-        [Route("shop_caldistance")]
-        [HttpGet]
-        public object CalDistance(string region)
-        {
-            try
-            {
-                if (System.Web.HttpContext.Current.Session["Shops"] != null)
-                {
-                    return new
-                    {
-                        jsonStatus = 1,
-                        resut = "店铺信息预加载成功"
-                    };
-                }
-
-                using (var db = new MeiHiEntities())
-                {
-                    var shops = ShopLogic.GetAllShops();
-
-                    var shopResults = new List<ShopModel>();
-
-                    for (int j = 0; j < shops.Count(); j++)
-                    {
-                        var shopModel = new ShopModel()
-                        {
-                            Coordinates = shops[j].Coordinates,
-                            ShopId = shops[j].ShopId,
-                            Title = shops[j].Title,
-                            DiscountRate = ShopLogic.GetDiscountRate(shops[j].ShopId),
-                            RegionName = shops[j].Region.Name,
-                            ShopImageUrl = shops[j].ShopBrandImages.FirstOrDefault().url,
-                            Rate = ShopLogic.GetShopRate(shops[j].ShopId),
-                            ParentShopId = shops[j].ParentShopId,
-                            Distance = HttpUtils.CalOneShop(region, shops[j].Coordinates)
-                        };
-
-                        shopResults.Add(shopModel);
-                    }
-
-                    System.Web.HttpContext.Current.Session["Shops"] = shopResults;
-
-                    return new
-                    {
-                        jsonStatus = 1,
-                        resut = "店铺信息预加载成功"
-                    };
-                }
-            }
-            catch (Exception ex)
-            {
-                return new
-                {
-                    jsonStatus = 0,
-                    resut = ex
-                };
             }
         }
     }

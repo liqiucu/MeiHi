@@ -21,7 +21,7 @@ namespace MeiHi.Shop
 
                 if (!ShoperLogic.HasPermission(shopId) && !filterContext.HttpContext.Response.IsRequestBeingRedirected)
                 {
-                    filterContext.Result = new RedirectResult(Constants.AdminSite.AdminLoginUrl);
+                    filterContext.Result = new RedirectResult(Constants.ShoperLoginUrl);
                     filterContext.HttpContext.Session["permissionnotenough"] = true;
                     filterContext.HttpContext.Session["ReturnUrl"] = filterContext.HttpContext.Request.Url.AbsoluteUri;
                     return;
@@ -31,7 +31,7 @@ namespace MeiHi.Shop
             {
                 if (filterContext.HttpContext.Request.IsAjaxRequest())
                 {
-                    filterContext.Result = new JavaScriptResult() { Script = "window.location = '" + Constants.AdminSite.AdminLoginUrl + "'" };
+                    filterContext.Result = new JavaScriptResult() { Script = "window.location = '" + Constants.ShoperLoginUrl + "'" };
                     filterContext.HttpContext.Session["ReturnUrl"] = filterContext.HttpContext.Request.Url.AbsoluteUri;
                     return;
                 }
@@ -39,7 +39,7 @@ namespace MeiHi.Shop
                 {
                     if (!filterContext.HttpContext.Response.IsRequestBeingRedirected)
                     {
-                        filterContext.Result = new RedirectResult(Constants.AdminSite.AdminLoginUrl);
+                        filterContext.Result = new RedirectResult(Constants.ShoperLoginUrl);
                         filterContext.HttpContext.Session["ReturnUrl"] = filterContext.HttpContext.Request.Url.AbsoluteUri;
                         return;
                     }

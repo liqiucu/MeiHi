@@ -36,6 +36,11 @@ namespace MeiHi.API.Helper
 
         public static double CalOneShop(string origin, string destination)
         {
+            if (string.IsNullOrEmpty(origin))
+            {
+                return 0;
+            }
+
             string[] originLatLng = origin.Split(',');
             double slng = double.Parse(originLatLng[0]);
             double slat = double.Parse(originLatLng[1]);
