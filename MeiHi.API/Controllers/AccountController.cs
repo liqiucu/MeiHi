@@ -10,6 +10,7 @@ using MeiHi.Model;
 using MeiHi.API.Helper;
 using MeiHi.API.ViewModels;
 using MeiHi.CommonDll.Helper;
+using System.Data.Entity.Validation;
 
 namespace MeiHi.API.Controllers
 {
@@ -25,34 +26,43 @@ namespace MeiHi.API.Controllers
         [HttpGet]
         public object GetRegisterMobileVerificationCode(string mobile)
         {
-            using (var db = new MeiHiEntities())
+            try
             {
-                var reg = db.User.SingleOrDefault(r => r.Mobile == mobile);
-                var code = CommonHelper.GenerateRandomNumber(100000, 999999).ToString();
-                if (reg == null)
+                using (var db = new MeiHiEntities())
                 {
-                    reg = new User()
+                    var reg = db.User.SingleOrDefault(r => r.Mobile == mobile);
+                    var code = CommonHelper.GenerateRandomNumber(100000, 999999).ToString();
+                    if (reg == null)
                     {
-                        Mobile = mobile,
-                        VerifyCode = code,
-                        DateCreated = DateTime.Now,
-                        DateModified = DateTime.Now,
+                        reg = new User()
+                        {
+                            Mobile = mobile,
+                            VerifyCode = code,
+                            DateCreated = DateTime.Now,
+                            DateModified = DateTime.Now,
+                            Salt=""
+                        };
+                        db.User.Add(reg);
+                        LuoSiMaoTextMessage.SendText(reg.Mobile, reg.VerifyCode + " 用于登陆");
+                    }
+                    else
+                    {
+                        reg.VerifyCode = code;
+                        reg.DateModified = DateTime.Now;
+                        LuoSiMaoTextMessage.SendText(reg.Mobile, reg.VerifyCode + " 用于登陆");
+                    }
+                    db.SaveChanges();
+                    return new
+                    {
+                        jsonStatus = 0,
+                        result = "send mobile:" + mobile + " verify code: " + code + "success"
                     };
-                    db.User.Add(reg);
-                    LuoSiMaoTextMessage.SendText(reg.Mobile, reg.VerifyCode + " 用于登陆");
                 }
-                else
-                {
-                    reg.VerifyCode = code;
-                    reg.DateModified = DateTime.Now;
-                    LuoSiMaoTextMessage.SendText(reg.Mobile, reg.VerifyCode + " 用于登陆");
-                }
-                db.SaveChanges();
-                return new
-                {
-                    jsonStatus = 0,
-                    result = "send mobile:" + mobile + " verify code: " + code + "success"
-                };
+            }
+            catch (DbEntityValidationException ex)
+            {
+                
+                throw;
             }
         }
 
@@ -80,20 +90,20 @@ namespace MeiHi.API.Controllers
 
                 if (reg == null)
                 {
-                    var resp = new HttpResponseMessage(HttpStatusCode.BadRequest)
+                    return new
                     {
-                        Content = new StringContent("{\"jsonStatus\": 0,\"alertMessage\": \"验证码错误\"}", Encoding.UTF8, "application/json")
+                        jsonStatus = 0,
+                        resut = "验证码错误"
                     };
-                    throw new HttpResponseException(resp);
                 }
 
-                if (reg.DateModified.AddMinutes(1) < DateTime.Now)
+                if (reg.DateModified.AddMinutes(3) < DateTime.Now)
                 {
-                    var resp = new HttpResponseMessage(HttpStatusCode.BadRequest)
+                    return new
                     {
-                        Content = new StringContent("{\"jsonStatus\": 0,\"alertMessage\": \"验证码已过期，请返回重新验证\"}", Encoding.UTF8, "application/json")
+                        jsonStatus = 0,
+                        resut = "验证码已过期，请返回重新验证"
                     };
-                    throw new HttpResponseException(resp);
                 }
 
                 reg.IsLogin = true;

@@ -44,7 +44,7 @@ namespace MeiHi.Shop.Controllers
                     ViewBag.ErrorMessage = string.Format("美嗨券 {0} 验证失败, 请核对后重新输入", code);
                 }
 
-                return View("Index");
+                return RedirectToAction("Index");
             }
         }
 

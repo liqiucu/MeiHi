@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -40,6 +41,18 @@ namespace MeiHi.CommonDll.Helper
             {
                 return false;
             }
+
+
+            ////将要加密的字符串转化为byte类型
+            //byte[] data = System.Text.Encoding.Unicode.GetBytes("daishengpu");
+            ////创建一个Md5对象
+            //System.Security.Cryptography.MD5 md5 = new System.Security.Cryptography.MD5CryptoServiceProvider();
+            ////加密Byte[]数组
+            //byte[] result = md5.ComputeHash(data);
+            ////将加密后的数组转化为字段
+            //string sResult = System.Text.Encoding.Unicode.GetString(result);
+            //var url1 = "http://api.cnsms.cn/?ac=send&uid=100860&pwd=" + sResult+"&mobile=13167226393&content=123";
+            ////http://api.cnsms.cn/?ac=send&uid=100860&pwd=fa246d0262c3925617b0c72bb20eeb1d&mobile=15901997305&content=%D6%D0%B9%FA%B6%CC%D0%C5%CD%F8%B7%A2%CB%CD%B2%E2%CA%D4
         }
         public static bool SendShopText(string mobile)
         {
