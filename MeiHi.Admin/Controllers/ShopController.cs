@@ -116,6 +116,24 @@ namespace MeiHi.Admin.Controllers
             HttpPostedFileBase[] ProductBrandFile,
             HttpPostedFileBase[] shopProductFile)
         {
+            if (ShopLogic.HaveRegisteredShopMobile(model.Phone))
+            {
+
+                TempData["createshoperror"] = "手机已经被注册";
+                return RedirectToAction("CreateShop");
+            }
+
+            if (ShopLogic.HaveRegisteredShopName(model.Title))
+            {
+                TempData["createshoperror"] = "店铺名已经被注册";
+                return RedirectToAction("CreateShop");
+            }
+
+            if (!string.IsNullOrEmpty(model.ParentShopName)&& !ShopLogic.CheckParentShopName(model.ParentShopName))
+            {
+                TempData["createshoperror"] = "父店铺不存在";
+                return RedirectToAction("CreateShop");
+            }
             try
             {
                 using (var db = new MeiHiEntities())

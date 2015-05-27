@@ -11,7 +11,10 @@
 
     <div class="form-horizontal">
         <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @if (TempData["createshoperror"] != null)
+        {
+            <label class="text-danger">@TempData["createshoperror"]</label>
+        }
         <div class="form-group">
             @Html.LabelFor(model => model.Title, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">

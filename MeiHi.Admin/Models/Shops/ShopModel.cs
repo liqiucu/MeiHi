@@ -29,6 +29,7 @@ namespace MeiHi.Admin.Models
             get;
             set;
         }
+        
         [Display(Name = "店名")]
         public string Title { get; set; }
         [Display(Name = "坐标")]

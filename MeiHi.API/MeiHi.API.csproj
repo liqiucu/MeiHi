@@ -224,7 +224,9 @@
     <Content Include="Areas\HelpPage\Views\Help\Api.cshtml" />
     <None Include="Properties\PublishProfiles\MeiHi - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\MeiHi - Web Deploy.pubxml" />
+    <None Include="Properties\PublishProfiles\MeiHiAPI - FTP %283%29.pubxml" />
     <None Include="Properties\PublishProfiles\MeiHiAPI - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\MeiHiAPI - Web Deploy %283%29.pubxml" />
     <None Include="Properties\PublishProfiles\MeiHiAPI - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />

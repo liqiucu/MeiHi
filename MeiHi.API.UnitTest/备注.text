@@ -1,0 +1,4 @@
+﻿
+默认值：
+DBCC CHECKIDENT (booking, RESEED, 10000001)
+

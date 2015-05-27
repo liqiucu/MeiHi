@@ -218,6 +218,8 @@
     <Content Include="Content\Site.css" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <None Include="Properties\PublishProfiles\MeiHi - FTP %282%29.pubxml" />
+    <None Include="Properties\PublishProfiles\MeiHi - Web Deploy %283%29.pubxml" />
     <None Include="Properties\PublishProfiles\MeiHi - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />

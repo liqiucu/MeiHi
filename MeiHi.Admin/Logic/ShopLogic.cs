@@ -42,6 +42,52 @@ namespace MeiHi.Admin.Logic
         //    }
         //}
 
+
+        public static bool HaveRegisteredShopMobile(string mobile)
+        {
+            using (var db = new MeiHiEntities())
+            {
+                var shop = db.Shop.FirstOrDefault(a => a.Phone == mobile);
+
+                if (shop == null)
+                {
+                    return false;
+                }
+
+                return true;
+            }
+        }
+
+        public static bool CheckParentShopName(string shopName)
+        {
+            using (var db = new MeiHiEntities())
+            {
+                var shop = db.Shop.FirstOrDefault(a => a.Title == shopName);
+
+                if (shop == null)
+                {
+                    return false;
+                }
+
+                return true;
+            }
+        }
+
+        public static bool HaveRegisteredShopName(string shopName)
+        {
+            using (var db = new MeiHiEntities())
+            {
+                var shop = db.Shop.FirstOrDefault(a => a.Title == shopName);
+
+                if (shop == null)
+                {
+                    return false;
+                }
+
+                return true;
+            }
+        }
+
         public static StaticPagedList<ShopListDetailModel> GetShops(int page, int pageSize, bool isOnline = true)
         {
             using (var access = new MeiHiEntities())

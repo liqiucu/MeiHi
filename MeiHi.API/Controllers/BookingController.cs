@@ -5,6 +5,7 @@ using MeiHi.CommonDll.Helper;
 using MeiHi.Model;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity.Validation;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -89,58 +90,69 @@ namespace MeiHi.API.Controllers
         [HttpPost]
         public object GenerateBooking(long userId, int count, long serviceId, decimal cost, string designer = null)
         {
-            using (var db = new MeiHiEntities())
+            try
             {
-                var user = db.User.FirstOrDefault(a => a.UserId == userId);
-
-                if (user == null)
+                using (var db = new MeiHiEntities())
                 {
+                    var user = db.User.FirstOrDefault(a => a.UserId == userId);
+
+                    if (user == null)
+                    {
+                        return new
+                        {
+                            jsonStatus = 0,
+                            resut = "获取用户信息失败"
+                        };
+                    }
+
+                    var service = db.Service.FirstOrDefault(a => a.ServiceId == serviceId);
+
+                    if (service == null)
+                    {
+                        return new
+                        {
+                            jsonStatus = 0,
+                            resut = "获取服务失败"
+                        };
+                    }
+
+                    var booking = new Booking()
+                    {
+                        ServiceName = service.Title,
+                        ShopName = service.Shop.Title,
+                        ServiceId = service.ServiceId,
+                        ShopId = service.ShopId,
+                        Mobile = user.Mobile,
+                        UserId = userId,
+                        DateModified = DateTime.Now,
+                        DateCreated = DateTime.Now,
+                        Count = count,
+                        Cost = cost,
+                        Designer = designer,
+                        Status = false,
+                        IsUsed = false,
+                        IsBilling = false,
+                        CancelSuccess = false,
+                        Cancel = false,
+                        VerifyCode = "",
+                        AlipayAccount = "",
+                        WeiXinAccount = "",
+                    };
+
+                    db.Booking.Add(booking);
+                    db.SaveChanges();
+
                     return new
                     {
-                        jsonStatus = 0,
-                        resut = "获取用户信息失败"
+                        jsonStatus = 1,
+                        resut = "订单生产成功 订单号"
                     };
                 }
+            }
+            catch (DbEntityValidationException ex)
+            {
 
-                var service = db.Service.FirstOrDefault(a => a.ServiceId == serviceId);
-
-                if (service == null)
-                {
-                    return new
-                    {
-                        jsonStatus = 0,
-                        resut = "获取服务失败"
-                    };
-                }
-
-                var booking = new Booking()
-                {
-                    ServiceName = service.Title,
-                    ShopName = service.Shop.Title,
-                    ServiceId = service.ServiceId,
-                    ShopId = service.ShopId,
-                    Mobile = user.Mobile,
-                    UserId = userId,
-                    DateModified = DateTime.Now,
-                    DateCreated = DateTime.Now,
-                    Count = count,
-                    Cost = cost,
-                    Designer = designer,
-                    Status = false,
-                    IsUsed = false,
-                    IsBilling = false,
-                    CancelSuccess = false,
-                    Cancel = false
-                };
-
-                db.Booking.Add(booking);
-                db.SaveChanges();
-
-                return new
-                {
-                    jsonStatus = 1,
-                    resut = "订单生产成功 订单号"
-                };
+                throw;
             }
         }
 
@@ -184,7 +196,7 @@ namespace MeiHi.API.Controllers
             }
             catch (Exception ex)
             {
-                
+
                 throw;
             }
         }
