@@ -1,0 +1,90 @@
+﻿@model MeiHi.Admin.Models.Service.ServiceDetailModel
+
+@{
+    ViewBag.Title = "ServiceDetail";
+}
+
+<h2>ServiceId:@Model.ServiceId</h2>
+
+<div>
+    <h4>ServiceDetailModel</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.ShopId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ShopId)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ServiceTypeName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ServiceTypeName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TitleUrl)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TitleUrl)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Title)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Title)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Detail)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Detail)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CMUnitCost)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CMUnitCost)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.OriginalUnitCost)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.OriginalUnitCost)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Designer)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Designer)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IfSupportRealTimeRefund)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IfSupportRealTimeRefund)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "EditService", new { id = Model.ServiceId }) |
+    @Html.ActionLink("Back to List", "ShowServicesByShopId", new { shopId = Model.ShopId })
+</p>

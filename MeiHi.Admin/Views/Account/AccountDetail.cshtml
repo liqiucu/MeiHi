@@ -1,0 +1,75 @@
+﻿@model MeiHi.Admin.ViewModels.AdminModel
+
+@{
+    ViewBag.Title = "账号详情";
+
+}
+<h2>账号详情</h2>
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.AdminId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.AdminId)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.UserName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.UserName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Password)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Password)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Mobile)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Mobile)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Avaliable)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Avaliable)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.RoleNmes)
+        </dt>
+
+        <dd>
+            @if (Model.RoleNmes != null && Model.RoleNmes.Count > 0)
+            {
+                <label>@string.Join(",", Model.RoleNmes)</label>
+            }
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.PermissionNames)
+        </dt>
+
+        <dd>
+            @if (Model.PermissionNames != null && Model.PermissionNames.Count > 0)
+            {
+                <label>@string.Join(",", Model.PermissionNames)</label>
+            }
+        </dd>
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("修改", "EditAccount", new { adminId = Model.AdminId }) |
+    @Html.ActionLink("返回账号列表", "ManageAccount")
+</p>

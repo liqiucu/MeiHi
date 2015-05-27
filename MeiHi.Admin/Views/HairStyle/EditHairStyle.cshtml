@@ -1,0 +1,52 @@
+﻿@model MeiHi.Admin.Models.HairStyle.HairStyleModel
+
+@{
+    ViewBag.Title = Model.HairStyleTypeName;
+}
+
+<h2>修改 @Model.HairStyleTypeName 发型</h2>
+
+
+@using (Html.BeginForm("UpdateHairStyle", "HairStyle", FormMethod.Post, new { enctype = "multipart/form-data", id = "form2" })) 
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <input type="hidden" name="HairStyleId" id="HairStyleId" value="@Model.HairStyleId" />
+        <input type="hidden" name="HairStyleTypeId" id="HairStyleTypeId" value="@Model.HairStyleTypeId" />
+
+        <div class="form-group">
+            <label for="file" class="control-label col-md-2">上传模特图片一张</label>
+            
+            <div class="col-md-10">
+                <img src="@Model.ModelUrl" />
+                <input type="file" name="modelUrls" id="modelUrls" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="file" class="control-label col-md-2">上传发型图片一张</label>
+            
+            <div class="col-md-10">
+                <img src="@Model.StyleUrl" />
+                <input type="file" name="styleUrls" id="styleUrls" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="保存" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("返回列表", "ManageHairStyle")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

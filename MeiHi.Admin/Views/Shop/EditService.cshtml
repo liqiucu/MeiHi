@@ -1,0 +1,106 @@
+﻿@model MeiHi.Admin.Models.Service.CreateServiceModel
+
+@{
+    ViewBag.Title = "编辑服务";
+}
+
+<h2>服务ID:@Model.ServiceId</h2>
+
+@using (Html.BeginForm("SaveService", "Shop", FormMethod.Post, new { enctype = "multipart/form-data", id = "form2" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <input type="hidden" name="ServiceId" id="ServiceId" value="@Model.ServiceId" />
+        <input type="hidden" name="ShopId" id="ShopId" value="@Model.ShopId" />
+        <div class="form-group">
+            <label class="control-label col-md-2">ServiceType</label>
+            <div class="col-md-10">
+                <select id="ServiceTypeId" name="ServiceTypeId">
+
+                    @foreach (var item in Model.ServiceTypeLists)
+                    {
+                        <option value="@item.Value" selected="@item.Selected">
+                            @item.Text
+                        </option>
+                    }
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="file" class="control-label col-md-2">服务Title图片</label>
+            <div class="col-md-10">
+                <img src="@Model.TitleUrl" />
+            </div>
+            <label for="file" class="control-label col-md-2">上传服务Title图片一张</label>
+            <div class="col-md-10">
+                <input type="file" multiple="multiple" name="serviceTitleUrl" id="serviceTitleUrl" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Title, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Detail, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextAreaFor(model => model.Detail, 10,200,new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Detail, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.CMUnitCost, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.CMUnitCost, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.CMUnitCost, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.OriginalUnitCost, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.OriginalUnitCost, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.OriginalUnitCost, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Designer, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextAreaFor(model => model.Designer,10,200, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Designer, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.IfSupportRealTimeRefund, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.IfSupportRealTimeRefund, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.IfSupportRealTimeRefund, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="保存" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("返回服务管理", "ShowServicesByShopId", new { shopId = Model.ShopId })
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

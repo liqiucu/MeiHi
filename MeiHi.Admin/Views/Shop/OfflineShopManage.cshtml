@@ -1,0 +1,88 @@
+﻿@model MeiHi.Admin.Models.ShopModel
+@using PagedList.Mvc;
+<link href="~/Content/PagedList.css" rel="stylesheet" />
+@{
+    ViewBag.Title = "下架店铺管理";
+}
+
+<h2>下架店铺管理</h2>
+
+<p>
+    @Html.ActionLink("创建新店铺", "CreateShop")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            店铺Id
+        </th>
+        <th>
+            店铺Title
+        </th>
+        <th>
+            详细地址
+        </th>
+        <th>
+            区域街道
+        </th>
+        <th>
+            电话
+        </th>
+        <th>
+            联系人
+        </th>
+        <th>
+            是否热门推荐
+        </th>
+        <th>
+            是否上架
+        </th>
+        <th>
+            备注
+        </th>
+        <th></th>
+    </tr>
+    @foreach (var item in Model.Lists)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ShopId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DetailAddress)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RegionName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Phone)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Contract)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsHot)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsOnline)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Comment)
+            </td>
+            <td>
+                @Html.ActionLink("服务", "ShowServicesByShopId", new { shopId = item.ShopId }) |
+                @Html.ActionLink("编辑", "EditShop", new { shopId = item.ShopId }) |
+                @Html.ActionLink("详情", "ShopDetail", new { shopId = item.ShopId }) |
+                @Html.ActionLink("删除", "DeleteShop", new { shopId = item.ShopId }) |
+                @Html.ActionLink("上架", "SetUpShop", new { shopId = item.ShopId })
+            </td>
+        </tr>
+    }
+</table>
+<br />
+Page @(Model.Lists.PageCount < Model.Lists.PageNumber ? 0 : Model.Lists.PageNumber) of @Model.Lists.PageCount
+
+@Html.PagedListPager(Model.Lists, page => Url.Action("ShopManege", "Shop",
+    new { page }))

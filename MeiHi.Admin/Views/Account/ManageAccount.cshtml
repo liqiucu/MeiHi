@@ -1,0 +1,64 @@
+﻿@model MeiHi.Admin.ViewModels.AccountManageModel
+@using PagedList.Mvc;
+<link href="~/Content/PagedList.css" rel="stylesheet" />
+
+@{
+    ViewBag.Title = "账户管理";
+}
+
+<h2>账户管理</h2>
+
+<p>
+    @Html.ActionLink("创建后台管理账户", "CreateAccount", "Account")
+</p>
+<table class="table">
+    <tr>
+        <th>用户Id</th>
+        <th>用户名</th>
+        <th>电话</th>
+        <th>有效</th>
+        <th>角色列表</th>
+        <th>权限列表</th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model.Admins)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.AdminId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UserName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Mobile)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Avaliable)
+            </td>
+            <td>
+                @if (item.RoleNmes != null && item.RoleNmes.Count > 0)
+                {
+                    <label>@string.Join(",", item.RoleNmes)</label>
+                }
+            </td>
+            <td>
+                @if (item.PermissionNames != null && item.PermissionNames.Count > 0)
+                {
+                    <label>@string.Join(",", item.PermissionNames)</label>
+                }
+            </td>
+            <td>
+                @Html.ActionLink("修改", "EditAccount", new { adminId = item.AdminId }) |
+                @Html.ActionLink("详情", "AccountDetail", new { adminId = item.AdminId }) |
+                @Html.ActionLink("删除", "DeleteAccount", new { adminId = item.AdminId })
+            </td>
+        </tr>
+    }
+
+</table>
+Page @(Model.Admins.PageCount < Model.Admins.PageNumber ? 0 : Model.Admins.PageNumber) of @Model.Admins.PageCount
+
+@Html.PagedListPager(Model.Admins, page => Url.Action("ManageAccount", "Account",
+    new { page }))

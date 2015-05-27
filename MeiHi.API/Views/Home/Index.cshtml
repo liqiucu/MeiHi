@@ -1,0 +1,23 @@
+﻿@using (Html.BeginForm("post_usercomment", "user", FormMethod.Post, new { enctype = "multipart/form-data", id = "form2" }))
+{
+    <fieldset>
+        <input id="userId" name="userId" value="1" />
+        <input id="content" name="content" value="1dadadaa" />
+        <input id="rate" name="rate" value="1" />
+        <input id="serviceId" name="serviceId" value="3" />
+        <input id="ShopId" name="ShopId" value="1" />
+        <input type="file" name="lists" id="lists" multiple="multiple" />
+
+        <input type="submit" value="提交" />
+    </fieldset>
+}
+
+@*<form name="form1" method="post" enctype="multipart/form-data" action="user/post_UserComment">
+    <input id="userId" name="userId" value="1" />
+    <input id="content" name="content" value="1dadadaa" />
+    <input id="rate" name="rate" value="1" />
+    <input id="serviceId" name="serviceId" value="3" />
+    <input id="ShopId" name="ShopId" value="1" />
+    <input type="file" name="lists" id="lists" multiple="multiple" />
+    <input type="submit" value="提交" />
+</form>*@

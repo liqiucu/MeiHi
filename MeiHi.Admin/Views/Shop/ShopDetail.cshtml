@@ -1,0 +1,147 @@
+﻿@model MeiHi.Admin.Models.ShopDetailMpdel
+
+@{
+    ViewBag.Title = "ShopDetail";
+}
+
+<h2>ShopDetail</h2>
+
+<div>
+    <h4>ShopDetailMpdel</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.ShopId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ShopId)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.RegionName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.RegionName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Title)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Title)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Coordinates)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Coordinates)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DetailAddress)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DetailAddress)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Phone)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Phone)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Contract)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Contract)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IsHot)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IsHot)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IsOnline)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IsOnline)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Comment)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Comment)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ParentShopName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ParentShopName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PurchaseNotes)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PurchaseNotes)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ShopTag)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ShopTag)
+        </dd>
+
+        <dt>
+            店铺图片列表
+        </dt>
+        <dd>
+            @if (Model.ProductBrandList != null)
+            {
+                foreach (var item in Model.ProductBrandList)
+                {
+                    <img src="@item" />
+                }
+            }
+
+        </dd>
+        <dt>
+            店铺产品列表
+        </dt>
+        <dd>
+            @if (Model.ShopProductList != null)
+            {
+
+                foreach (var item in Model.ShopProductList)
+                {
+                    <img src="@item" />
+                }
+            }
+        </dd>
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "EditShop", new { id = Model.ShopId }) |
+    @Html.ActionLink("Back to List", "ShopManege")
+</p>
