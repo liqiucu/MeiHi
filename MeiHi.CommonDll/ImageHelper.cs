@@ -121,6 +121,38 @@ namespace MeiHi.CommonDll.Helper
             }
         }
 
+        public static void DeleteAllImagesFromPhycleFolderPath(string folder)
+        {
+            if (Directory.Exists(HttpContext.Current.Server.MapPath(folder)))
+            {
+                Directory.Delete(HttpContext.Current.Server.MapPath(folder), true);
+            }
+
+            
+            //Directory.GetFiles(HttpContext.Current.Server.MapPath(folder),)
+
+            //var temp1 = fullName.Split('/');
+            //var temp2 = temp1[temp1.Length - 1];
+
+            //if (temp2.Contains("_"))
+            //{
+            //    var temp3 = temp2.Split('_')[1];
+            //    string filePhycleName = HttpContext.Current.Server.MapPath(folder + temp3);
+
+            //    if (File.Exists(filePhycleName))
+            //    {
+            //        File.Delete(filePhycleName);
+            //    }
+            //}
+
+            //string filePhycleName100 = HttpContext.Current.Server.MapPath(folder + temp2);
+
+            //if (File.Exists(filePhycleName100))
+            //{
+            //    File.Delete(filePhycleName100);
+            //}
+        }
+
         /// <summary>
         /// A quick lookup for getting image encoders
         /// </summary>

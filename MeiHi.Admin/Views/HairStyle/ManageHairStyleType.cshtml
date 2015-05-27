@@ -1,0 +1,40 @@
+﻿@model IEnumerable<MeiHi.Admin.Models.HairStyle.HairStyleTypeModel>
+
+@{
+    ViewBag.Title = "发型管理";
+}
+
+<h2>发型管理</h2>
+
+<p>
+    @Html.ActionLink("创建类型", "CreateHairStyleType")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.HairStyleTypeName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.HairStyleTypeId)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.HairStyleTypeName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.HairStyleTypeId)
+            </td>
+            <td>
+                @Html.ActionLink("发型列表", "ManageHairStyle", new { hairStyleTypeId = item.HairStyleTypeId }) |
+                @Html.ActionLink("编辑", "EditHairStyleType", new { hairStyleTypeId = item.HairStyleTypeId }) |
+                @Html.ActionLink("删除", "DeleteHairStyleType", new { hairStyleTypeId = item.HairStyleTypeId })
+            </td>
+        </tr>
+    }
+
+</table>

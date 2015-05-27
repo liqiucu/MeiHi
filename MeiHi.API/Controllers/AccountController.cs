@@ -43,13 +43,13 @@ namespace MeiHi.API.Controllers
                             Salt=""
                         };
                         db.User.Add(reg);
-                        LuoSiMaoTextMessage.SendText(reg.Mobile, reg.VerifyCode + " 用于登陆");
+                        LuoSiMaoTextMessage.SendText(reg.Mobile, reg.VerifyCode + " 登陆验证码");
                     }
                     else
                     {
                         reg.VerifyCode = code;
                         reg.DateModified = DateTime.Now;
-                        LuoSiMaoTextMessage.SendText(reg.Mobile, reg.VerifyCode + " 用于登陆");
+                        LuoSiMaoTextMessage.SendText(reg.Mobile, reg.VerifyCode + " 登陆验证码");
                     }
                     db.SaveChanges();
                     return new

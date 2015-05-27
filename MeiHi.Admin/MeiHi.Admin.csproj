@@ -181,6 +181,7 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AdvertisingController.cs" />
+    <Compile Include="Controllers\HairStyleController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ShopController.cs" />
     <Compile Include="Global.asax.cs">
@@ -192,6 +193,7 @@
     <Compile Include="Logic\CommonLogic.cs" />
     <Compile Include="Logic\ShopLogic.cs" />
     <Compile Include="Models\Advertising\AdvertisingModel.cs" />
+    <Compile Include="Models\HairStyle\HairStyleModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\Service\ServiceModel.cs" />
     <Compile Include="Models\Shops\ProductBrandModel.cs" />
@@ -270,6 +272,12 @@
     <Content Include="Views\Account\CreatePermission.cshtml" />
     <Content Include="Views\Account\EditPermission.cshtml" />
     <Content Include="Views\Shop\RecommandShopManege.cshtml" />
+    <Content Include="Views\HairStyle\ManageHairStyleType.cshtml" />
+    <Content Include="Views\HairStyle\CreateHairStyleType.cshtml" />
+    <Content Include="Views\HairStyle\EditHairStyleType.cshtml" />
+    <Content Include="Views\HairStyle\ManageHairStyle.cshtml" />
+    <Content Include="Views\HairStyle\CreateHairStyle.cshtml" />
+    <Content Include="Views\HairStyle\EditHairStyle.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

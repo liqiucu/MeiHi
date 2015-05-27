@@ -126,10 +126,11 @@
                     </li>
                     <li class="dropdown">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                            个人用户 <span class="caret"></span>
+                            用户管理 <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu">
-                            <li>@Html.ActionLink("用户管理", "Index", "Home")</li>
+                            <li>@Html.ActionLink("个人用户", "Index", "Home")</li>
+                            <li>@Html.ActionLink("店铺用户", "Index", "Home")</li>
                         </ul>
                     </li>
                     <li class="dropdown">
@@ -148,6 +149,14 @@
                         </a>
                         <ul class="dropdown-menu">
                             <li>@Html.ActionLink("编辑APP首页广告", "ShowAdvertising", "Advertising")</li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            发型管理 <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>@Html.ActionLink("发型类型", "ManageHairStyleType", "HairStyle")</li>
                         </ul>
                     </li>
                     <li class="dropdown">
