@@ -88,7 +88,12 @@ namespace MeiHi.API.Controllers
         [ApiAuthorize]
         [Route("generate_booking")]
         [HttpPost]
-        public object GenerateBooking(long userId, int count, long serviceId, decimal cost, string designer = null)
+        public object GenerateBooking(
+            long userId, 
+            int count, 
+            long serviceId,
+            decimal cost, 
+            string designer = null)
         {
             try
             {
@@ -159,7 +164,10 @@ namespace MeiHi.API.Controllers
         [ApiAuthorize]
         [Route("Call_AliPayApiToPayServices")]
         [HttpPost]
-        public object CallAliPayApiToPayServices(decimal cost, long companyId, long bookingId)
+        public object CallAliPayApiToPayServices(
+            decimal cost,
+            long companyId, 
+            long bookingId)
         {
             try
             {
@@ -200,10 +208,14 @@ namespace MeiHi.API.Controllers
                 throw;
             }
         }
+
         [ApiAuthorize]
         [Route("Call_WeiXinPayApiToPayServices")]
         [HttpPost]
-        public object CallWeiXinPayApiToPayServices(decimal cost, long companyId, long bookingId)
+        public object CallWeiXinPayApiToPayServices(
+            decimal cost,
+            long companyId, 
+            long bookingId)
         {
             try
             {

@@ -76,7 +76,7 @@ namespace MeiHi.API.Controllers
         /// <param name="downFromAppId">从哪里下载的</param>
         /// <returns></returns>
         [Route("register_user")]
-        [HttpGet]
+        [HttpPost]
         public object RegisterUser(
             string mobile,
             string verifyCode,
@@ -127,7 +127,7 @@ namespace MeiHi.API.Controllers
         }
 
         [Route("user_logout")]
-        [HttpGet]
+        [HttpPost]
         public object LogOut(string mobile, string token)
         {
             using (var db = new MeiHiEntities())

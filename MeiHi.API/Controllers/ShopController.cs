@@ -56,13 +56,23 @@ namespace MeiHi.API.Controllers
         [AllowAnonymous]
         public object GetNearestDistanceShops(string region, int page = 1, int size = 20)
         {
-            if (System.Web.HttpContext.Current.Session["ShopsDistance"] == null)
+            if (HttpRuntime.Cache.Get(region) as List<ShopDistanceModel> == null)
             {
                 CalDistance(region);
             }
 
+            var shopDistances = HttpRuntime.Cache.Get(region) as List<ShopDistanceModel>;
+
+            if (shopDistances == null)
+            {
+                return new
+                {
+                    jsonStatus = 0,
+                    resut = "内存爆了 请联系 13167226393"
+                };
+            }
+
             var shops = ShopLogic.GetAllShopsFromCache();
-            var shopDistances = System.Web.HttpContext.Current.Session["ShopsDistance"] as List<ShopDistanceModel>;
             var temp = shopDistances.OrderBy(a => a.Distance).Skip((page - 1) * size).Take(size);
 
             var results = new List<ShopModel>();
@@ -124,7 +134,9 @@ namespace MeiHi.API.Controllers
         {
             try
             {
-                if (System.Web.HttpContext.Current.Session["ShopsDistance"] != null)
+                var shopResult = HttpRuntime.Cache.Get(region) as List<ShopDistanceModel>;
+
+                if (shopResult != null)
                 {
                     return new
                     {
@@ -148,8 +160,8 @@ namespace MeiHi.API.Controllers
                         });
                     }
 
-                    //每个用户的距离信息  放入临时session
-                    System.Web.HttpContext.Current.Session["ShopsDistance"] = shopDistances;
+                    HttpRuntime.Cache.Insert(region, shopDistances, null,
+                          DateTime.Now.AddSeconds(3600), TimeSpan.Zero);
 
                     return new
                     {
@@ -187,7 +199,7 @@ namespace MeiHi.API.Controllers
                     {
                         Coordinates = shop.Coordinates,
                         DetailAddress = shop.DetailAddress,
-                        Phone = shop.Phone,
+                        Contract = shop.Contract,
                         ShopTag = shop.ShopTag,
                         ShopId = shop.ShopId,
                         Title = shop.Title,
@@ -233,7 +245,7 @@ namespace MeiHi.API.Controllers
                     {
                         Coordinates = shop.Coordinates,
                         DetailAddress = shop.DetailAddress,
-                        Phone = shop.Phone,
+                        Contract=shop.Contract,
                         ShopId = shop.ShopId,
                         ProductBrandImages = shop.ProductBrand.Select(a => a.ProductUrl).ToList(),
                         PurchaseNotes = shop.PurchaseNotes,

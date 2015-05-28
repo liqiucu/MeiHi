@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using MeiHi.Model;
 using System.Runtime.Serialization;
+using System.ComponentModel.DataAnnotations;
 
 namespace MeiHi.API.ViewModels
 {
@@ -19,25 +20,15 @@ namespace MeiHi.API.ViewModels
             set;
         }
         public long? ParentShopId { get; set; }
-        /// <summary>
-        /// 店铺图片地址
-        /// </summary>
 
+        [Display(Name = "店铺Title图片")]
         public string ShopImageUrl
         {
             get;
             set;
         }
 
-        /// <summary>
-        /// 联系电话
-        /// </summary>
-  
-        public string Phone { get; set; }
-        /// <summary>
-        /// 联系人
-        /// </summary>
-
+        [Display(Name = "联系电话")]
         public string Contract { get; set; }
 
         public string PurchaseNotes { get; set; }
