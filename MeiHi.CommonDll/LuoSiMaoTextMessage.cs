@@ -54,9 +54,9 @@ namespace MeiHi.CommonDll.Helper
             //var url1 = "http://api.cnsms.cn/?ac=send&uid=100860&pwd=" + sResult+"&mobile=13167226393&content=123";
             ////http://api.cnsms.cn/?ac=send&uid=100860&pwd=fa246d0262c3925617b0c72bb20eeb1d&mobile=15901997305&content=%D6%D0%B9%FA%B6%CC%D0%C5%CD%F8%B7%A2%CB%CD%B2%E2%CA%D4
         }
-        public static bool SendShopText(string mobile)
+        public static bool SendShopText(string mobile, string comment)
         {
-            string message = "此信息用于美嗨商户登陆系统,账号为本手机,初始密码为手机后六位,【美嗨科技】";
+            string message = comment + " 此信息用于美嗨商户登陆系统,账号为本手机,初始密码为手机后六位,【美嗨科技】";
             string username = "api";
             string password = "key-e4ce14f0cd25bbd87a2ee45eba1a7a83";
             string url = "https://sms-api.luosimao.com/v1/send.json";

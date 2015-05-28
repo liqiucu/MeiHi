@@ -1,0 +1,11 @@
+input[type=checkbox]:checked+div.col
+{
+	-webkit-border-bottom-left-radius: 0em;
+	border-bottom-left-radius: 0em;
+	-webkit-border-bottom-right-radius: 0em;
+	border-bottom-right-radius: 0em
+}
+.col-c
+{
+	display:none;
+}

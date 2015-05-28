@@ -196,10 +196,8 @@
     <Compile Include="Models\HairStyle\HairStyleModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\Service\ServiceModel.cs" />
-    <Compile Include="Models\Shops\ProductBrandModel.cs" />
     <Compile Include="Models\Shops\RecommandShopModel.cs" />
     <Compile Include="Models\Shops\ShopModel.cs" />
-    <Compile Include="Models\Shops\ProductBrandImages.cs" />
     <Compile Include="Models\Shops\ServiceForShopDetailModel.cs" />
     <Compile Include="Models\UserComments\UserCommentsModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

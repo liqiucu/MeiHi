@@ -5,16 +5,13 @@
 }
 <h2>创建店铺</h2>
 <script src="~/Scripts/Shop/Shop.js"></script>
-@using (Html.BeginForm("SaveShop", "Shop", FormMethod.Post, new { enctype = "multipart/form-data", id = "form2" }))
+@using (Html.BeginForm("CreateShop", "Shop", FormMethod.Post, new { enctype = "multipart/form-data", id = "form2" }))
 {
     @Html.AntiForgeryToken()
 
     <div class="form-horizontal">
         <hr />
-        @if (TempData["createshoperror"] != null)
-        {
-            <label class="text-danger">@TempData["createshoperror"]</label>
-        }
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <div class="form-group">
             @Html.LabelFor(model => model.Title, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
@@ -140,3 +137,7 @@
 <div>
     @Html.ActionLink("返回店铺管理", "ShopManege")
 </div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

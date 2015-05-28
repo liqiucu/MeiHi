@@ -6,7 +6,7 @@
 
 <h2>编辑店铺</h2>
 
-@using (Html.BeginForm("UpdateShop", "Shop", FormMethod.Post, new { enctype = "multipart/form-data", id = "form2" }))
+@using (Html.BeginForm("EditShop", "Shop", FormMethod.Post, new { enctype = "multipart/form-data", id = "form2" }))
 {
     @Html.AntiForgeryToken()
 
@@ -160,3 +160,7 @@
 <div>
     @Html.ActionLink("返回店铺管理", "ShopManege")
 </div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

@@ -111,28 +111,37 @@ namespace MeiHi.Admin.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Auth(PermissionName = "店铺维护管理")]
-        public ActionResult SaveShop(
+        public ActionResult CreateShop(
             CreateShopMpdel model,
             HttpPostedFileBase[] ProductBrandFile,
             HttpPostedFileBase[] shopProductFile)
         {
+            if (!ModelState.IsValid)
+            {
+                ModelState.AddModelError("", "请检查输入的信息是否有问题");
+                model.RegionNameList=new CommonLogic().RegionList(); 
+                return View(model);
+            }
+
             if (ShopLogic.HaveRegisteredShopMobile(model.Phone))
             {
-
-                TempData["createshoperror"] = "手机已经被注册";
-                return RedirectToAction("CreateShop");
+                ModelState.AddModelError("", "手机已经被注册");
+                model.RegionNameList = new CommonLogic().RegionList();
+                return View(model);
             }
 
             if (ShopLogic.HaveRegisteredShopName(model.Title))
             {
-                TempData["createshoperror"] = "店铺名已经被注册";
-                return RedirectToAction("CreateShop");
+                ModelState.AddModelError("", "店铺名已经被注册");
+                model.RegionNameList = new CommonLogic().RegionList();
+                return View(model);
             }
 
-            if (!string.IsNullOrEmpty(model.ParentShopName)&& !ShopLogic.CheckParentShopName(model.ParentShopName))
+            if (!string.IsNullOrEmpty(model.ParentShopName) && !ShopLogic.CheckParentShopName(model.ParentShopName))
             {
-                TempData["createshoperror"] = "父店铺不存在";
-                return RedirectToAction("CreateShop");
+                ModelState.AddModelError("", "父店铺不存在");
+                model.RegionNameList = new CommonLogic().RegionList();
+                return View(model);
             }
             try
             {
@@ -194,6 +203,8 @@ namespace MeiHi.Admin.Controllers
 
                     db.Shop.Add(shop);
                     db.SaveChanges();
+
+                    LuoSiMaoTextMessage.SendShopText(model.Phone, "");
                 }
 
                 return RedirectToAction("ShopManege");
@@ -202,6 +213,18 @@ namespace MeiHi.Admin.Controllers
             {
                 throw ex;
             }
+        }
+
+        [HttpGet]
+        [Auth(PermissionName = "店铺维护管理")]
+        public ActionResult CreateShop()
+        {
+            CreateShopMpdel model = new CreateShopMpdel()
+            {
+                RegionNameList = new CommonLogic().RegionList()
+            };
+
+            return View(model);
         }
 
         /// <summary>
@@ -214,11 +237,20 @@ namespace MeiHi.Admin.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Auth(PermissionName = "店铺维护管理")]
-        public ActionResult UpdateShop(
+        public ActionResult EditShop(
             EditShopMpdel model,
             HttpPostedFileBase[] ProductBrandFile,
             HttpPostedFileBase[] shopProductFile)
         {
+            string oldMobile = "";
+
+            if (!ModelState.IsValid)
+            {
+                ModelState.AddModelError("", "请检查输入数据是否正确");
+                model.RegionNameList = new CommonLogic().RegionList();
+                return View(model);
+            }
+
             try
             {
                 using (var db = new MeiHiEntities())
@@ -227,8 +259,12 @@ namespace MeiHi.Admin.Controllers
 
                     if (shop == null)
                     {
-                        throw new Exception("the shop not exist shopId:" + model.ShopId);
+                        ModelState.AddModelError("", "店铺不存在");
+                        model.RegionNameList = new CommonLogic().RegionList();
+                        return View(model);
                     }
+
+                    oldMobile = shop.Phone;
 
                     //产品
                     if (ProductBrandFile != null && ProductBrandFile.FirstOrDefault() != null)
@@ -295,26 +331,21 @@ namespace MeiHi.Admin.Controllers
                     shop.DateModified = DateTime.Now;
 
                     db.SaveChanges();
+
+                    if (oldMobile != model.Phone)
+                    {
+                        LuoSiMaoTextMessage.SendShopText(model.Phone, "");
+                    }
                 }
 
                 return RedirectToAction("ShopManege");
             }
             catch (Exception ex)
             {
-                throw ex;
+                ModelState.AddModelError("", ex);
+                model.RegionNameList = new CommonLogic().RegionList();
+                return View(model);
             }
-        }
-
-        [HttpGet]
-        [Auth(PermissionName = "店铺维护管理")]
-        public ActionResult CreateShop()
-        {
-            CreateShopMpdel model = new CreateShopMpdel()
-            {
-                RegionNameList = new CommonLogic().RegionList()
-            };
-
-            return View(model);
         }
 
         [HttpGet]

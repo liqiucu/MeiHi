@@ -102,19 +102,24 @@ namespace MeiHi.API.Controllers
         [AllowAnonymous]
         public object GetLowestDiscountRateShops(string region, int page = 1, int size = 20)
         {
-            if (System.Web.HttpContext.Current.Session["ShopsDistance"] == null)
+            if (HttpRuntime.Cache.Get(region) as List<ShopDistanceModel> == null)
             {
                 CalDistance(region);
             }
 
-            var shops = ShopLogic.GetAllShopsFromCache();
-            var shopDistances = System.Web.HttpContext.Current.Session["ShopsDistance"] as List<ShopDistanceModel>;
-            var result = shops.OrderBy(a => a.DiscountRate).Skip((page - 1) * size).Take(size);
+            var shopDistances = HttpRuntime.Cache.Get(region) as List<ShopDistanceModel>;
 
-            foreach (var item in result)
+            if (shopDistances == null)
             {
-                item.Distance = shopDistances.First(a => a.ShopId == item.ShopId).Distance;
+                return new
+                {
+                    jsonStatus = 0,
+                    resut = "内存爆了 请联系 13167226393"
+                };
             }
+
+            var shops = ShopLogic.GetAllShopsFromCache();
+            var result = shops.OrderBy(a => a.DiscountRate).Skip((page - 1) * size).Take(size);
 
             return new
             {
@@ -135,7 +140,7 @@ namespace MeiHi.API.Controllers
             try
             {
                 var shopResult = HttpRuntime.Cache.Get(region) as List<ShopDistanceModel>;
-
+                
                 if (shopResult != null)
                 {
                     return new

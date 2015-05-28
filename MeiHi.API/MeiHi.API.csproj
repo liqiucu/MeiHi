@@ -234,6 +234,29 @@
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
+    <Content Include="Temp\css\anim.css" />
+    <Content Include="Temp\css\base.css" />
+    <Content Include="Temp\css\box.css" />
+    <Content Include="Temp\css\btn.css" />
+    <Content Include="Temp\css\color.css" />
+    <Content Include="Temp\css\fold.css" />
+    <Content Include="Temp\css\input.css" />
+    <Content Include="Temp\css\list.css" />
+    <Content Include="Temp\css\on.css" />
+    <Content Include="Temp\css\tab.css" />
+    <Content Include="Temp\dianpu.html" />
+    <Content Include="Temp\huiyuan.html" />
+    <Content Include="Temp\images\banka.jpg" />
+    <Content Include="Temp\images\baozheng.jpg" />
+    <Content Include="Temp\images\chanpian.jpg" />
+    <Content Include="Temp\images\chennuo.jpg" />
+    <Content Include="Temp\images\fuwudaowei.jpg" />
+    <Content Include="Temp\images\huiyuan.png" />
+    <Content Include="Temp\images\meifa.jpg" />
+    <Content Include="Temp\images\meihi.png" />
+    <Content Include="Temp\images\shuxin.jpg" />
+    <Content Include="Temp\js\jquery-1.10.2.js" />
+    <Content Include="Temp\js\jquery-1.10.2.min.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
