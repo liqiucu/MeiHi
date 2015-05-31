@@ -1,0 +1,84 @@
+﻿@model MeiHi.Admin.Models.User.UsersModel
+@using PagedList.Mvc;
+<link href="~/Content/PagedList.css" rel="stylesheet" />
+
+@{
+    ViewBag.Title = "用户管理";
+}
+
+<h2>用户管理</h2>
+
+<table class="table">
+    <tr>
+        <th>
+           美嗨ID
+        </th>
+        <th>
+           用户名
+        </th>
+        <th>
+           手机
+        </th>
+        <th>
+            余额
+        </th>
+        <th>
+            阿里账号
+        </th>
+        <th>
+            微信账号
+        </th>
+        <th>
+            订单数
+        </th>
+        <th>
+            总消费
+        </th>
+        <th>
+            正在申请退款
+        </th>
+        <th></th>
+    </tr>
+    @foreach (var item in Model.Users)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.UserId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UserName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Mobile)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Blance)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AliPayAccount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.WeiXinPayAccount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.HaveBillingCount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.HaveBillingMoney)
+
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.HaveCancelBooking)
+            </td>
+            <td>
+                @Html.ActionLink("订单", "ManageUserBookingsByUserId", new { userId = item.UserId })
+                @Html.ActionLink("评论", "ManageUserCommentsByUserId", new { userId = item.UserId })
+            </td>
+        </tr>
+    }
+</table>
+<br />
+Page @(Model.Users.PageCount < Model.Users.PageNumber ? 0 : Model.Users.PageNumber) of @Model.Users.PageCount
+
+@Html.PagedListPager(Model.Users, page => Url.Action("ManageUsers", "User",
+    new { page }))

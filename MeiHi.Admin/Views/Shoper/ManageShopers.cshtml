@@ -1,0 +1,66 @@
+﻿@model MeiHi.Admin.Models.Shoper.ShopersModel
+@using PagedList.Mvc;
+<link href="~/Content/PagedList.css" rel="stylesheet" />
+
+@{
+    ViewBag.Title = "店铺用户管理";
+}
+
+<h2>店铺用户管理</h2>
+
+<table class="table">
+    <tr>
+        <th>
+            店铺ID
+        </th>
+        <th>
+            店铺名
+        </th>
+        <th>
+            用户登陆名
+        </th>
+        <th>
+            店铺联系方式
+        </th>
+        <th>
+            未结算总金额
+        </th>
+        <th>
+            未结算单数
+        </th>
+        <th></th>
+    </tr>
+    @foreach (var item in Model.Shopers)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ShopId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ShopName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UserName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ShopComment)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SumUnBillinged)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UnBillingedCount)
+            </td>
+            <td>
+                @Html.ActionLink("未结算订单", "GetUnBillingBookingsByShopId", new { shopId = item.ShopId })
+                @Html.ActionLink("已结算订单", "GetBillingedBookingsByShopId", new { shopId = item.ShopId })
+                @Html.ActionLink("评论", "ManageUserCommentsByShopId", new { shopId = item.ShopId })
+            </td>
+        </tr>
+    }
+</table>
+<br />
+Page @(Model.Shopers.PageCount < Model.Shopers.PageNumber ? 0 : Model.Shopers.PageNumber) of @Model.Shopers.PageCount
+
+@Html.PagedListPager(Model.Shopers, page => Url.Action("ManageShopers", "Shoper",
+    new { page }))

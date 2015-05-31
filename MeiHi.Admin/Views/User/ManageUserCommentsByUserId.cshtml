@@ -1,0 +1,93 @@
+﻿@model MeiHi.Admin.Models.User.UserCommentsListModel
+@using PagedList.Mvc;
+
+<link href="~/Content/PagedList.css" rel="stylesheet" />
+
+@{
+    ViewBag.Title = "用户评论管理";
+}
+
+<h2>@Model.UserFullName 的评论管理</h2>
+
+<table class="table">
+    <tr>
+        <th>
+            用户名
+        </th>
+        <th>
+            手机
+        </th>
+        <th>
+            消费的店铺
+        </th>
+        <th>
+            消费的服务
+        </th>
+        <th>
+            评论内容
+        </th>
+        <th>
+            评分
+        </th>
+        <th>
+            分享的图片
+        </th>
+        <th>
+            美嗨回复
+        </th>
+        <th>
+            评论时间
+        </th>
+        <th></th>
+    </tr>
+    @foreach (var item in Model.UserCommentsList)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.UserFullName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Mobile)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ShopName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ServiceName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Comment)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Rate)
+            </td>
+            <td>
+                @foreach (var t in item.UserSharedImgaeList)
+                {
+                    <img src="@t" />
+                }
+            </td>
+            <td>
+                @if (item.UserSharedImgaeList != null && item.UserSharedImgaeList.Count > 0)
+                {
+                    <label>@string.Join("|", item.UserSharedImgaeList)</label>
+                }
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DateCreated)
+            </td>
+            <td>
+                @Html.ActionLink("屏蔽", "UnDisplayUserComment", new { userCommentId = item.UserCommentId })
+                @Html.ActionLink("回复", "ReplyUserComment", new { userCommentId = item.UserCommentId })
+            </td>
+        </tr>
+    }
+</table>
+<br />
+Page @(Model.UserCommentsList.PageCount < Model.UserCommentsList.PageNumber ? 0 : Model.UserCommentsList.PageNumber) of @Model.UserCommentsList.PageCount
+
+@Html.PagedListPager(Model.UserCommentsList, page => Url.Action("ManageUserCommentsByUserId", "User",
+    new { page }))
+<div>
+    @Html.ActionLink("返回商铺列表", "ManageUsers")
+</div>

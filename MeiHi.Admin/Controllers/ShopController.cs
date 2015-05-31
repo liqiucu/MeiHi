@@ -119,7 +119,7 @@ namespace MeiHi.Admin.Controllers
             if (!ModelState.IsValid)
             {
                 ModelState.AddModelError("", "请检查输入的信息是否有问题");
-                model.RegionNameList=new CommonLogic().RegionList(); 
+                model.RegionNameList = new CommonLogic().RegionList();
                 return View(model);
             }
 
@@ -170,6 +170,9 @@ namespace MeiHi.Admin.Controllers
                         DateCreated = DateTime.Now,
                         DateModified = DateTime.Now,
                         ShopUserName = model.Phone,
+                        AliPayAccount = model.AliPayAccount,
+                        FullName = model.FullName,
+                        WeiXinPayAccount = model.WinXinPayAccount,
                         Password = model.Phone.Substring(model.Phone.Length - 6)
                     });
 
@@ -329,6 +332,15 @@ namespace MeiHi.Admin.Controllers
                     shop.Title = model.Title;
                     shop.DetailAddress = model.DetailAddress;
                     shop.DateModified = DateTime.Now;
+
+                    var shopUser = shop.ShopUser.FirstOrDefault(a => a.ShopId == model.ShopId);
+
+                    if (shopUser != null)
+                    {
+                        shopUser.WeiXinPayAccount=model.WinXinPayAccount;
+                        shopUser.AliPayAccount = model.AliPayAccount;
+                        shopUser.FullName = model.FullName;
+                    }
 
                     db.SaveChanges();
 
@@ -539,7 +551,7 @@ namespace MeiHi.Admin.Controllers
                     {
                         service = new Service();
 
-                        if (serviceTitleUrl != null && serviceTitleUrl.Count() > 0)
+                        if (serviceTitleUrl != null && serviceTitleUrl.Count() > 0 && serviceTitleUrl[0] != null)
                         {
                             var serviceImageUrl = ImageHelper.SaveImage(
                                 Request.Url.Authority,
@@ -562,7 +574,7 @@ namespace MeiHi.Admin.Controllers
                     }
                     else
                     {
-                        if (serviceTitleUrl != null && serviceTitleUrl.Count() > 0)
+                        if (serviceTitleUrl != null && serviceTitleUrl.Count() > 0 && serviceTitleUrl[0] != null)
                         {
                             var serviceImageUrl = ImageHelper.SaveImage(
                                 Request.Url.Authority,

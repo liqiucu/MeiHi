@@ -1,0 +1,92 @@
+﻿@model MeiHi.Admin.Models.User.UserBookingsModel
+
+@using PagedList.Mvc;
+
+<link href="~/Content/PagedList.css" rel="stylesheet" />
+
+@{
+    ViewBag.Title = "未结算订单";
+}
+
+<h2>未结算订单数：@Model.TotalCount  总金额：@Model.TotalCost</h2>
+<h3>目前可选择以下两种支付方式</h3>
+@if (TempData["PayAllUnBillingBookingsError"] != null)
+{
+    <label class="text-danger">@TempData["PayAllUnBillingBookingsError"]</label>
+}
+@using (Html.BeginForm("PayAllUnBillingBookings", "Shoper", FormMethod.Post))
+{
+    <input type="hidden" value="@Model.ShopId" name="ShopId"/>
+    <label>金额：</label><input name="Cost" id="Cost" value="@Model.TotalCost" />
+    <label>支付宝账号：</label><input name="AliAccount" id="AliAccount" value="@Model.AliAccount" />
+    <input type="submit" value="支付宝结清" />
+}
+
+@using (Html.BeginForm("PayAllUnBillingBookings", "Shoper", FormMethod.Post))
+{
+    <input type="hidden" value="@Model.ShopId" name="ShopId" />
+    <label>金额：</label><input name="Cost" id="Cost" value="@Model.TotalCost" />
+    <label>微信账号：</label><input name="WeiXinAccount" id="WeiXinAccount" value="@Model.WeiXinAccount" />
+    <input type="submit" value="微信结清" />
+}
+
+<table class="table">
+    <tr>
+        <th>
+            美嗨券
+        </th>
+        <th>
+            手机
+        </th>
+        <th>
+            消费的店铺
+        </th>
+        <th>
+            消费的服务
+        </th>
+        <th>
+            设计师
+        </th>
+        <th>
+            下单时间
+        </th>
+        <th>
+            消费金额
+        </th>
+        <th></th>
+    </tr>
+    @foreach (var item in Model.UserBookings)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.VerifyCode)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Mobile)
+            </td>
+            <td>
+                @Html.ActionLink(item.ShopName, "ShopDetail", "Shop", new { shopId = item.ShopId })
+            </td>
+            <td>
+                @Html.ActionLink(item.ServiceName, "ServiceDetail", "Shop", new { serviceId = item.ServiceId })
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Designer)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DateModified)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Cost)
+            </td>
+        </tr>
+    }
+</table>
+<br />
+Page @(Model.UserBookings.PageCount < Model.UserBookings.PageNumber ? 0 : Model.UserBookings.PageNumber) of @Model.UserBookings.PageCount
+
+@Html.PagedListPager(Model.UserBookings, page => Url.Action("ManageUserBookingsByUserId", "User",
+    new { page }))
+<div>
+    @Html.ActionLink("返回商铺列表", "ManageShopers")
+</div>

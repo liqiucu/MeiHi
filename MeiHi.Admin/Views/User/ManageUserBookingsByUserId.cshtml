@@ -1,0 +1,108 @@
+﻿@model MeiHi.Admin.Models.User.UserBookingsModel
+
+@using PagedList.Mvc;
+
+<link href="~/Content/PagedList.css" rel="stylesheet" />
+
+@{
+    ViewBag.Title = "用户订单管理";
+}
+
+<h2>用户订单管理</h2>
+
+<table class="table">
+    <tr>
+        <th>
+            美嗨券
+        </th>
+        <th>
+            手机
+        </th>
+        <th>
+            消费的店铺
+        </th>
+        <th>
+            消费的服务
+        </th>
+        <th>
+            设计师
+        </th>
+        <th>
+            是否申请退款
+        </th>
+        <th>
+            退款成功
+        </th>
+        <th>
+            是否已支付
+        </th>
+        <th>
+            是否已使用
+        </th>
+        <th></th>
+    </tr>
+    @foreach (var item in Model.UserBookings)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.VerifyCode)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Mobile)
+            </td>
+            <td>
+                @Html.ActionLink(item.ShopName, "ShopDetail", "Shop", new { shopId = item.ShopId })
+            </td>
+            <td>
+                @Html.ActionLink(item.ServiceName, "ServiceDetail", "Shop", new { serviceId = item.ServiceId })
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Designer)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Cancel)
+
+                @if (item.IsBilling && !item.IsUsed && item.Cancel && !item.CancelSuccess)
+                {
+                    <br />
+                    if (!string.IsNullOrEmpty(item.WeiXinAccount))
+                    {
+                        <label>微信支付：</label><label>@item.WeiXinAccount</label>
+                    }
+
+                    if (!string.IsNullOrEmpty(item.AlipayAccount))
+                    {
+                        <label>支付宝：</label><label>@item.AlipayAccount</label>
+                    }
+                }
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CancelSuccess)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsBilling)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsUsed)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DateModified)
+            </td>
+            <td>
+                @if (item.IsBilling && !item.IsUsed && item.Cancel && !item.CancelSuccess)
+                {
+                    @Html.ActionLink("立即退款", "RefundToUserByBookingId", new { userBookingId = item.BookingId })
+                }
+            </td>
+        </tr>
+    }
+</table>
+<br />
+Page @(Model.UserBookings.PageCount < Model.UserBookings.PageNumber ? 0 : Model.UserBookings.PageNumber) of @Model.UserBookings.PageCount
+
+@Html.PagedListPager(Model.UserBookings, page => Url.Action("ManageUserBookingsByUserId", "User",
+    new { page }))
+
+<div>
+    @Html.ActionLink("返回商铺列表", "ManageUsers")
+</div>

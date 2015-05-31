@@ -54,8 +54,8 @@ namespace MeiHi.API.Controllers
                     db.SaveChanges();
                     return new
                     {
-                        jsonStatus = 0,
-                        result = "send mobile:" + mobile + " verify code: " + code + "success"
+                        jsonStatus = 1,
+                        result = "发送登陆验证码成功 手机号:" + mobile + " 验证码: " + code
                     };
                 }
             }

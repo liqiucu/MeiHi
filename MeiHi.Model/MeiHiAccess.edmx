@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="MeiHiModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012.Azure" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="MeiHiModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012.Azure" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Add">
           <Key>
             <PropertyRef Name="AddId" />
@@ -231,6 +231,9 @@
           <Property Name="DateCreated" Type="datetime" Nullable="false" />
           <Property Name="DateModified" Type="datetime" Nullable="false" />
           <Property Name="ShopUserName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="AliPayAccount" Type="nvarchar" MaxLength="50" />
+          <Property Name="FullName" Type="nvarchar" MaxLength="50" />
+          <Property Name="WeiXinPayAccount" Type="nvarchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="User">
           <Key>
@@ -754,8 +757,7 @@
             <End Role="UserFavorites" EntitySet="UserFavorites" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="MeiHiModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -1024,6 +1026,9 @@
           <Property Name="DateModified" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="ShopUserName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <NavigationProperty Name="Shop" Relationship="Self.FK_ShopUser_Shop" FromRole="ShopUser" ToRole="Shop" />
+          <Property Name="AliPayAccount" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="FullName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="WeiXinPayAccount" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="User">
           <Key>
@@ -1801,6 +1806,9 @@
           <EntitySetMapping Name="ShopUser">
             <EntityTypeMapping TypeName="MeiHiModel.ShopUser">
               <MappingFragment StoreEntitySet="ShopUser">
+                <ScalarProperty Name="WeiXinPayAccount" ColumnName="WeiXinPayAccount" />
+                <ScalarProperty Name="FullName" ColumnName="FullName" />
+                <ScalarProperty Name="AliPayAccount" ColumnName="AliPayAccount" />
                 <ScalarProperty Name="ShopUserId" ColumnName="ShopUserId" />
                 <ScalarProperty Name="Password" ColumnName="Password" />
                 <ScalarProperty Name="ShopId" ColumnName="ShopId" />

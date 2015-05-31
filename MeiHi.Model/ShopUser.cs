@@ -20,6 +20,9 @@ namespace MeiHi.Model
         public System.DateTime DateCreated { get; set; }
         public System.DateTime DateModified { get; set; }
         public string ShopUserName { get; set; }
+        public string AliPayAccount { get; set; }
+        public string FullName { get; set; }
+        public string WeiXinPayAccount { get; set; }
     
         public virtual Shop Shop { get; set; }
     }

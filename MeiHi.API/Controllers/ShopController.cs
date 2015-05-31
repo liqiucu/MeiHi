@@ -23,25 +23,48 @@ namespace MeiHi.API.Controllers
         [AllowAnonymous]
         public object GetRecmmondShoppings(string region)
         {
-            using (var db = new MeiHiEntities())
+            try
             {
-                var shops = ShopLogic.GetAllShopsFromCache();
-                var recommandShops = shops.Where(a => a.IsHot == true && a.IsOnline == true).Take(10);
-
-                if (recommandShops == null || recommandShops.Count() == 0)
+                using (var db = new MeiHiEntities())
                 {
+                    if (HttpRuntime.Cache.Get(region) as List<ShopDistanceModel> == null)
+                    {
+                        CalDistance(region);
+                    }
+
+                    var shopDistances = HttpRuntime.Cache.Get(region) as List<ShopDistanceModel>;
+
+                    if (shopDistances == null)
+                    {
+                        return new
+                        {
+                            jsonStatus = 0,
+                            resut = "内存爆了 请联系 13167226393"
+                        };
+                    }
+
+                    var shops = ShopLogic.GetAllShopsFromCache();
+                    var temp = shops.Where(a => a.IsHot == true && a.IsOnline == true).Take(10);
+
+                    foreach (var item in temp)
+                    {
+                        item.Distance = shopDistances.First(a => a.ShopId == item.ShopId).Distance;
+                    }
+
                     return new
                     {
-                        jsonStatus = 0,
-                        result = "没有推荐店铺"
+                        jsonStatus = 1,
+                        resut = temp
                     };
                 }
-
+            }
+            catch (Exception ex)
+            {
                 return new
                 {
-                    jsonStatus = 1,
-                    resut = recommandShops
-                };
+                    jsonStatus = 0,
+                    resut = ex
+                }; ;
             }
         }
 

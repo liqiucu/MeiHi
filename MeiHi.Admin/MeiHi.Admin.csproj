@@ -184,6 +184,8 @@
     <Compile Include="Controllers\HairStyleController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ShopController.cs" />
+    <Compile Include="Controllers\ShoperController.cs" />
+    <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -191,15 +193,20 @@
     <Compile Include="Logic\AdminLogic.cs" />
     <Compile Include="Logic\ServiceLogic.cs" />
     <Compile Include="Logic\CommonLogic.cs" />
+    <Compile Include="Logic\ShoperLogic.cs" />
+    <Compile Include="Logic\UserLogic.cs" />
     <Compile Include="Logic\ShopLogic.cs" />
     <Compile Include="Models\Advertising\AdvertisingModel.cs" />
+    <Compile Include="Models\Booking\BookingModel.cs" />
     <Compile Include="Models\HairStyle\HairStyleModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\Service\ServiceModel.cs" />
+    <Compile Include="Models\Shoper\ShoperModel.cs" />
     <Compile Include="Models\Shops\RecommandShopModel.cs" />
     <Compile Include="Models\Shops\ShopModel.cs" />
     <Compile Include="Models\Shops\ServiceForShopDetailModel.cs" />
     <Compile Include="Models\UserComments\UserCommentsModel.cs" />
+    <Compile Include="Models\User\UserModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="Models\Admin\AccountManageModel.cs" />
@@ -278,6 +285,15 @@
     <Content Include="Views\HairStyle\ManageHairStyle.cshtml" />
     <Content Include="Views\HairStyle\CreateHairStyle.cshtml" />
     <Content Include="Views\HairStyle\EditHairStyle.cshtml" />
+    <Content Include="Views\User\ManageUsers.cshtml" />
+    <Content Include="Views\User\ManageUserCommentsByUserId.cshtml" />
+    <Content Include="Views\User\ReplyUserComment.cshtml" />
+    <Content Include="Views\User\ManageUserBookingsByUserId.cshtml" />
+    <Content Include="Views\Shoper\ManageShopers.cshtml" />
+    <Content Include="Views\Shoper\GetUnBillingBookingsByShopId.cshtml" />
+    <Content Include="Views\Shoper\GetBillingedBookingsByShopId.cshtml" />
+    <Content Include="Views\Shoper\ManageUserCommentsByShopId.cshtml" />
+    <Content Include="Views\Shoper\ReplyUserComment.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

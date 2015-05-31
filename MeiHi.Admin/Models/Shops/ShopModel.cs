@@ -41,6 +41,15 @@ namespace MeiHi.Admin.Models
         [Required]
         public string Phone { get; set; }
 
+        [Display(Name = "支付宝账号")]
+        public string AliPayAccount { get; set; }
+
+        [Display(Name = "微信支付账号")]
+        public string WinXinPayAccount { get; set; }
+
+        [Display(Name = "联系人名字")]
+        public string FullName { get; set; }
+
         [Display(Name = "店主联系方式(座机或者手机)")]
         [Required]
         public string Contract { get; set; }
@@ -95,6 +104,15 @@ namespace MeiHi.Admin.Models
          [RegularExpression(@"^1[3458][0-9]{9}$", ErrorMessage = "手机号格式不正确")]
          [Required]
          public string Phone { get; set; }
+
+         [Display(Name = "支付宝账号")]
+         public string AliPayAccount { get; set; }
+
+         [Display(Name = "微信支付账号")]
+         public string WinXinPayAccount { get; set; }
+
+         [Display(Name = "联系人名字")]
+         public string FullName { get; set; }
 
          [Display(Name = "店主联系方式(座机或者手机)")]
          [Required]
