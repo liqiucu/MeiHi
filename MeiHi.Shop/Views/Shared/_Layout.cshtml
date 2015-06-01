@@ -64,16 +64,39 @@
             <div class="navbar-header">
                 @Html.ActionLink("美嗨店主管理系统", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
             </div>
-            <div class="navbar-collapse collapse">
-               
-            </div>
+            @*<div class="navbar-collapse collapse">
+                <ul class="nav nav-tabs">
+                    
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            店铺管理 <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>@Html.ActionLink("店铺评论", "ShopManege", "Shop")</li>
+                            <li>@Html.ActionLink("未结算订单", "OfflineShopManage", "Shop")</li>
+                            <li>@Html.ActionLink("已结算订单", "CreateShop", "Shop")</li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            统计 <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>@Html.ActionLink("店铺资金流水统计", "Index", "Home")</li>
+                            <li>@Html.ActionLink("会员资金流水统计", "Index", "Home")</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>*@
         </div>
     </div>
     <div class="container body-content">
         @if (Session["UserName"] != null)
         {
-            @Session["UserName"]  <label>,</label>
-            @Html.ActionLink("LogOff", "LogOff", "Account");
+            <label>欢迎你, </label>@Session["UserName"]<label>, </label>
+            @Html.ActionLink("登出", "LogOff", "Account");
+            <label>, </label>
+            @Html.ActionLink("重置密码", "ResetShoperPassword", "Home", new { shopId = Session["ShopId"] }, new { })
         }
         <hr />
         @RenderBody()

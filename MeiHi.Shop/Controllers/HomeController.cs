@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using MeiHi.Model;
 using MeiHi.Shop.ViewModels;
+using MeiHi.Shop.Models.HomeModel;
 
 namespace MeiHi.Shop.Controllers
 {
@@ -13,15 +14,32 @@ namespace MeiHi.Shop.Controllers
         [Auth(Roles = "店主")]
         public ActionResult Index()
         {
-            ViewBag.ShopId = Session["ShopId"];
+            using (var db = new MeiHiEntities())
+            {
+                ShoperHomeModel model = new ShoperHomeModel();
 
-            return View();
+                if (Session["ShopId"] != null)
+                {
+                    var shopId = long.Parse(Session["ShopId"].ToString());
+                    TempData["ShopId"] = Session["ShopId"];
+
+                    var shop = db.Shop.FirstOrDefault(a => a.ShopId == shopId);
+
+                    if (shop != null)
+                    {
+                        model.ShopId = shop.ShopId;
+                        model.ShopName = shop.Title;
+                    }
+                }
+
+                return View(model);
+            }
         }
 
         [Auth(Roles = "店主")]
         [ValidateAntiForgeryToken]
         [HttpPost]
-        public ActionResult VerifyUserMeiHiCode(string code)
+        public ActionResult VerifyUserMeiHiCode(string code, long shopId, string shopName)
         {
             using (var db = new MeiHiEntities())
             {
@@ -31,7 +49,7 @@ namespace MeiHi.Shop.Controllers
                 {
                     booking.IsUsed = true;
                     db.SaveChanges();
-                    ViewBag.WelcomeMessage = string.Format("用户[{0}] 购买的 [{1} {2} {3}] 验证通过, 下单时间 {4},下单手机号 {5}",
+                    TempData["WelcomeMessage"] = string.Format("用户[{0}] 购买的 [{1} {2} {3}] 验证通过, 下单时间 {4},下单手机号 {5}",
                                                     booking.User.FullName,
                                                     booking.ShopName,
                                                     booking.ServiceName,
@@ -41,44 +59,31 @@ namespace MeiHi.Shop.Controllers
                 }
                 else
                 {
-                    ViewBag.ErrorMessage = string.Format("美嗨券 {0} 验证失败, 请核对后重新输入", code);
+                    TempData["ErrorMessage"] = string.Format("美嗨券 {0} 验证失败, 请核对后重新输入", code);
                 }
 
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", new ShoperHomeModel() { ShopId = shopId, ShopName = shopName });
             }
         }
 
         [Auth(Roles = "店主")]
-        [HttpGet]
         public ActionResult ResetShoperPassword(long shopId)
         {
-            using (var db = new MeiHiEntities())
-            {
-                var shoper = db.ShopUser.FirstOrDefault(a => a.ShopId == shopId);
-
-                if (shoper == null)
-                {
-                    throw new Exception("无效的店铺");
-                }
-
-                var shoperModel = new ShoperModel();
-                shoperModel.ShopId = shopId;
-                //shoperModel.Password = shoper.Password;
-
-                return View(shoperModel);
-            }
+            var shoperModel = new ShoperModelPassword();
+            shoperModel.ShopId = shopId;
+            return View(shoperModel);
         }
 
         [Auth(Roles = "店主")]
-        [ValidateAntiForgeryToken]
         [HttpPost]
-        public ActionResult UpdateShopper(ShoperModel model)
+        public ActionResult ResetShoperPassword(ShoperModelPassword model)
         {
             using (var db = new MeiHiEntities())
             {
                 if (model.Password1 != model.Password2)
                 {
-                    TempData["message"] = "两个密码不一致,请重新输入";
+                    ModelState.AddModelError("", "两个密码不一致,请重新输入");
+                    return View(model);
                 }
                 else
                 {
@@ -86,16 +91,17 @@ namespace MeiHi.Shop.Controllers
 
                     if (shoper == null)
                     {
-                        throw new Exception("无效的店铺");
+                        ModelState.AddModelError("", "无效的店铺");
+                        return View(model);
                     }
 
                     shoper.Password = model.Password1;
                     db.SaveChanges();
 
                     TempData["message"] = "重置成功";
-                }
 
-                return RedirectToAction("ResetShoperPassword", new { shopId = model.ShopId });
+                    return View(model);
+                }
             }
         }
     }

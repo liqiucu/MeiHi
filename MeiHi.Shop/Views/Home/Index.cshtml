@@ -1,26 +1,30 @@
-﻿@{
+﻿@model MeiHi.Shop.Models.HomeModel.ShoperHomeModel
+
+@{
     ViewBag.Title = "美嗨店主管理系统";
 }
 
 <div class="jumbotron">
-    这里是美嗨店主管理系统
+    @Model.ShopName：
+    @Html.ActionLink("未结算订单", "GetUnBillingBookingsByShopId", "Shoper", new { shopId = @Model.ShopId }, new { })
+    @Html.ActionLink("已结算订单", "GetBillingedBookingsByShopId", "Shoper", new { shopId = @Model.ShopId }, new { })
+    @Html.ActionLink("评论", "ManageUserCommentsByShopId", "Shoper", new { shopId = @Model.ShopId }, new { })
 </div>
-
-@Html.ActionLink("重置密码", "ResetShoperPassword", new { shopId = ViewBag.ShopId }) 
-
+@if (TempData["WelcomeMessage"] != null)
+{
+    <label class="text-success">验证通过：@TempData["WelcomeMessage"]</label>
+}
+else if (TempData["ErrorMessage"] != null)
+{
+    <label class="text-warning">验证失败：@TempData["ErrorMessage"]</label>
+}
 @using (Html.BeginForm("VerifyUserMeiHiCode", "Home", FormMethod.Post))
 {
     @Html.AntiForgeryToken()
-    <label>目前只有一个功能，验证用户美嗨券</label>
+    <label>验证用户美嗨券</label>
     <input name="code" id="code" value="" />
+    <input name="shopId" value="@Model.ShopId" type="hidden" />
+    <input name="shopName" value="@Model.ShopName" type="hidden" />
     <input type="submit" value="验证" />
-
-    if (!string.IsNullOrEmpty(ViewBag.WelcomeMessage))
-    {
-        <label class="text-success">验证通过：@ViewBag.WelcomeMessage</label>
-    }
-    else if (!string.IsNullOrEmpty(ViewBag.ErrorMessage))
-    {
-        <label class="text-warning">验证失败：@ViewBag.ErrorMessage</label>
-    }
 }
+

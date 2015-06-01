@@ -2,11 +2,12 @@
 {
     <text>
         @*Hello, @Html.ActionLink(User.Identity.Name, "ManageAccount", "Account", routeValues: null, htmlAttributes: new { @class = "username", title = "Manage" })!*@
-        @User.Identity.Name
+        欢迎你 @User.Identity.Name
         @using (Html.BeginForm("LogOff", "Account", FormMethod.Post))
         {
             @Html.AntiForgeryToken()
-            <a href="javascript:document.getElementById('logoutForm').submit()">,Log off</a>
+            <a href="javascript:document.getElementById('logoutForm').submit()">,登出,</a>
         }
+        @Html.ActionLink("重置密码", "ResetShoperPassword", "Home", new { shopId = TempData["ShopId"] })
     </text>
 }
