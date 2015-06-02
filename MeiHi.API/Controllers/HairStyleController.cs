@@ -29,7 +29,7 @@ namespace MeiHi.API.Controllers
                     return new
                     {
                         jsonStatus = 1,
-                        resut = "暂时没有发型可供选择"
+                        result = "暂时没有发型可供选择"
                     };
                 }
 
@@ -60,7 +60,7 @@ namespace MeiHi.API.Controllers
                 return new
                 {
                     jsonStatus = 1,
-                    resut = result
+                    result = result
                 }; 
             }
         }

@@ -39,7 +39,7 @@ namespace MeiHi.API.Controllers
                         return new
                         {
                             jsonStatus = 0,
-                            resut = "内存爆了 请联系 13167226393"
+                            result = "内存爆了 请联系 13167226393"
                         };
                     }
 
@@ -54,7 +54,7 @@ namespace MeiHi.API.Controllers
                     return new
                     {
                         jsonStatus = 1,
-                        resut = temp
+                        result = temp
                     };
                 }
             }
@@ -63,7 +63,7 @@ namespace MeiHi.API.Controllers
                 return new
                 {
                     jsonStatus = 0,
-                    resut = ex
+                    result = ex
                 }; ;
             }
         }
@@ -91,7 +91,7 @@ namespace MeiHi.API.Controllers
                 return new
                 {
                     jsonStatus = 0,
-                    resut = "内存爆了 请联系 13167226393"
+                    result = "内存爆了 请联系 13167226393"
                 };
             }
 
@@ -110,7 +110,7 @@ namespace MeiHi.API.Controllers
             return new
             {
                 jsonStatus = 1,
-                resut = results
+                result = results
             };
         }
 
@@ -137,7 +137,7 @@ namespace MeiHi.API.Controllers
                 return new
                 {
                     jsonStatus = 0,
-                    resut = "内存爆了 请联系 13167226393"
+                    result = "内存爆了 请联系 13167226393"
                 };
             }
 
@@ -147,7 +147,7 @@ namespace MeiHi.API.Controllers
             return new
             {
                 jsonStatus = 1,
-                resut = result
+                result = result
             };
         }
 
@@ -169,7 +169,7 @@ namespace MeiHi.API.Controllers
                     return new
                     {
                         jsonStatus = 1,
-                        resut = "预加载成功"
+                        result = "成功获取店铺距离"
                     };
                 }
 
@@ -194,7 +194,7 @@ namespace MeiHi.API.Controllers
                     return new
                     {
                         jsonStatus = 1,
-                        resut = "预加载成功"
+                        result = "成功获取店铺距离"
                     };
                 }
             }
@@ -203,7 +203,7 @@ namespace MeiHi.API.Controllers
                 return new
                 {
                     jsonStatus = 0,
-                    resut = ex
+                    result = ex
                 };
             }
         }
@@ -241,14 +241,14 @@ namespace MeiHi.API.Controllers
                     return new
                     {
                         jsonStatus = 1,
-                        resut = shopModel
+                        result = shopModel
                     };
                 }
 
                 return new
                 {
                     jsonStatus = 0,
-                    resut = "获取店铺服务列表失败"
+                    result = "获取店铺服务列表失败"
                 };
             }
         }
@@ -284,14 +284,14 @@ namespace MeiHi.API.Controllers
                     return new
                     {
                         jsonStatus = 1,
-                        resut = shopModel
+                        result = shopModel
                     };
                 }
 
                 return new
                 {
                     jsonStatus = 0,
-                    resut = "获取店铺服务列表失败"
+                    result = "获取店铺服务列表失败"
                 };
             }
         }
@@ -313,14 +313,14 @@ namespace MeiHi.API.Controllers
                 return new
                 {
                     jsonStatus = 1,
-                    resut = temp
+                    result = temp
                 };
             }
 
             return new
             {
                 jsonStatus = 1,
-                resut = "没有店铺评论"
+                result = "没有店铺评论"
             };
         }
 
@@ -339,7 +339,7 @@ namespace MeiHi.API.Controllers
                 return new
                 {
                     jsonStatus = 0,
-                    resut = "网络较慢，还没刷出店铺信息"
+                    result = "网络较慢，还没刷出店铺信息"
                 };
             }
 
@@ -349,7 +349,7 @@ namespace MeiHi.API.Controllers
             return new
             {
                 jsonStatus = 1,
-                resut = shops
+                result = shops
             };
         }
 
@@ -372,14 +372,14 @@ namespace MeiHi.API.Controllers
                     return new
                     {
                         jsonStatus = 1,
-                        resut = shop.ShopBrandImages.Select(a => a.url)
+                        result = shop.ShopBrandImages.Select(a => a.url)
                     };
                 }
 
                 return new
                 {
                     jsonStatus = 0,
-                    resut = "店铺没有品牌图片"
+                    result = "店铺没有品牌图片"
                 };
             }
         }
@@ -410,7 +410,7 @@ namespace MeiHi.API.Controllers
                     return new
                     {
                         jsonStatus = 1,
-                        resut = "添加成功"
+                        result = "添加成功"
                     };
                 }
             }
@@ -419,7 +419,7 @@ namespace MeiHi.API.Controllers
                 return new
                 {
                     jsonStatus = 0,
-                    resut = "添加失败"
+                    result = "添加失败"
                 };
 
                 throw;

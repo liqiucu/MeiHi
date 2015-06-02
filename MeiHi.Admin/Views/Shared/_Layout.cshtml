@@ -135,12 +135,20 @@
                     </li>
                     <li class="dropdown">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                            资金 <span class="caret"></span>
+                            订单与资金 <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu">
-                            <li>@Html.ActionLink("店铺资金管理", "Index", "Home")</li>
-                            <li>@Html.ActionLink("会员资金管理", "Index", "Home")</li>
+                            <li>@Html.ActionLink("订单查询", "Index", "Home")</li>
+                            <li>@Html.ActionLink("资金流动", "Index", "Home")</li>
                             <li>@Html.ActionLink("资金记录", "Index", "Home")</li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            评论管理 <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>@Html.ActionLink("所有评论", "Index", "Home")</li>
                         </ul>
                     </li>
                     <li class="dropdown">

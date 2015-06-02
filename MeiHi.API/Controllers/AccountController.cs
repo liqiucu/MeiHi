@@ -40,7 +40,7 @@ namespace MeiHi.API.Controllers
                             VerifyCode = code,
                             DateCreated = DateTime.Now,
                             DateModified = DateTime.Now,
-                            Salt=""
+                            Salt = ""
                         };
                         db.User.Add(reg);
                         LuoSiMaoTextMessage.SendText(reg.Mobile, reg.VerifyCode + " 登陆验证码");
@@ -61,7 +61,7 @@ namespace MeiHi.API.Controllers
             }
             catch (DbEntityValidationException ex)
             {
-                
+
                 throw;
             }
         }
@@ -93,7 +93,7 @@ namespace MeiHi.API.Controllers
                     return new
                     {
                         jsonStatus = 0,
-                        resut = "验证码错误"
+                        result = "验证码错误"
                     };
                 }
 
@@ -102,7 +102,7 @@ namespace MeiHi.API.Controllers
                     return new
                     {
                         jsonStatus = 0,
-                        resut = "验证码已过期，请返回重新验证"
+                        result = "验证码已过期，请返回重新验证"
                     };
                 }
 
@@ -119,9 +119,12 @@ namespace MeiHi.API.Controllers
                 reg.Version = version;
                 db.SaveChanges();
 
-                return new HttpResponseMessage(HttpStatusCode.OK)
+                return new
                 {
-                    Content = new StringContent("{\"jsonStatus\": 1, \"token\": \"" + reg.Token + "\", \"mobile\": " + reg.Mobile + "\", \"MeiHiUserId\": " + reg.UserId + "\"}", Encoding.UTF8, "application/json")
+                    jsonStatus = 1,
+                    token = reg.Token,
+                    mobile = reg.Mobile,
+                    meiHiUserId = reg.UserId
                 };
             }
         }
@@ -146,14 +149,14 @@ namespace MeiHi.API.Controllers
                     return new
                     {
                         jsonStatus = 1,
-                        resut = "登出成功"
+                        result = "登出成功"
                     };
                 }
 
                 return new
                 {
                     jsonStatus = 0,
-                    resut = "登出失败,用户不存在！"
+                    result = "登出失败,用户不存在！"
                 };
             }
         }

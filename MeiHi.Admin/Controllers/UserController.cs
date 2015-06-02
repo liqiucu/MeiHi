@@ -70,6 +70,23 @@ namespace MeiHi.Admin.Controllers
             }
         }
 
+        public ActionResult DisplayUserComment(long userCommentId)
+        {
+            using (var db = new MeiHiEntities())
+            {
+                var userComment = db.UserComments.FirstOrDefault(a => a.UserCommentId == userCommentId);
+
+                if (userComment != null)
+                {
+                    userComment.Display = true;
+                    userComment.DateModified = DateTime.Now;
+                    db.SaveChanges();
+                }
+
+                return RedirectToAction("ManageUserCommentsByUserId", new { shopId = userComment.ShopId });
+            }
+        }
+
         [HttpPost]
         public ActionResult ReplyUserComment(UserCommentsReplyModel model)
         {
