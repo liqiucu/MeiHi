@@ -169,7 +169,7 @@ namespace MeiHi.API.Controllers
                     return new
                     {
                         jsonStatus = 1,
-                        resut = "成功获取店铺距离"
+                        resut = "预加载成功"
                     };
                 }
 
@@ -194,7 +194,7 @@ namespace MeiHi.API.Controllers
                     return new
                     {
                         jsonStatus = 1,
-                        resut = "成功获取店铺距离"
+                        resut = "预加载成功"
                     };
                 }
             }
