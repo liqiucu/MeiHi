@@ -44,14 +44,14 @@ namespace MeiHi.API.Controllers
                     return new
                     {
                         jsonStatus = 1,
-                        resut = serviceModel
+                        result = serviceModel
                     };
                 }
 
                 return new
                 {
                     jsonStatus = 0,
-                    resut = "获取服务信息失败"
+                    result = "获取服务信息失败"
                 };
             }
         }
@@ -73,14 +73,14 @@ namespace MeiHi.API.Controllers
                 return new
                 {
                     jsonStatus = 1,
-                    resut = temp
+                    result = temp
                 };
             }
 
             return new
             {
                 jsonStatus = 1,
-                resut = "没有服务评论"
+                result = "没有服务评论"
             };
         }
 
@@ -110,7 +110,7 @@ namespace MeiHi.API.Controllers
                     return new
                     {
                         jsonStatus = 1,
-                        resut = "添加成功"
+                        result = "添加成功"
                     };
                 }
             }
@@ -119,7 +119,7 @@ namespace MeiHi.API.Controllers
                  return new
                 {
                     jsonStatus = 0,
-                    resut = "添加失败"
+                    result = "添加失败"
                 };
                 throw;
             }

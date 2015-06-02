@@ -31,7 +31,7 @@ namespace MeiHi.API.Controllers
                     return new
                     {
                         jsonStatus = 0,
-                        resut = "用户不存在"
+                        result = "用户不存在"
                     };
                 }
 
@@ -48,7 +48,7 @@ namespace MeiHi.API.Controllers
                 return new
                 {
                     jsonStatus = 1,
-                    resut = userHomeModel
+                    result = userHomeModel
                 };
             }
         }
@@ -66,7 +66,7 @@ namespace MeiHi.API.Controllers
                     return new
                     {
                         jsonStatus = 0,
-                        resut = "用户不存在"
+                        result = "用户不存在"
                     };
                 }
 
@@ -84,7 +84,7 @@ namespace MeiHi.API.Controllers
                 return new
                 {
                     jsonStatus = 1,
-                    resut = userDetailModel
+                    result = userDetailModel
                 };
             }
         }
@@ -109,7 +109,7 @@ namespace MeiHi.API.Controllers
                     return new
                     {
                         jsonStatus = 0,
-                        resut = "用户不存在"
+                        result = "用户不存在"
                     };
                 }
 
@@ -120,7 +120,7 @@ namespace MeiHi.API.Controllers
                     return new
                     {
                         jsonStatus = 0,
-                        resut = "用户Token和用户ID不一致 USERID：" + userId
+                        result = "用户Token和用户ID不一致 USERID：" + userId
                     };
                 }
 
@@ -135,7 +135,7 @@ namespace MeiHi.API.Controllers
                 return new
                 {
                     jsonStatus = 1,
-                    resut = "用户信息更新成功"
+                    result = "用户信息更新成功"
                 };
             }
         }
@@ -161,7 +161,7 @@ namespace MeiHi.API.Controllers
                         return new
                         {
                             jsonStatus = 0,
-                            resut = "图片上传数量为空"
+                            result = "图片上传数量为空"
                         };
                     }
 
@@ -170,7 +170,7 @@ namespace MeiHi.API.Controllers
                         return new
                         {
                             jsonStatus = 0,
-                            resut = "图片上传数量不该大于1"
+                            result = "图片上传数量不该大于1"
                         };
                     }
 
@@ -181,7 +181,7 @@ namespace MeiHi.API.Controllers
                         return new
                         {
                             jsonStatus = 0,
-                            resut = "用户不存在 UserId:" + userId
+                            result = "用户不存在 UserId:" + userId
                         };
                     }
 
@@ -192,7 +192,7 @@ namespace MeiHi.API.Controllers
                         return new
                         {
                             jsonStatus = 0,
-                            resut = "用户Token和用户ID不一致 USERID：" + userId
+                            result = "用户Token和用户ID不一致 USERID：" + userId
                         };
                     }
 
@@ -214,7 +214,7 @@ namespace MeiHi.API.Controllers
                     return new
                     {
                         jsonStatus = 1,
-                        resut = "用户上传图片成功 UserId:" + userId
+                        result = "用户上传图片成功 UserId:" + userId
                     };
                 }
             }
@@ -223,7 +223,7 @@ namespace MeiHi.API.Controllers
                 return new
                 {
                     jsonStatus = 0,
-                    resut = "用户上传图片失败 UserId:" + userId + " ex:" + ex
+                    result = "用户上传图片失败 UserId:" + userId + " ex:" + ex
                 };
             }
         }
@@ -260,7 +260,7 @@ namespace MeiHi.API.Controllers
                 return new
                 {
                     jsonStatus = 1,
-                    resut = result
+                    result = result
                 };
             }
         }
@@ -279,7 +279,7 @@ namespace MeiHi.API.Controllers
                     return new
                     {
                         jsonStatus = 1,
-                        resut = "该用户没有订单:" + userId
+                        result = "该用户没有订单:" + userId
                     };
                 }
 
@@ -342,7 +342,7 @@ namespace MeiHi.API.Controllers
                 return new
                 {
                     jsonStatus = 1,
-                    resut = model
+                    result = model
                 };
             }
         }
@@ -371,7 +371,7 @@ namespace MeiHi.API.Controllers
                     return new
                     {
                         jsonStatus = 0,
-                        resut = "获取用户信息失败"
+                        result = "获取用户信息失败"
                     };
                 }
 
@@ -387,7 +387,7 @@ namespace MeiHi.API.Controllers
                     return new
                     {
                         jsonStatus = 0,
-                        resut = "获取用户订单信息失败"
+                        result = "获取用户订单信息失败"
                     };
                 }
 
@@ -407,7 +407,7 @@ namespace MeiHi.API.Controllers
                 return new
                 {
                     jsonStatus = 1,
-                    resut = "申请退款成功,退款将在次日到账"
+                    result = "申请退款成功,退款将在次日到账"
                 };
             }
         }
@@ -426,7 +426,7 @@ namespace MeiHi.API.Controllers
                     return new
                     {
                         jsonStatus = 1,
-                        resut = "该用户没有未支付的订单 userid:" + userId
+                        result = "该用户没有未支付的订单 userid:" + userId
                     };
                 }
 
@@ -451,7 +451,7 @@ namespace MeiHi.API.Controllers
                 return new
                 {
                     jsonStatus = 1,
-                    resut = result
+                    result = result
                 };
             }
         }
@@ -476,7 +476,7 @@ namespace MeiHi.API.Controllers
                     return new
                     {
                         jsonStatus = 0,
-                        resut = "订单异常了,订单号：" + bookingId + " 服务名：" + serviceName
+                        result = "订单异常了,订单号：" + bookingId + " 服务名：" + serviceName
                     };
                 }
 
@@ -485,7 +485,7 @@ namespace MeiHi.API.Controllers
                     return new
                     {
                         jsonStatus = 0,
-                        resut = "这单已经支付了"
+                        result = "这单已经支付了"
                     };
                 }
 
@@ -507,7 +507,7 @@ namespace MeiHi.API.Controllers
                 return new
                 {
                     jsonStatus = 1,
-                    resut = model
+                    result = model
                 };
             }
         }
@@ -526,7 +526,7 @@ namespace MeiHi.API.Controllers
                     return new
                     {
                         jsonStatus = 0,
-                        resut = "没有获取到该用户信息"
+                        result = "没有获取到该用户信息"
                     };
                 }
 
@@ -579,7 +579,7 @@ namespace MeiHi.API.Controllers
                 return new
                 {
                     jsonStatus = 1,
-                    resut = model
+                    result = model
                 };
             }
         }
@@ -598,7 +598,7 @@ namespace MeiHi.API.Controllers
                     return new
                     {
                         jsonStatus = 0,
-                        resut = "没有获取到该用户信息"
+                        result = "没有获取到该用户信息"
                     };
                 }
 
@@ -612,7 +612,7 @@ namespace MeiHi.API.Controllers
                 return new
                 {
                     jsonStatus = 1,
-                    resut = useraccountinfo
+                    result = useraccountinfo
                 };
             }
         }
@@ -629,7 +629,7 @@ namespace MeiHi.API.Controllers
                     return new
                     {
                         jsonStatus = 0,
-                        resut = "不能为空"
+                        result = "不能为空"
                     };
                 }
 
@@ -645,7 +645,7 @@ namespace MeiHi.API.Controllers
                 return new
                 {
                     jsonStatus = 1,
-                    resut = "提议成功"
+                    result = "提议成功"
                 };
             }
         }
@@ -669,7 +669,7 @@ namespace MeiHi.API.Controllers
                     return new
                     {
                         jsonStatus = 0,
-                        resut = "参数异常"
+                        result = "参数异常"
                     };
                 }
 
@@ -716,7 +716,7 @@ namespace MeiHi.API.Controllers
                     return new
                     {
                         jsonStatus = 1,
-                        resut = "评论成功"
+                        result = "评论成功"
                     };
                 }
             }
@@ -725,7 +725,7 @@ namespace MeiHi.API.Controllers
                 return new
                 {
                     jsonStatus = 0,
-                    resut = ex.Message
+                    result = ex.Message
                 };
             }
         }

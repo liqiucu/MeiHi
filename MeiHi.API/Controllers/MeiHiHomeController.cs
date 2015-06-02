@@ -35,14 +35,14 @@ namespace MeiHi.API.Controllers
                 return new
                 {
                     jsonStatus = 1,
-                    resut = temp
+                    result = temp
                 };
             }
 
             return new
             {
                 jsonStatus = 1,
-                resut = "没有店铺评论"
+                result = "没有店铺评论"
             };
         }
 
@@ -69,7 +69,7 @@ namespace MeiHi.API.Controllers
                 return new
                 {
                     jsonStatus = 1,
-                    resut = models
+                    result = models
                 };
             }
         }
@@ -107,14 +107,14 @@ namespace MeiHi.API.Controllers
                     return new
                     {
                         jsonStatus = 1,
-                        resut = shopModel
+                        result = shopModel
                     };
                 }
 
                 return new
                 {
                     jsonStatus = 1,
-                    resut = "没有搜索到店铺"
+                    result = "没有搜索到店铺"
                 };
             }
         }
@@ -158,14 +158,14 @@ namespace MeiHi.API.Controllers
                     return new
                     {
                         jsonStatus = 1,
-                        resut = results
+                        result = results
                     };
                 }
 
                 return new
                 {
                     jsonStatus = 1,
-                    resut = "没有搜索到店铺"
+                    result = "没有搜索到店铺"
                 };
             }
         }
@@ -184,13 +184,13 @@ namespace MeiHi.API.Controllers
                     return new
                     {
                         jsonStatus = 1,
-                        resut = add
+                        result = add
                     };
                 }
                 return new
                 {
                     jsonStatus = 1,
-                    resut = "没有首页广告图片"
+                    result = "没有首页广告图片"
                 };
             }
         }

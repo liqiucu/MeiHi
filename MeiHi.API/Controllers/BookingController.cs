@@ -44,7 +44,7 @@ namespace MeiHi.API.Controllers
                     return new
                     {
                         jsonStatus = 0,
-                        resut = "获取用户信息失败"
+                        result = "获取用户信息失败"
                     };
                 }
 
@@ -60,7 +60,7 @@ namespace MeiHi.API.Controllers
                     return new
                     {
                         jsonStatus = 0,
-                        resut = "获取用户订单信息失败"
+                        result = "获取用户订单信息失败"
                     };
                 }
 
@@ -80,7 +80,7 @@ namespace MeiHi.API.Controllers
                 return new
                 {
                     jsonStatus = 1,
-                    resut = "申请退款成功,退款将在次日到账"
+                    result = "申请退款成功,退款将在次日到账"
                 };
             }
         }
@@ -106,7 +106,7 @@ namespace MeiHi.API.Controllers
                         return new
                         {
                             jsonStatus = 0,
-                            resut = "获取用户信息失败"
+                            result = "获取用户信息失败"
                         };
                     }
 
@@ -117,7 +117,7 @@ namespace MeiHi.API.Controllers
                         return new
                         {
                             jsonStatus = 0,
-                            resut = "获取服务失败"
+                            result = "获取服务失败"
                         };
                     }
 
@@ -150,7 +150,7 @@ namespace MeiHi.API.Controllers
                     return new
                     {
                         jsonStatus = 1,
-                        resut = "订单生产成功 订单号"
+                        result = "订单生产成功 订单号"
                     };
                 }
             }
@@ -180,7 +180,7 @@ namespace MeiHi.API.Controllers
                         return new
                         {
                             jsonStatus = 0,
-                            resut = "订单不存在"
+                            result = "订单不存在"
                         };
                     }
 
@@ -198,7 +198,7 @@ namespace MeiHi.API.Controllers
                     return new
                     {
                         jsonStatus = 1,
-                        resut = "订单支付成功"
+                        result = "订单支付成功"
                     };
                 }
             }
@@ -228,7 +228,7 @@ namespace MeiHi.API.Controllers
                         return new
                         {
                             jsonStatus = 0,
-                            resut = "订单不存在"
+                            result = "订单不存在"
                         };
                     }
 
@@ -246,7 +246,7 @@ namespace MeiHi.API.Controllers
                     return new
                     {
                         jsonStatus = 1,
-                        resut = "订单支付成功"
+                        result = "订单支付成功"
                     };
                 }
             }

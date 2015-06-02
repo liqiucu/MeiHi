@@ -37,7 +37,7 @@
             美嗨回复
         </th>
         <th>
-            评论时间
+            是否屏蔽
         </th>
         <th></th>
     </tr>
@@ -69,16 +69,24 @@
                 }
             </td>
             <td>
-                @if (item.UserSharedImgaeList != null && item.UserSharedImgaeList.Count > 0)
+                @if (item.MeiHiReply != null && item.MeiHiReply.Count > 0)
                 {
-                    <label>@string.Join("|", item.UserSharedImgaeList)</label>
+                    <label>@string.Join("|", item.MeiHiReply)</label>
                 }
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.DateCreated)
+               @if (item.Display)
+               {
+                <label>否</label>
+               }
+               else
+               {
+                <label>是</label>
+               }
             </td>
             <td>
                 @Html.ActionLink("屏蔽", "UnDisplayUserComment", new { userCommentId = item.UserCommentId })
+                @Html.ActionLink("不屏蔽", "DisplayUserComment", new { userCommentId = item.UserCommentId })
                 @Html.ActionLink("回复", "ReplyUserComment", new { userCommentId = item.UserCommentId })
             </td>
         </tr>
