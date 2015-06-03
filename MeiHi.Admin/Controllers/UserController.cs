@@ -12,10 +12,10 @@ namespace MeiHi.Admin.Controllers
     public class UserController : Controller
     {
         // GET: User
-        public ActionResult ManageUsers(int page = 1)
+        public ActionResult ManageUsers(int page = 1, string userName = "")
         {
             var model = new UsersModel();
-            model.Users = UserLogic.GetUsers(page, 10);
+            model.Users = UserLogic.GetUsers(page, 10, userName);
             return View(model);
         }
 

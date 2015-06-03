@@ -181,6 +181,7 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AdvertisingController.cs" />
+    <Compile Include="Controllers\BookingController.cs" />
     <Compile Include="Controllers\HairStyleController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ShopController.cs" />
@@ -191,6 +192,7 @@
     </Compile>
     <Compile Include="Logic\AdminAccountManager.cs" />
     <Compile Include="Logic\AdminLogic.cs" />
+    <Compile Include="Logic\BookingLogic.cs" />
     <Compile Include="Logic\ServiceLogic.cs" />
     <Compile Include="Logic\CommonLogic.cs" />
     <Compile Include="Logic\ShoperLogic.cs" />
@@ -198,6 +200,7 @@
     <Compile Include="Logic\ShopLogic.cs" />
     <Compile Include="Models\Advertising\AdvertisingModel.cs" />
     <Compile Include="Models\Booking\BookingModel.cs" />
+    <Compile Include="Models\Booking\SearchBookingModel.cs" />
     <Compile Include="Models\Booking\ShopsBookingManageModel.cs" />
     <Compile Include="Models\HairStyle\HairStyleModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
@@ -298,6 +301,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\Booking\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

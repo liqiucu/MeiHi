@@ -13,11 +13,17 @@ namespace MeiHi.Admin.Logic
 {
     public static class UserLogic
     {
-        public static StaticPagedList<UserModel> GetUsers(int page, int pageSize)
+        public static StaticPagedList<UserModel> GetUsers(int page, int pageSize, string userName = "")
         {
             using (var access = new MeiHiEntities())
             {
                 var users = access.User.OrderByDescending(a => a.Booking.Any(b => b.Cancel && b.CancelSuccess == false)).Skip((page - 1) * pageSize).Take(pageSize);
+
+                if (!string.IsNullOrEmpty(userName))
+                {
+                    users = access.User.Where(a => a.FullName.Contains(userName)).OrderByDescending(a => a.Booking.Any(b => b.Cancel && b.CancelSuccess == false)).Skip((page - 1) * pageSize).Take(pageSize);
+                }
+
                 var usersList = new List<UserModel>();
 
                 foreach (var item in users)
@@ -79,9 +85,9 @@ namespace MeiHi.Admin.Logic
                         });
                     }
                 }
-                result.UserCommentsList=new StaticPagedList<UserCommentsModel>(comments, page, pageSize, userComments.Count());
-                result.UserFullName=db.User.FirstOrDefault(a=>a.UserId==userId).FullName;
-                result.UserId=userId;
+                result.UserCommentsList = new StaticPagedList<UserCommentsModel>(comments, page, pageSize, userComments.Count());
+                result.UserFullName = db.User.FirstOrDefault(a => a.UserId == userId).FullName;
+                result.UserId = userId;
                 return result;
             }
         }

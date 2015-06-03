@@ -28,11 +28,11 @@ namespace MeiHi.Admin.Controllers
     public class ShoperController : Controller
     {
         // GET: Shoper
-        public ActionResult ManageShopers(int page = 1)
+        public ActionResult ManageShopers(int page = 1, string shopName="")
         {
             var model = new ShopersModel()
             {
-                Shopers = ShoperLogic.GetShopers(page, 10)
+                Shopers = ShoperLogic.GetShopers(page, 10, shopName)
             };
 
             return View(model);

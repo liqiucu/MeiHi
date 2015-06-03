@@ -7,6 +7,11 @@
 }
 
 <h2>用户管理</h2>
+@using (Html.BeginForm("ManageUsers", "User", FormMethod.Get))
+{
+    <input type="text" name="userName" value=""  id="userName"/>
+    <input type="submit" value="查询" class="btn btn-default" />
+}
 
 <table class="table">
     <tr>

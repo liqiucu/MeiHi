@@ -14,11 +14,17 @@ namespace MeiHi.Admin.Logic
 {
     public static class ShoperLogic
     {
-        public static StaticPagedList<ShoperModel> GetShopers(int page, int pageSize)
+        public static StaticPagedList<ShoperModel> GetShopers(int page, int pageSize, string shopName="")
         {
             using (var db = new MeiHiEntities())
             {
                 var shopers = db.Shop.OrderByDescending(a => a.Booking.Where(c => !c.Status && c.IsBilling).Sum(b => b.Cost)).Skip((page - 1) * pageSize).Take(pageSize);
+
+                if (!string.IsNullOrEmpty(shopName))
+                {
+                    shopers = db.Shop.Where(a => a.Title.Contains("shopName")).OrderByDescending(a => a.Booking.Where(c => !c.Status && c.IsBilling).Sum(b => b.Cost)).Skip((page - 1) * pageSize).Take(pageSize);
+                }
+
                 var shopersList = new List<ShoperModel>();
 
                 foreach (var item in shopers)
