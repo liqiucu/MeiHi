@@ -88,11 +88,17 @@ namespace MeiHi.Admin.Logic
             }
         }
 
-        public static StaticPagedList<ShopListDetailModel> GetShops(int page, int pageSize, bool isOnline = true)
+        public static StaticPagedList<ShopListDetailModel> GetShops(int page, int pageSize, bool isOnline = true, string shopName = "")
         {
             using (var access = new MeiHiEntities())
             {
                 var shops = access.Shop.Where(a => a.IsOnline == isOnline).OrderByDescending(a => a.IsHot).Skip((page - 1) * pageSize).Take(pageSize);
+
+                if (!string.IsNullOrEmpty(shopName))
+                {
+                    shops = access.Shop.Where(a => a.Title.Contains(shopName) && a.IsOnline == isOnline).OrderByDescending(a => a.IsHot).Skip((page - 1) * pageSize).Take(pageSize);
+                }
+
                 List<ShopListDetailModel> shopLists = new List<ShopListDetailModel>();
                 foreach (var item in shops)
                 {

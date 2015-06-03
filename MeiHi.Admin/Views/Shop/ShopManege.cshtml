@@ -6,7 +6,11 @@
 }
 
 <h2>已上架店铺管理</h2>
-
+@using (Html.BeginForm("ShopManege", "Shop", FormMethod.Get))
+{
+    <input type="text" name="shopName" value="" id="shopName" />
+    <input type="submit" value="查询" class="btn btn-default" />
+}
 <p>
     @Html.ActionLink("创建新店铺", "CreateShop")
 </p>

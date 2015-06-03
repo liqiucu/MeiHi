@@ -8,6 +8,7 @@ using MeiHi.Model;
 using MeiHi.Admin.Logic;
 using MeiHi.Admin.ViewModels;
 using System.Web.Security;
+using MeiHi.CommonDll;
 
 namespace MeiHi.Admin.Controllers
 {
@@ -33,6 +34,13 @@ namespace MeiHi.Admin.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Login(LoginModel model)
         {
+            if (Session["ValidateCode"] != null && Session["ValidateCode"].ToString() != model.ValidateCode)
+            {
+                ModelState.AddModelError("", "验证码错误，请从新输入");
+
+                return View(model);
+            }
+
             int adminId = 0;
 
             using (var db = new MeiHiEntities())
@@ -61,6 +69,21 @@ namespace MeiHi.Admin.Controllers
             Session.Clear();
             FormsAuthentication.SignOut();
             return RedirectToAction("Login", "Account");
+        }
+
+        /// <summary>
+        /// 验证码的校验
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        public ActionResult CheckCode()
+        {
+            //生成验证码
+            ValidateCode validateCode = new ValidateCode();
+            string code = validateCode.CreateValidateCode(4);
+            Session["ValidateCode"] = code;
+            byte[] bytes = validateCode.CreateValidateGraphic(code);
+            return File(bytes, @"image/jpeg");
         }
 
         #region 账号管理
@@ -494,7 +517,11 @@ namespace MeiHi.Admin.Controllers
                     });
                 }
 
-                roles.FirstOrDefault(a => a.Value == role.ParentRoleId.ToString()).Selected = true;
+                if (role.ParentRoleId != null)
+                {
+                    roles.FirstOrDefault(a => a.Value == role.ParentRoleId.ToString()).Selected = true;
+                }
+
                 var permissions = new List<SelectListItem>();
 
                 foreach (var item in db.Permission)
@@ -679,7 +706,7 @@ namespace MeiHi.Admin.Controllers
 
                 if (permission != null)
                 {
-                    permission.DateModified=DateTime.Now;
+                    permission.DateModified = DateTime.Now;
                     permission.Description = model.Description;
                     permission.Group = model.Group;
                     permission.Name = model.PermissionName;

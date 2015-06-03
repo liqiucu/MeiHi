@@ -185,8 +185,8 @@
     <div class="container body-content">
         @if (Session["UserName"] != null)
         {
-            @Session["UserName"]  <label>,</label>
-            @Html.ActionLink("LogOff", "LogOff", "Account");
+           <label>欢迎 </label> @Session["UserName"]  <label> 登入,</label>
+            @Html.ActionLink("登出", "LogOff", "Account");
         }
         <hr />
         @RenderBody()

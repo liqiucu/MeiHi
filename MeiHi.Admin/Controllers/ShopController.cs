@@ -31,10 +31,10 @@ namespace MeiHi.Admin.Controllers
         /// <returns></returns>
         [HttpGet]
         [Auth(PermissionName = "店铺维护管理")]
-        public ActionResult ShopManege(int page = 1)
+        public ActionResult ShopManege(int page = 1, string shopName = "")
         {
             ShopModel shopmodel = new ShopModel();
-            shopmodel.Lists = ShopLogic.GetShops(page, 10);
+            shopmodel.Lists = ShopLogic.GetShops(page, 10, true, shopName);
             return View(shopmodel);
         }
 
@@ -101,10 +101,10 @@ namespace MeiHi.Admin.Controllers
         /// <returns></returns>
         [HttpGet]
         [Auth(PermissionName = "店铺维护管理")]
-        public ActionResult OfflineShopManage(int page = 1)
+        public ActionResult OfflineShopManage(int page = 1, string shopName = "")
         {
             ShopModel shopmodel = new ShopModel();
-            shopmodel.Lists = ShopLogic.GetShops(page, 10, false);
+            shopmodel.Lists = ShopLogic.GetShops(page, 10, false, shopName);
             return View(shopmodel);
         }
 
@@ -337,7 +337,7 @@ namespace MeiHi.Admin.Controllers
 
                     if (shopUser != null)
                     {
-                        shopUser.WeiXinPayAccount=model.WinXinPayAccount;
+                        shopUser.WeiXinPayAccount = model.WinXinPayAccount;
                         shopUser.AliPayAccount = model.AliPayAccount;
                         shopUser.FullName = model.FullName;
                     }

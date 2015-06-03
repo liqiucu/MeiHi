@@ -65,6 +65,7 @@
     <Compile Include="TextMessage.cs" />
     <Compile Include="Thumbnail.cs" />
     <Compile Include="Utils.cs" />
+    <Compile Include="ValidateCode.cs" />
     <Compile Include="WaterMark.cs" />
     <Compile Include="WGS2GCJ.cs" />
   </ItemGroup>
