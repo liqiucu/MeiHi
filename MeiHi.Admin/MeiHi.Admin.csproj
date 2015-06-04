@@ -299,10 +299,10 @@
     <Content Include="Views\Shoper\GetBillingedBookingsByShopId.cshtml" />
     <Content Include="Views\Shoper\ManageUserCommentsByShopId.cshtml" />
     <Content Include="Views\Shoper\ReplyUserComment.cshtml" />
+    <Content Include="Views\Booking\ManageBookings.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\Booking\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

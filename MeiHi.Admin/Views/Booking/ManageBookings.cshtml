@@ -1,0 +1,148 @@
+﻿@model MeiHi.Admin.Models.Booking.ShopsBookingManageModel
+
+@{
+    ViewBag.Title = "订单总览";
+}
+
+<h2>订单总览</h2>
+
+<div>
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.TotalNotPayedCount)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TotalNotPayedCount)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TotalNotPayedMoney)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TotalNotPayedMoney)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TotalPayedMoney)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TotalPayedMoney)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TotalGotedMoney)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TotalGotedMoney)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TotalCancelCount)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TotalCancelCount)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TotalCancelMoney)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TotalCancelMoney)
+        </dd>
+
+    </dl>
+</div>
+
+@using (Html.BeginForm("ManageBookings", "Booking", FormMethod.Get))
+{
+    <label>美嗨券查询</label>
+    <input type="text" name="meihiTicket" value="" id="meihiTicket" />
+    <input type="submit" value="查询" class="btn btn-default" />
+}
+@using (Html.BeginForm("ManageBookings", "Booking", FormMethod.Get))
+{
+    <label>订单号查询</label>
+    <input type="text" name="bookingId" value="" id="bookingId" />
+    <input type="submit" value="查询" class="btn btn-default" />
+}
+<table class="table">
+    <tr>
+        <th>
+            订单ID
+        </th>
+        <th>
+            美嗨券
+        </th>
+        <th>
+            店铺名
+        </th>
+        <th>
+            服务名
+        </th>
+        <th>
+            移动电话
+        </th>
+        <th>
+            消费金额
+        </th>
+        <th>
+            是否已经支付
+        </th>
+        <th>
+            是否已经使用
+        </th>
+        <th>
+            是否在申请退款
+        </th>
+        <th>
+            申请退款成功
+        </th>
+        <th>
+            和店铺已结算
+        </th>
+    </tr>
+    @foreach (var item in Model.UserBookings)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.BookingId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.VerifyCode)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ShopName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ServiceName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Mobile)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Cost)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsBilling)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsUsed)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Cancel)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CancelSuccess)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Status)
+            </td>
+        </tr>
+    }
+</table>
