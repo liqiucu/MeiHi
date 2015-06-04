@@ -200,7 +200,7 @@
     <Compile Include="Logic\ShopLogic.cs" />
     <Compile Include="Models\Advertising\AdvertisingModel.cs" />
     <Compile Include="Models\Booking\BookingModel.cs" />
-    <Compile Include="Models\Booking\SearchBookingModel.cs" />
+    <Compile Include="Models\Booking\PayBookingModel.cs" />
     <Compile Include="Models\Booking\ShopsBookingManageModel.cs" />
     <Compile Include="Models\HairStyle\HairStyleModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
@@ -300,6 +300,7 @@
     <Content Include="Views\Shoper\ManageUserCommentsByShopId.cshtml" />
     <Content Include="Views\Shoper\ReplyUserComment.cshtml" />
     <Content Include="Views\Booking\ManageBookings.cshtml" />
+    <Content Include="Views\Booking\PayUnBillingBooking.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

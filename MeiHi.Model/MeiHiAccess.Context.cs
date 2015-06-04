@@ -22,7 +22,7 @@ namespace MeiHi.Model
     
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            throw new UnintentionalCodeFirstException();
+            modelBuilder.Entity<Booking>().Property(p => p.Version).IsRowVersion();
         }
     
         public virtual DbSet<Add> Add { get; set; }

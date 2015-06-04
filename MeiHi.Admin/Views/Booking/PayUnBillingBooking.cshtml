@@ -1,0 +1,31 @@
+﻿@model MeiHi.Admin.Models.Booking.PayBookingModel
+
+@{
+    ViewBag.Title = "PayUnBillingBooking";
+}
+
+<h2>订单 @Model.BookingId 结算</h2>
+
+@using (Html.BeginForm("PayUnBillingBooking", "Booking", FormMethod.Post))
+{
+    <input type="hidden" value="@Model.BookingId" name="bookingId" />
+    <label>金额：</label><input name="Cost" id="Cost" value="@Model.Cost" />
+    <label>支付宝账号：</label><input name="AliAccount" id="AliAccount" value="@Model.AliAccount" />
+    <input type="submit" value="支付宝支付" />
+}
+
+@using (Html.BeginForm("PayUnBillingBooking", "Booking", FormMethod.Post))
+{
+    <input type="hidden" value="@Model.BookingId" name="bookingId" />
+    <label>金额：</label><input name="Cost" id="Cost" value="@Model.Cost" />
+    <label>微信账号：</label><input name="WeiXinAccount" id="WeiXinAccount" value="@Model.WeiXinAccount" />
+    <input type="submit" value="微信支付" />
+}
+
+<div>
+    @Html.ActionLink("返回订单列表", "ManageBookings")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
