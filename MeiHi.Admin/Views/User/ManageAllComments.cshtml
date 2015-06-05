@@ -1,14 +1,25 @@
-﻿@model MeiHi.Admin.Models.User.UserCommentsListModel
+﻿@model MeiHi.Admin.Models.UserComments.AllUserCommentsModel
+
 @using PagedList.Mvc;
 
 <link href="~/Content/PagedList.css" rel="stylesheet" />
 
 @{
-    ViewBag.Title = "用户评论管理";
+    ViewBag.Title = "评论管理";
 }
 
-<h2>@Model.UserFullName 的评论管理</h2>
-
+<h2>评论管理</h2>
+<br />
+@using (Html.BeginForm("ManageAllComments", "User", FormMethod.Get))
+{
+    <h5>模糊查询</h5>
+    <label>店铺名</label><input type="text" name="shopName" value="" id="shopName" />
+    <label>服务名</label><input type="text" name="serviceName" value="" id="serviceName" />
+    <label>用户名</label><input type="text" name="userName" value="" id="userName" />
+    <label>电话</label><input type="text" name="mobile" value="" id="mobile" />
+    <label>内容</label><input type="text" name="content" value="" id="content" />
+    <input type="submit" value="查询" class="btn btn-default" />
+}
 <table class="table">
     <tr>
         <th>
@@ -34,9 +45,6 @@
         </th>
         <th>
             美嗨回复
-        </th>
-        <th>
-            评论时间
         </th>
         <th>
             是否屏蔽
@@ -97,8 +105,5 @@
 <br />
 Page @(Model.UserCommentsList.PageCount < Model.UserCommentsList.PageNumber ? 0 : Model.UserCommentsList.PageNumber) of @Model.UserCommentsList.PageCount
 
-@Html.PagedListPager(Model.UserCommentsList, page => Url.Action("ManageUserCommentsByUserId", "User",
+@Html.PagedListPager(Model.UserCommentsList, page => Url.Action("ManageAllComments", "User",
     new { page }))
-<div>
-    @Html.ActionLink("返回商铺列表", "ManageUsers")
-</div>

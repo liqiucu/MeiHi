@@ -6,6 +6,7 @@ using System.Web;
 using System.Web.Mvc;
 using MeiHi.Model;
 using MeiHi.Admin.Logic;
+using MeiHi.Admin.Models.UserComments;
 
 namespace MeiHi.Admin.Controllers
 {
@@ -122,6 +123,36 @@ namespace MeiHi.Admin.Controllers
 
                 return View(model);
             }
+        }
+
+        public ActionResult ManageAllComments(
+            int page = 1, 
+            string userName = "", 
+            string mobile = "", 
+            string content = "",
+            string shopName = "",
+            string serviceName = "")
+        {
+            var model = UserLogic.GetAllUserComments(page, 10);
+
+            if (!string.IsNullOrEmpty(userName)
+                || !string.IsNullOrEmpty(mobile)
+                || !string.IsNullOrEmpty(content)
+                || !string.IsNullOrEmpty(shopName)
+                || !string.IsNullOrEmpty(serviceName)
+                )
+            {
+                model = UserLogic.GetAllUserComments(
+                                page,
+                                10, 
+                                userName,
+                                mobile,
+                                content,
+                                shopName,
+                                serviceName);
+            } 
+
+            return View(model);
         }
     }
 }

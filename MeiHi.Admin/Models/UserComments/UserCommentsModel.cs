@@ -1,10 +1,23 @@
-﻿using System;
+﻿using PagedList;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 
 namespace MeiHi.Admin.Models.UserComments
 {
+    public class AllUserCommentsModel
+    {
+        [Display(Name="差评数量")]
+        public int LowerRateCount { get; set; }
+
+        [Display(Name = "好评数量")]
+        public int HigherRateCount { get; set; }
+
+        public StaticPagedList<UserCommentsModel> UserCommentsList { get; set; }
+    }
+
     public class UserCommentsModel
     {
         public long UserCommentId { get; set; }

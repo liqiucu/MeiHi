@@ -11,6 +11,7 @@ using MeiHi.API.Helper;
 using Newtonsoft.Json;
 using System.Web.Caching;
 using MeiHi.API.Logic;
+using System.Web;
 
 
 namespace MeiHi.API.Controllers
@@ -87,38 +88,47 @@ namespace MeiHi.API.Controllers
         {
             using (var db = new MeiHiEntities())
             {
-                var temp = db.Shop.Where(a => a.Title.Contains(shopName)).FirstOrDefault();
-
-                if (temp != null)
+                if (HttpRuntime.Cache.Get(start) as List<ShopDistanceModel> == null)
                 {
-                    var shopModel = new ShopModel()
-                    {
-                        Coordinates = temp.Coordinates,
-                        ShopId = temp.ShopId,
-                        Title = temp.Title,
-                        DiscountRate = ShopLogic.GetDiscountRate(temp.ShopId),
-                        RegionName = temp.Region.Name,
-                        ShopImageUrl = temp.ShopBrandImages.FirstOrDefault().url,
-                        Rate = ShopLogic.GetShopRate(temp.ShopId),
-                        ParentShopId = temp.ParentShopId,
-                        Distance = HttpUtils.CalOneShop(start, temp.Coordinates)
-                    };
+                    new ShopController().CalDistance(start);
+                }
 
+                var shopDistances = HttpRuntime.Cache.Get(start) as List<ShopDistanceModel>;
+
+                if (shopDistances == null)
+                {
+                    return new
+                    {
+                        jsonStatus = 0,
+                        result = "内存爆了 请联系 13167226393"
+                    };
+                }
+
+                var shops = ShopLogic.GetAllShopsFromCache();
+
+                var temp = shops.Where(a => a.Title.Contains(shopName)).Take(10);
+
+                if (temp == null || temp.Count() == 0)
+                {
                     return new
                     {
                         jsonStatus = 1,
-                        result = shopModel
+                        result = "没有搜索到店铺"
                     };
+                }
+
+                foreach (var item in temp)
+                {
+                    item.Distance = shopDistances.First(a => a.ShopId == item.ShopId).Distance;
                 }
 
                 return new
                 {
                     jsonStatus = 1,
-                    result = "没有搜索到店铺"
+                    result = temp
                 };
             }
         }
-
 
         /// <summary>
         /// 搜索店铺

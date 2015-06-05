@@ -301,6 +301,7 @@
     <Content Include="Views\Shoper\ReplyUserComment.cshtml" />
     <Content Include="Views\Booking\ManageBookings.cshtml" />
     <Content Include="Views\Booking\PayUnBillingBooking.cshtml" />
+    <Content Include="Views\User\ManageAllComments.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -11,6 +11,8 @@
 {
     @Html.AntiForgeryToken()
     <input  hidden="hidden" value="@Model.ShopId" name="ShopId" id="ShopId"/>
+    <input type="hidden" value="@Model.UserCommentId" name="UserCommentId" id="UserCommentId" />
+    <input type="hidden" value="@Model.UserId" name="UserId" id="userId" />
     <div class="form-horizontal">
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
@@ -20,7 +22,6 @@
                 <textarea contenteditable="false" class="form-control">@Model.UserContent</textarea>
             </div>
         </div>
-        <input type="hidden" value="@Model.UserCommentId" name="UserCommentId" id="UserCommentId" />
         <div class="form-group">
             @Html.LabelFor(model => model.MeiHiContent, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
