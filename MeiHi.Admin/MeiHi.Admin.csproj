@@ -190,7 +190,6 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Logic\AdminAccountManager.cs" />
     <Compile Include="Logic\AdminLogic.cs" />
     <Compile Include="Logic\BookingLogic.cs" />
     <Compile Include="Logic\ServiceLogic.cs" />

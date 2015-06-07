@@ -14,7 +14,6 @@ namespace MeiHi.Admin.Controllers
 {
     public class AccountController : Controller
     {
-        AdminAccountManager manager = new AdminAccountManager();
         int pagesize = 10;
 
         [AllowAnonymous]
@@ -92,10 +91,7 @@ namespace MeiHi.Admin.Controllers
         [Auth(RoleName = "管理员")]
         public ActionResult ManageAccount(int? page)
         {
-            AccountManageModel amm = new AccountManageModel();
-            amm.Admins = manager.GetAdmins(page ?? 1, pagesize);
-
-            return View(amm);
+            return View(AdminLogic.GetAdmins(page ?? 1, pagesize));
         }
 
         [HttpPost]
@@ -156,7 +152,7 @@ namespace MeiHi.Admin.Controllers
             }
         }
 
-        [HttpGet]
+        [HttpGet]   
         [Auth(RoleName = "管理员")]
         public ActionResult DeleteAccount(int adminId)
         {

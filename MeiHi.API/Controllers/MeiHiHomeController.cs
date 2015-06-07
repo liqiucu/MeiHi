@@ -13,7 +13,6 @@ using System.Web.Caching;
 using MeiHi.API.Logic;
 using System.Web;
 
-
 namespace MeiHi.API.Controllers
 {
     [RoutePrefix("meihihome")]
@@ -106,7 +105,7 @@ namespace MeiHi.API.Controllers
 
                 var shops = ShopLogic.GetAllShopsFromCache();
 
-                var temp = shops.Where(a => a.Title.Contains(shopName)).Take(10);
+                var temp = shops.Where(a => a.Title.Contains(shopName));
 
                 if (temp == null || temp.Count() == 0)
                 {
@@ -125,7 +124,62 @@ namespace MeiHi.API.Controllers
                 return new
                 {
                     jsonStatus = 1,
-                    result = temp
+                    result = temp.OrderBy(a=>a.Distance)
+                };
+            }
+        }
+
+        /// <summary>
+        /// 搜索店铺
+        /// </summary>
+        /// <param name="shopName"></param>
+        /// <param name="start"></param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("Show_searchshopOrderByDiscountRate")]
+        [AllowAnonymous]
+        public object SearchShopOrderByDiscountRate(string shopName, string start)
+        {
+            using (var db = new MeiHiEntities())
+            {
+                if (HttpRuntime.Cache.Get(start) as List<ShopDistanceModel> == null)
+                {
+                    new ShopController().CalDistance(start);
+                }
+
+                var shopDistances = HttpRuntime.Cache.Get(start) as List<ShopDistanceModel>;
+
+                if (shopDistances == null)
+                {
+                    return new
+                    {
+                        jsonStatus = 0,
+                        result = "内存爆了 请联系 13167226393"
+                    };
+                }
+
+                var shops = ShopLogic.GetAllShopsFromCache();
+
+                var temp = shops.Where(a => a.Title.Contains(shopName));
+
+                if (temp == null || temp.Count() == 0)
+                {
+                    return new
+                    {
+                        jsonStatus = 1,
+                        result = "没有搜索到店铺"
+                    };
+                }
+
+                foreach (var item in temp)
+                {
+                    item.Distance = shopDistances.First(a => a.ShopId == item.ShopId).Distance;
+                }
+
+                return new
+                {
+                    jsonStatus = 1,
+                    result = temp.OrderBy(a=>a.DiscountRate)
                 };
             }
         }
@@ -187,7 +241,8 @@ namespace MeiHi.API.Controllers
         {
             using (var db = new MeiHiEntities())
             {
-                var add = db.Add.Select(a => a.Url).FirstOrDefault();
+                var add = 
+                    db.Add.Select(a => a.Url).FirstOrDefault();
 
                 if (!string.IsNullOrEmpty(add))
                 {

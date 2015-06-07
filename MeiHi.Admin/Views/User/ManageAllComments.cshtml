@@ -9,15 +9,20 @@
 }
 
 <h2>评论管理</h2>
-<br />
+<div>
+
+            @Html.ActionLink(@Model.HigherRateCount.ToString() + " 个好评", "ManageAllComments", new { higherRate = true })
+    <br />
+            @Html.ActionLink(@Model.LowerRateCount.ToString() + " 个差评", "ManageAllComments", new { lowerRate = true })
+</div>
 @using (Html.BeginForm("ManageAllComments", "User", FormMethod.Get))
 {
-    <h5>模糊查询</h5>
-    <label>店铺名</label><input type="text" name="shopName" value="" id="shopName" />
-    <label>服务名</label><input type="text" name="serviceName" value="" id="serviceName" />
-    <label>用户名</label><input type="text" name="userName" value="" id="userName" />
-    <label>电话</label><input type="text" name="mobile" value="" id="mobile" />
-    <label>内容</label><input type="text" name="content" value="" id="content" />
+    <hr />
+    <label>店铺名</label><input type="text" name="shopName" value="@ViewData["ShopName"]" id="shopName" />
+    <label>服务名</label><input type="text" name="serviceName" value="@ViewData["ServiceName"]" id="serviceName" />
+    <label>用户名</label><input type="text" name="userName" value="@ViewData["UserName"]" id="userName" />
+    <label>电话</label><input type="text" name="mobile" value="@ViewData["Mobile"]" id="mobile" />
+    <label>内容</label><input type="text" name="content" value="@ViewData["Content"]" id="content" />
     <input type="submit" value="查询" class="btn btn-default" />
 }
 <table class="table">
@@ -95,9 +100,9 @@
                 }
             </td>
             <td>
-                @Html.ActionLink("屏蔽", "UnDisplayUserComment", new { userCommentId = item.UserCommentId })
-                @Html.ActionLink("不屏蔽", "DisplayUserComment", new { userCommentId = item.UserCommentId })
-                @Html.ActionLink("回复", "ReplyUserComment", new { userCommentId = item.UserCommentId })
+                @Html.ActionLink("屏蔽", "UnDisplayUserComment", new { userCommentId = item.UserCommentId, allManage = true })
+                @Html.ActionLink("不屏蔽", "DisplayUserComment", new { userCommentId = item.UserCommentId, allManage = true })
+                @Html.ActionLink("回复", "ReplyUserComment", new { userCommentId = item.UserCommentId, allManage = true })
             </td>
         </tr>
     }
@@ -106,4 +111,14 @@
 Page @(Model.UserCommentsList.PageCount < Model.UserCommentsList.PageNumber ? 0 : Model.UserCommentsList.PageNumber) of @Model.UserCommentsList.PageCount
 
 @Html.PagedListPager(Model.UserCommentsList, page => Url.Action("ManageAllComments", "User",
-    new { page }))
+    new
+    {
+        page,
+        userName = ViewData["UserName"],
+        mobile = ViewData["Mobile"],
+        content = ViewData["Content"],
+        shopName = ViewData["ShopName"],
+        serviceName = ViewData["ServiceName"],
+        lowerRate = ViewData["LowerRate"],
+        higherRate = ViewData["HigherRate"]
+    }))

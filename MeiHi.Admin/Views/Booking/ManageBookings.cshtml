@@ -4,58 +4,44 @@
     ViewBag.Title = "订单总览";
 }
 
-<h2>订单总览</h2>
-
 <div>
     <dl class="dl-horizontal">
         <dt>
             @Html.DisplayNameFor(model => model.TotalNotPayedCount)
         </dt>
-
         <dd>
             @Html.DisplayFor(model => model.TotalNotPayedCount)
         </dd>
-
         <dt>
             @Html.DisplayNameFor(model => model.TotalNotPayedMoney)
         </dt>
-
         <dd>
             @Html.DisplayFor(model => model.TotalNotPayedMoney)
         </dd>
-
         <dt>
             @Html.DisplayNameFor(model => model.TotalPayedMoney)
         </dt>
-
         <dd>
             @Html.DisplayFor(model => model.TotalPayedMoney)
         </dd>
-
         <dt>
             @Html.DisplayNameFor(model => model.TotalGotedMoney)
         </dt>
-
         <dd>
             @Html.DisplayFor(model => model.TotalGotedMoney)
         </dd>
-
         <dt>
             @Html.DisplayNameFor(model => model.TotalCancelCount)
         </dt>
-
         <dd>
             @Html.DisplayFor(model => model.TotalCancelCount)
         </dd>
-
         <dt>
             @Html.DisplayNameFor(model => model.TotalCancelMoney)
         </dt>
-
         <dd>
             @Html.DisplayFor(model => model.TotalCancelMoney)
         </dd>
-
     </dl>
 </div>
 
@@ -73,7 +59,7 @@
 }
 <table class="table">
     <tr>
-        <th>
+        <th> 
             订单ID
         </th>
         <th>

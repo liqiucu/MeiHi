@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Security;
 using MeiHi.Model;
+using PagedList;
+using MeiHi.Admin.ViewModels;
 
 namespace MeiHi.Admin.Logic
 {
@@ -89,7 +91,34 @@ namespace MeiHi.Admin.Logic
             }
         }
 
+        public static StaticPagedList<AdminModel> GetAdmins(int page, int pageSize)
+        {
+            using (var access = new MeiHiEntities())
+            {
+                var admins = access.Admin.OrderBy(a => a.AdminId).Skip((page - 1) * pageSize).Take(pageSize);//.Where(a => a.AdminRole.FirstOrDefault(b => b.Role.Name == "管理员") == null)
+                List<AdminModel> temp = new List<AdminModel>();
 
+                if (admins != null)
+                {
+                    foreach (var item in admins)
+                    {
+                        temp.Add(new AdminModel()
+                        {
+                            AdminId = item.AdminId,
+                            UserName = item.UserName,
+                            Mobile = item.Mobile,
+                            Avaliable = item.Avaliable,
+                            PermissionNames = item.AdminPermission != null ? item.AdminPermission.Select(a => a.Permission.Name).ToList() : null,
+                            RoleNmes = item.AdminRole != null ? item.AdminRole.Select(a => a.Role.Name).ToList() : null
+                        });
+                    }
+                }
+
+                StaticPagedList<AdminModel> result = new StaticPagedList<AdminModel>(temp, page, pageSize, access.Admin.Count());
+
+                return result;
+            }
+        }
 
         public static void DeleteRoleTree(int rootRoleId)
         {

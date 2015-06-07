@@ -54,7 +54,7 @@ namespace MeiHi.Admin.Controllers
             }
         }
 
-        public ActionResult UnDisplayUserComment(long userCommentId)
+        public ActionResult UnDisplayUserComment(long userCommentId, bool allManage = false)
         {
             using (var db = new MeiHiEntities())
             {
@@ -66,12 +66,16 @@ namespace MeiHi.Admin.Controllers
                     userComment.DateModified = DateTime.Now;
                     db.SaveChanges();
                 }
+                if (allManage)
+                {
+                    return RedirectToAction("ManageAllComments", new { userCommentId = userCommentId });
+                }
 
                 return RedirectToAction("ManageUserCommentsByUserId", new { userId = userComment.UserId });
             }
         }
 
-        public ActionResult DisplayUserComment(long userCommentId)
+        public ActionResult DisplayUserComment(long userCommentId, bool allManage = false)
         {
             using (var db = new MeiHiEntities())
             {
@@ -83,13 +87,17 @@ namespace MeiHi.Admin.Controllers
                     userComment.DateModified = DateTime.Now;
                     db.SaveChanges();
                 }
+                if (allManage)
+                {
+                    return RedirectToAction("ManageAllComments", new { userCommentId = userCommentId });
+                }
 
                 return RedirectToAction("ManageUserCommentsByUserId", new { shopId = userComment.ShopId });
             }
         }
 
         [HttpPost]
-        public ActionResult ReplyUserComment(UserCommentsReplyModel model)
+        public ActionResult ReplyUserComment(UserCommentsReplyModel model, bool allManage = false)
         {
             using (var db = new MeiHiEntities())
             {
@@ -102,6 +110,10 @@ namespace MeiHi.Admin.Controllers
                 });
 
                 db.SaveChanges();
+                if (allManage)
+                {
+                    return RedirectToAction("ManageAllComments", new { userCommentId = model.UserCommentId });
+                }
                 return RedirectToAction("ManageUserCommentsByUserId", new { userId = model.UserId });
             }
         }
@@ -126,14 +138,30 @@ namespace MeiHi.Admin.Controllers
         }
 
         public ActionResult ManageAllComments(
-            int page = 1, 
-            string userName = "", 
-            string mobile = "", 
+            int page = 1,
+            string userName = "",
+            string mobile = "",
             string content = "",
             string shopName = "",
-            string serviceName = "")
+            string serviceName = "",
+            long userCommentId = 0,
+            bool lowerRate = false,
+            bool higherRate = false)
         {
-            var model = UserLogic.GetAllUserComments(page, 10);
+            if (lowerRate)
+            {
+                ViewData["LowerRate"] = lowerRate;
+                var model = UserLogic.GetAllLowerRateUserComments(page, 10);
+                return View(model);
+            }
+
+            if (higherRate)
+            {
+
+                ViewData["HigherRate"] = higherRate;
+                var model = UserLogic.GetAllHighterRateUserComments(page, 10);
+                return View(model);
+            }
 
             if (!string.IsNullOrEmpty(userName)
                 || !string.IsNullOrEmpty(mobile)
@@ -142,17 +170,28 @@ namespace MeiHi.Admin.Controllers
                 || !string.IsNullOrEmpty(serviceName)
                 )
             {
-                model = UserLogic.GetAllUserComments(
+                ViewData["UserName"] = userName;
+                ViewData["Mobile"] = mobile;
+                ViewData["Content"] = content;
+                ViewData["ShopName"] = shopName;
+                ViewData["ServiceName"] = serviceName;
+
+                var model = UserLogic.GetAllUserComments(
                                 page,
-                                10, 
+                                10,
                                 userName,
                                 mobile,
                                 content,
                                 shopName,
-                                serviceName);
-            } 
-
-            return View(model);
+                                serviceName,
+                                userCommentId);
+                return View(model);
+            }
+            else
+            {
+                var model = UserLogic.GetAllUserComments(page, 10);
+                return View(model);
+            }
         }
     }
 }

@@ -35,6 +35,7 @@ namespace MeiHi.Admin.Controllers
         {
             ShopModel shopmodel = new ShopModel();
             shopmodel.Lists = ShopLogic.GetShops(page, 10, true, shopName);
+
             return View(shopmodel);
         }
 
@@ -139,7 +140,7 @@ namespace MeiHi.Admin.Controllers
 
             if (!string.IsNullOrEmpty(model.ParentShopName) && !ShopLogic.CheckParentShopName(model.ParentShopName))
             {
-                ModelState.AddModelError("", "父店铺不存在");
+                ModelState.AddModelError("", "父店铺不合法");
                 model.RegionNameList = new CommonLogic().RegionList();
                 return View(model);
             }

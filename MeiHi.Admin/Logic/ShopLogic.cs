@@ -69,6 +69,11 @@ namespace MeiHi.Admin.Logic
                     return false;
                 }
 
+                if (shop.ParentShopId != null && shop.ParentShopId > 0)
+                {
+                    return false;
+                }
+
                 return true;
             }
         }

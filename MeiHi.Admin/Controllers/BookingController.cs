@@ -113,17 +113,30 @@ namespace MeiHi.Admin.Controllers
                     return View(model);
                 }
 
-                if (!string.IsNullOrEmpty(model.AliAccount))
+                try
                 {
-                    //call ali api success
-                }
-                else
-                {
-                    //call weixinaccount api success
-                }
+                    if (booking != null)
+                    {
+                        booking.Status = true;
+                        db.SaveChanges();
 
-                booking.Status = true;
-                db.SaveChanges();
+                        if (!string.IsNullOrEmpty(model.AliAccount))
+                        {
+                            //if pay success
+                            //else booking.Status = false; db.SaveChanges();
+                        }
+                        else
+                        {
+                            //if pay success
+                            //else booking.Status = false; db.SaveChanges();
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    booking.Status = false;
+                    db.SaveChanges();
+                }
 
                 return RedirectToAction("ManageBookings", new { bookingId = model.BookingId });
             }
