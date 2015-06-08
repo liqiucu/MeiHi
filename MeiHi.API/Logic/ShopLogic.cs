@@ -35,7 +35,7 @@ namespace MeiHi.API.Logic
                                 Title = item.Title,
                                 DiscountRate = GetDiscountRate(item.ShopId),
                                 RegionName = item.Region.Name,
-                                ShopImageUrl = item.ShopBrandImages.FirstOrDefault().url,
+                                ShopImageUrl = item.ShopBrandImages.FirstOrDefault() != null ? item.ShopBrandImages.FirstOrDefault().url : "",
                                 Rate = GetShopRate(item.ShopId),
                                 ParentShopId = item.ParentShopId,
                                 IsHot = item.IsHot,

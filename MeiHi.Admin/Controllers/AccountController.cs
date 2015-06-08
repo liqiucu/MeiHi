@@ -91,7 +91,9 @@ namespace MeiHi.Admin.Controllers
         [Auth(RoleName = "管理员")]
         public ActionResult ManageAccount(int? page)
         {
-            return View(AdminLogic.GetAdmins(page ?? 1, pagesize));
+            AccountManageModel model = new AccountManageModel();
+            model.Admins = AdminLogic.GetAdmins(page ?? 1, pagesize);
+            return View(model);
         }
 
         [HttpPost]
