@@ -58,6 +58,11 @@ namespace MeiHi.Admin.Logic
             }
         }
 
+        /// <summary>
+        /// 检测父店名 是否有效 如果有效 将父店ID设置成自己
+        /// </summary>
+        /// <param name="shopName"></param>
+        /// <returns></returns>
         public static bool CheckParentShopName(string shopName)
         {
             using (var db = new MeiHiEntities())
@@ -74,6 +79,12 @@ namespace MeiHi.Admin.Logic
                     return false;
                 }
 
+                if ( shop.ParentShopId!=shop.ShopId)
+                {
+                    shop.ParentShopId = shop.ShopId;
+                    db.SaveChanges();
+                }
+              
                 return true;
             }
         }

@@ -25,38 +25,35 @@ namespace MeiHi.API.Controllers
         {
             try
             {
-                using (var db = new MeiHiEntities())
+                if (HttpRuntime.Cache.Get(region) as List<ShopDistanceModel> == null)
                 {
-                    if (HttpRuntime.Cache.Get(region) as List<ShopDistanceModel> == null)
-                    {
-                        CalDistance(region);
-                    }
+                    CalDistance(region);
+                }
 
-                    var shopDistances = HttpRuntime.Cache.Get(region) as List<ShopDistanceModel>;
+                var shopDistances = HttpRuntime.Cache.Get(region) as List<ShopDistanceModel>;
 
-                    if (shopDistances == null)
-                    {
-                        return new
-                        {
-                            jsonStatus = 0,
-                            result = "内存爆了 请联系 13167226393"
-                        };
-                    }
-
-                    var shops = ShopLogic.GetAllShopsFromCache();
-                    var temp = shops.Where(a => a.IsHot == true && a.IsOnline == true).Take(10);
-
-                    foreach (var item in temp)
-                    {
-                        item.Distance = shopDistances.First(a => a.ShopId == item.ShopId).Distance;
-                    }
-
+                if (shopDistances == null)
+                {
                     return new
                     {
-                        jsonStatus = 1,
-                        result = temp
+                        jsonStatus = 0,
+                        result = "内存爆了 请联系 13167226393"
                     };
                 }
+
+                var shops = ShopLogic.GetAllShopsFromCache();
+                var temp = shops.Where(a => a.IsHot == true && a.IsOnline == true).Take(10);
+
+                foreach (var item in temp)
+                {
+                    item.Distance = shopDistances.First(a => a.ShopId == item.ShopId).Distance;
+                }
+
+                return new
+                {
+                    jsonStatus = 1,
+                    result = temp
+                };
             }
             catch (Exception ex)
             {
@@ -163,7 +160,7 @@ namespace MeiHi.API.Controllers
             try
             {
                 var shopResult = HttpRuntime.Cache.Get(region) as List<ShopDistanceModel>;
-                
+
                 if (shopResult != null)
                 {
                     return new
@@ -265,15 +262,15 @@ namespace MeiHi.API.Controllers
         {
             using (var db = new MeiHiEntities())
             {
-
                 var shop = db.Shop.Where(a => a.ShopId == shopId).FirstOrDefault();
+
                 if (shop != null)
                 {
                     var shopModel = new ShopModel()
                     {
                         Coordinates = shop.Coordinates,
                         DetailAddress = shop.DetailAddress,
-                        Contract=shop.Contract,
+                        Contract = shop.Contract,
                         ShopId = shop.ShopId,
                         ProductBrandImages = shop.ProductBrand.Select(a => a.ProductUrl).ToList(),
                         PurchaseNotes = shop.PurchaseNotes,
@@ -332,25 +329,81 @@ namespace MeiHi.API.Controllers
         [HttpGet]
         [Route("Show_BranchShops")]
         [AllowAnonymous]
-        public object GetBranchShops(long shopId)
+        public object GetBranchShops(long shopId, string region)
         {
-            if (System.Web.HttpContext.Current.Session["Shops"] == null)
+            //if (HttpRuntime.Cache.Get(region) as List<ShopDistanceModel> == null)
+            //{
+            //    CalDistance(region);
+            //}
+
+            //var shopDistances = HttpRuntime.Cache.Get(region) as List<ShopDistanceModel>;
+
+            //if (shopDistances == null)
+            //{
+            //    return new
+            //    {
+            //        jsonStatus = 0,
+            //        result = "内存爆了 请联系 13167226393"
+            //    };
+            //}
+
+            //var shops = ShopLogic.GetAllShopsFromCache();
+
+            //return new
+            //{
+            //    jsonStatus = 1,
+            //    result = shops.Where(a => a.ParentShopId == shopId)
+            //};
+            using (var db = new MeiHiEntities())
             {
+                var shops = db.Shop.Where(a => a.ParentShopId == shopId);
+
+                if (shops != null && shops.Count() > 0)
+                {
+                    var result = new List<ShopModel>();
+
+                    foreach (var item in shops)
+                    {
+                        result.Add(new ShopModel() 
+                        {
+                            Coordinates = item.Coordinates,
+                            ShopId = item.ShopId,
+                            Title = item.Title,
+                            DiscountRate = ShopLogic.GetDiscountRate(item.ShopId),
+                            RegionName = item.Region.Name,
+                            ShopImageUrl = item.ShopBrandImages.FirstOrDefault() != null ? item.ShopBrandImages.FirstOrDefault().url : "",
+                            Rate = ShopLogic.GetShopRate(item.ShopId),
+                            ParentShopId = item.ParentShopId,
+                            IsHot = item.IsHot,
+                            IsOnline = item.IsOnline
+                        });
+                    }
+
+                    if (HttpRuntime.Cache.Get(region) as List<ShopDistanceModel> == null)
+                    {
+                        CalDistance(region);
+                    }
+
+                    var shopDistances = HttpRuntime.Cache.Get(region) as List<ShopDistanceModel>;
+
+                    foreach (var x in result)
+                    {
+                        x.Distance = shopDistances.First(a => a.ShopId == x.ShopId).Distance;
+                    }
+
+                    return new
+                    {
+                        jsonStatus = 1,
+                        result = result
+                    }; 
+                }
+
                 return new
                 {
                     jsonStatus = 0,
-                    result = "网络较慢，还没刷出店铺信息"
-                };
+                    result = "没有分店"
+                }; 
             }
-
-            var Shops = System.Web.HttpContext.Current.Session["Shops"] as List<ShopModel>;
-            var shops = Shops.Where(a => a.ParentShopId == shopId);
-
-            return new
-            {
-                jsonStatus = 1,
-                result = shops
-            };
         }
 
         /// <summary>

@@ -144,6 +144,7 @@ namespace MeiHi.Admin.Controllers
                 model.RegionNameList = new CommonLogic().RegionList();
                 return View(model);
             }
+
             try
             {
                 using (var db = new MeiHiEntities())
@@ -250,7 +251,14 @@ namespace MeiHi.Admin.Controllers
 
             if (!ModelState.IsValid)
             {
-                ModelState.AddModelError("", "请检查输入数据是否正确");
+                ModelState.AddModelError("", "请检查输入的信息是否有问题");
+                model.RegionNameList = new CommonLogic().RegionList();
+                return View(model);
+            }
+
+            if (!string.IsNullOrEmpty(model.ParentShopName) && !ShopLogic.CheckParentShopName(model.ParentShopName))
+            {
+                ModelState.AddModelError("", "父店铺不合法");
                 model.RegionNameList = new CommonLogic().RegionList();
                 return View(model);
             }
@@ -269,6 +277,21 @@ namespace MeiHi.Admin.Controllers
                     }
 
                     oldMobile = shop.Phone;
+
+                    if (oldMobile != model.Phone && ShopLogic.HaveRegisteredShopMobile(model.Phone))
+                    {
+                        ModelState.AddModelError("", "手机已经被注册");
+                        model.RegionNameList = new CommonLogic().RegionList();
+                        return View(model);
+                    }
+
+                    if (shop.Title != model.Title && ShopLogic.HaveRegisteredShopName(model.Title))
+                    {
+                        ModelState.AddModelError("", "店铺名已经被注册");
+                        model.RegionNameList = new CommonLogic().RegionList();
+                        return View(model);
+                    }
+
 
                     //产品
                     if (ProductBrandFile != null && ProductBrandFile.FirstOrDefault() != null)
