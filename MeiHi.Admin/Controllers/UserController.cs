@@ -7,6 +7,7 @@ using System.Web.Mvc;
 using MeiHi.Model;
 using MeiHi.Admin.Logic;
 using MeiHi.Admin.Models.UserComments;
+using MeiHi.Admin.Models.UserSuggests;
 
 namespace MeiHi.Admin.Controllers
 {
@@ -190,6 +191,23 @@ namespace MeiHi.Admin.Controllers
             else
             {
                 var model = UserLogic.GetAllUserComments(page, 10);
+                return View(model);
+            }
+        }
+
+        public ActionResult ManageAllSuggests(UserSuggestsModel model, int page = 1, int search = 0)
+        {
+            using (var db = new MeiHiEntities())
+            {
+                if (search == 1)
+                {
+                    model = UserLogic.GetAllUserSuggests(page, 30, model.StartDateTime,model.EndDateTime);
+                }
+                else
+                {
+                    model = UserLogic.GetAllUserSuggests(page, 30);
+                }
+
                 return View(model);
             }
         }

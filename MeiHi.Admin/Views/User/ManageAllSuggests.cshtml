@@ -1,0 +1,51 @@
+﻿@model MeiHi.Admin.Models.UserSuggests.UserSuggestsModel
+@using PagedList.Mvc;
+
+<link href="~/Content/PagedList.css" rel="stylesheet" />
+@{
+    ViewBag.Title = "ManageAllSuggests";
+}
+
+<h2>反馈与建议</h2>
+@using (@Html.BeginForm("ManageAllSuggests", "User", FormMethod.Get))
+{
+    <input type="hidden" value="1" name="search" />
+
+    <label>输入起始时间：</label>@Html.EditorFor(a => a.StartDateTime)
+    <label>输入结束时间：</label>@Html.EditorFor(a => a.EndDateTime)
+    <input type="submit" value="查询" />
+}
+<table class="table">
+    <tr>
+        <th>
+            提议内容
+        </th>
+        <th>
+            联系方式
+        </th>
+        <th>
+            创建时间
+        </th>
+    </tr>
+
+    @foreach (var item in Model.UserSuggest)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Content)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Contract)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DateCreated)
+            </td>
+        </tr>
+    }
+
+</table>
+
+<br />
+    Page @(Model.UserSuggest.PageCount < Model.UserSuggest.PageNumber ? 0 : Model.UserSuggest.PageNumber) of @Model.UserSuggest.PageCount
+
+    @Html.PagedListPager(Model.UserSuggest, page => Url.Action("ManageAllSuggests", "User", new { page }))
