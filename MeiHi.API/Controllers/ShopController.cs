@@ -213,7 +213,7 @@ namespace MeiHi.API.Controllers
         [HttpGet]
         [Route("Show_ShopServices")]
         [AllowAnonymous]
-        public object GetShopServices(long shopId)
+        public object GetShopServices(long shopId, long userId)
         {
             using (var db = new MeiHiEntities())
             {
@@ -233,7 +233,8 @@ namespace MeiHi.API.Controllers
                                         ? shop.ShopBrandImages.FirstOrDefault().url
                                         : null,
                         ProductBrandCount = shop.ProductBrand.Count,
-                        Services = ShopLogic.GetServices(shop.ShopId)
+                        Services = ShopLogic.GetServices(shop.ShopId),
+                        HaveAddedToFavorite = db.UserFavorites.FirstOrDefault(a => a.ShopId == shopId && a.UserId == userId) != null
                     };
                     return new
                     {
@@ -364,7 +365,7 @@ namespace MeiHi.API.Controllers
 
                     foreach (var item in shops)
                     {
-                        result.Add(new ShopModel() 
+                        result.Add(new ShopModel()
                         {
                             Coordinates = item.Coordinates,
                             ShopId = item.ShopId,
@@ -395,14 +396,14 @@ namespace MeiHi.API.Controllers
                     {
                         jsonStatus = 1,
                         result = result
-                    }; 
+                    };
                 }
 
                 return new
                 {
                     jsonStatus = 0,
                     result = "没有分店"
-                }; 
+                };
             }
         }
 
@@ -452,10 +453,23 @@ namespace MeiHi.API.Controllers
             {
                 using (var db = new MeiHiEntities())
                 {
+                    var favorite = db.UserFavorites.FirstOrDefault(a => a.ShopId == shopId && a.UserId == userId);
+
+                    if (favorite != null)
+                    {
+                        return new
+                        {
+                            jsonStatus = 1,
+                            result = "添加失败: 已经添加过了"
+                        };
+                    }
+
                     db.UserFavorites.Add(new UserFavorites()
                     {
                         UserId = userId,
-                        ShopId = shopId
+                        ShopId = shopId,
+                        DateCreated = DateTime.Now,
+                        DateModified = DateTime.Now
                     });
 
                     db.SaveChanges();
@@ -467,15 +481,59 @@ namespace MeiHi.API.Controllers
                     };
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return new
                 {
                     jsonStatus = 0,
-                    result = "添加失败"
+                    result = "添加失败" + ex
                 };
+            }
+        }
 
-                throw;
+        /// <summary>
+        ///取消收藏
+        /// </summary>
+        /// <param name="serviceId"></param>
+        /// <param name="userId"></param>
+        [ApiAuthorize]
+        [HttpPost]
+        [Route("Cancel_Favorite")]
+        public object CancelFavorite(long shopId, long userId)
+        {
+            try
+            {
+                using (var db = new MeiHiEntities())
+                {
+                    var favorite = db.UserFavorites.FirstOrDefault(a => a.ShopId == shopId && a.UserId == userId);
+
+                    if (favorite == null)
+                    {
+                        return new
+                        {
+                            jsonStatus = 1,
+                            result = "取消失败：因为没收藏过"
+                        };
+                    }
+
+                    db.UserFavorites.Remove(favorite);
+
+                    db.SaveChanges();
+
+                    return new
+                    {
+                        jsonStatus = 1,
+                        result = "取消成功"
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new
+                {
+                    jsonStatus = 0,
+                    result = "取消失败" + ex
+                };
             }
         }
     }

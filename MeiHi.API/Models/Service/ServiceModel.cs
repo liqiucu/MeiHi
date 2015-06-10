@@ -1,6 +1,7 @@
 ﻿using MeiHi.API.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 
@@ -19,7 +20,8 @@ namespace MeiHi.API.ViewModels
         public string PurchaseNotes { get; set; }
         public string Designer { get; set; }
         public bool? IfSupportRealTimeRefund { get; set; }
-
+        [Display(Name="是否已收藏")]
+        public bool HaveAddedToFavorite { get; set; }
         public List<UserCommentsModel> UserComments { get; set; }
     }
 }

@@ -92,6 +92,9 @@ namespace MeiHi.API.ViewModels
 
         public bool IsHot { get; set; }
         public bool IsOnline { get; set; }
+
+        [Display(Name="是否已收藏")]
+        public bool HaveAddedToFavorite { get; set; }
     }
 
     public class ShopDistanceModel
