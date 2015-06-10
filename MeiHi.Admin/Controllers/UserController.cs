@@ -208,6 +208,8 @@ namespace MeiHi.Admin.Controllers
                     model = UserLogic.GetAllUserSuggests(page, 30);
                 }
 
+                model.EndDateTime = DateTime.Now;
+                model.StartDateTime = DateTime.Now.AddDays(-1);
                 return View(model);
             }
         }

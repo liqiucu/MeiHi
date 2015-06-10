@@ -67,6 +67,27 @@ namespace MeiHi.Admin.Controllers
         }
 
         [HttpPost]
+        public ActionResult EditHairStyleType(HairStyleTypeModel model)
+        {
+            using (var db = new MeiHiEntities())
+            {
+                var styleType = db.HairStyleType.FirstOrDefault(a => a.HairStyleTypeId == model.HairStyleTypeId);
+
+                if (styleType == null)
+                {
+                    ModelState.AddModelError("", "没有对应的发型类型");
+                    return View(model);
+                }
+
+                styleType.DateCreated = DateTime.Now;
+                styleType.Title = model.HairStyleTypeName;
+                db.SaveChanges();
+
+                return RedirectToAction("ManageHairStyleType");
+            }
+        }
+
+        [HttpPost]
         public ActionResult SaveHairStyleType(HairStyleTypeModel model)
         {
             using (var db = new MeiHiEntities())
@@ -77,26 +98,6 @@ namespace MeiHi.Admin.Controllers
                     Title = model.HairStyleTypeName
                 });
 
-                db.SaveChanges();
-
-                return RedirectToAction("ManageHairStyleType");
-            }
-        }
-
-        [HttpPost]
-        public ActionResult UpdateHairStyleType(HairStyleTypeModel model)
-        {
-            using (var db = new MeiHiEntities())
-            {
-                var styleType = db.HairStyleType.FirstOrDefault(a => a.HairStyleTypeId == model.HairStyleTypeId);
-
-                if (styleType == null)
-                {
-                    throw new Exception("没有对应的发型类型");
-                }
-
-                styleType.DateCreated = DateTime.Now;
-                styleType.Title = model.HairStyleTypeName;
                 db.SaveChanges();
 
                 return RedirectToAction("ManageHairStyleType");
