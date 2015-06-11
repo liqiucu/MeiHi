@@ -1,6 +1,6 @@
-﻿using MeiHi.Admin.Logic;
-using MeiHi.Admin.Models.Booking;
-using MeiHi.Admin.Models.Shoper;
+﻿using MeiHi.Shop.Logic;
+using MeiHi.Shop.Models.Booking;
+using MeiHi.Shop.Models.Shoper;
 using MeiHi.Model;
 using System;
 using System.Collections.Generic;
@@ -8,12 +8,12 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
-namespace MeiHi.Admin.Controllers
+namespace MeiHi.Shop.Controllers
 {
     public class BookingController : Controller
     {
         // GET: Booking
-        public ActionResult ManageBookings(int page = 1, string meihiTicket = "", long bookingId = 0)
+        public ActionResult ManageBookings(long shoppId, int page = 1, string meihiTicket = "", long bookingId = 0)
         {
             ShopsBookingManageModel model = new ShopsBookingManageModel();
 
@@ -122,89 +122,6 @@ namespace MeiHi.Admin.Controllers
                 }
 
                 return RedirectToAction("ManageBookings", new { bookingId = bookingId });
-            }
-        }
-
-        public ActionResult PayUnBillingBooking(long bookingId)
-        {
-            using (var db = new MeiHiEntities())
-            {
-                PayBookingModel model = new PayBookingModel()
-                {
-                    BookingId = bookingId
-                };
-
-                var booking = db.Booking.FirstOrDefault(a => a.BookingId == bookingId);
-
-                if (booking == null)
-                {
-                    ModelState.AddModelError("", "无效的订单");
-                    return View(model);
-                }
-
-                model.Cost = booking.Cost;
-
-                return View(model);
-            }
-        }
-
-        /// <summary>
-        /// 这个是批量支付 较危险 只能一个人操作
-        /// 设置权限的时候只有一个人有权限
-        /// </summary>
-        /// <param name="model"></param>
-        /// <returns></returns>
-        [HttpPost]
-        public ActionResult PayUnBillingBooking(PayBookingModel model)
-        {
-            if (string.IsNullOrEmpty(model.AliAccount) && string.IsNullOrEmpty(model.WeiXinAccount))
-            {
-                ModelState.AddModelError("", "账号必须输入一个");
-                return View(model);
-            }
-
-            using (var db = new MeiHiEntities())
-            {
-                var booking = db.Booking.FirstOrDefault(a => a.BookingId == model.BookingId);
-
-                if (booking == null)
-                {
-                    ModelState.AddModelError("", "订单无效");
-                    return View(model);
-                }
-
-                if (booking.Cost != model.Cost)
-                {
-                    ModelState.AddModelError("", "金额不匹配 实际金额应该是:" + booking.Cost);
-                    return View(model);
-                }
-
-                try
-                {
-                    if (booking != null)
-                    {
-                        booking.Status = true;
-                        db.SaveChanges();
-
-                        if (!string.IsNullOrEmpty(model.AliAccount))
-                        {
-                            //if pay success
-                            //else booking.Status = false; db.SaveChanges();
-                        }
-                        else
-                        {
-                            //if pay success
-                            //else booking.Status = false; db.SaveChanges();
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    booking.Status = false;
-                    db.SaveChanges();
-                }
-
-                return RedirectToAction("ManageBookings", new { bookingId = model.BookingId });
             }
         }
     }

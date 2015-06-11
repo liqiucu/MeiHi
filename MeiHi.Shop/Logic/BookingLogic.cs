@@ -1,32 +1,33 @@
 ﻿using MeiHi.Admin.Models.Booking;
 using MeiHi.Model;
+using MeiHi.Shop.Models.Booking;
 using PagedList;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace MeiHi.Admin.Logic
+namespace MeiHi.Shop.Logic
 {
     public class BookingLogic
     {
-        public static ShopsBookingManageModel GetAllBookings(int page, int pageSize, string meiHiTicket = "", long bookingId = 0)
+        public static ShopsBookingManageModel GetAllBookings(long shopId, int page, int pageSize, string meiHiTicket = "", long bookingId = 0)
         {
             using (var db = new MeiHiEntities())
             {
-                var userBookings = db.Booking.OrderByDescending(a => a.IsBilling).OrderByDescending(a => a.DateCreated).Skip((page - 1) * pageSize).Take(pageSize);
+                var userBookings = db.Booking.Where(a=>a.ShopId==shopId).OrderByDescending(a => a.IsBilling).OrderByDescending(a => a.DateCreated).Skip((page - 1) * pageSize).Take(pageSize);
                 int count = db.Booking.Count();
 
                 if (!string.IsNullOrEmpty(meiHiTicket))
                 {
-                    userBookings = db.Booking.Where(a => a.VerifyCode.Contains(meiHiTicket)).OrderByDescending(a => a.IsBilling).OrderByDescending(a => a.DateCreated).Skip((page - 1) * pageSize).Take(pageSize);
-                    count = db.Booking.Where(a => a.VerifyCode.Contains(meiHiTicket)).Count();
+                    userBookings = db.Booking.Where(a =>a.ShopId==shopId && a.VerifyCode.Contains(meiHiTicket)).OrderByDescending(a => a.IsBilling).OrderByDescending(a => a.DateCreated).Skip((page - 1) * pageSize).Take(pageSize);
+                    count = db.Booking.Where(a =>a.ShopId==shopId&& a.VerifyCode.Contains(meiHiTicket)).Count();
                 }
 
                 if (bookingId > 0)
                 {
-                    userBookings = db.Booking.Where(a => a.BookingId == bookingId).OrderByDescending(a => a.IsBilling).OrderByDescending(a => a.DateCreated).Skip((page - 1) * pageSize).Take(pageSize);
-                    count = db.Booking.Where(a => a.BookingId == bookingId).Count();
+                    userBookings = db.Booking.Where(a =>a.ShopId==shopId && a.BookingId == bookingId).OrderByDescending(a => a.IsBilling).OrderByDescending(a => a.DateCreated).Skip((page - 1) * pageSize).Take(pageSize);
+                    count = db.Booking.Where(a =>a.ShopId==shopId&& a.BookingId == bookingId).Count();
                 }
 
                 var bookings = new List<BookingModel>();

@@ -32,7 +32,7 @@
             <td>
                 @Html.ActionLink("发型列表", "ManageHairStyle", new { hairStyleTypeId = item.HairStyleTypeId }) |
                 @Html.ActionLink("编辑", "EditHairStyleType", new { hairStyleTypeId = item.HairStyleTypeId }) |
-                @Html.ActionLink("删除", "DeleteHairStyleType", new { hairStyleTypeId = item.HairStyleTypeId })
+                @Html.ActionLink("删除", "DeleteHairStyleType", new { hairStyleTypeId = item.HairStyleTypeId }, new { onclick = "return confirm('确定要删除吗')" })
             </td>
         </tr>
     }

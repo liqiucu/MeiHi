@@ -16,7 +16,7 @@
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <input type="hidden" id="ShopId" name="ShopId" value="@Model.ShopId" /> >
         <div class="form-group">
-            <label class="control-label col-md-2">ServiceType</label>
+            <label class="control-label col-md-2">服务类型</label>
             <div class="col-md-10">
                 @Html.DropDownListFor(model => model.ServiceTypeId, Model.ServiceTypeLists)
             </div>
@@ -24,14 +24,14 @@
 
         @*上传店铺的品牌图片*@
         <div class="form-group">
-            <label for="file" class="control-label col-md-2">上传服务Title图片</label>
+            <label for="file" class="control-label col-md-2">服务图片</label>
             <div class="col-md-10">
                 <input type="file" name="serviceTitleUrl" id="serviceTitleUrl" />
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.Title, htmlAttributes: new { @class = "control-label col-md-2" })
+            <label for="file" class="control-label col-md-2">服务名称</label>
             <div class="col-md-10">
                 @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
@@ -39,7 +39,7 @@
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.Detail, htmlAttributes: new { @class = "control-label col-md-2" })
+            <label for="file" class="control-label col-md-2">服务详情</label>
             <div class="col-md-10">
                 @Html.TextAreaFor(model => model.Detail, 10,200,new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.Detail, "", new { @class = "text-danger" })
@@ -47,7 +47,7 @@
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.CMUnitCost, htmlAttributes: new { @class = "control-label col-md-2" })
+            <label for="file" class="control-label col-md-2">美嗨价</label>
             <div class="col-md-10">
                 @Html.EditorFor(model => model.CMUnitCost, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.CMUnitCost, "", new { @class = "text-danger" })
@@ -55,7 +55,7 @@
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.OriginalUnitCost, htmlAttributes: new { @class = "control-label col-md-2" })
+            <label for="file" class="control-label col-md-2">原价</label>
             <div class="col-md-10">
                 @Html.EditorFor(model => model.OriginalUnitCost, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.OriginalUnitCost, "", new { @class = "text-danger" })
@@ -73,16 +73,14 @@
             两个类型举例：设计师_初级理发师_教导主任_总设计师_导师|0_10_20_30|0_20_30_40,性别_男_女|0_10|0_20 （这里有2个类型，4个设计师，2个性别，价格组合有4 * 2 = 8个）
             一个类型举例：男导师_女导师|10_0|20_0
             每个规则由逗号分隔，每个再根据‘|’分隔，第一个是类型列表，第二个是美嗨+价，第三个是原+价
-            @*<input type="button" id="btnAddDesinger" value="增加设计者"/>
-            <label>类型</label><input type="text" value="设计师"/>*@
-            @Html.LabelFor(model => model.Designer, htmlAttributes: new { @class = "control-label col-md-2" })
+            <label for="file" class="control-label col-md-2">设计</label>
             <div class="col-md-10">
                 @Html.TextAreaFor(model => model.Designer,10,200, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.Designer, "", new { @class = "text-danger" })
             </div>
         </div>
         <div class="form-group">
-            @Html.LabelFor(model => model.IfSupportRealTimeRefund, htmlAttributes: new { @class = "control-label col-md-2" })
+            <label for="file" class="control-label col-md-2">是否支持实时退款</label>
             <div class="col-md-10">
                 @Html.EditorFor(model => model.IfSupportRealTimeRefund, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.IfSupportRealTimeRefund, "", new { @class = "text-danger" })

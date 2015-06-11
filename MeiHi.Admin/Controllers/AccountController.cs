@@ -33,6 +33,7 @@ namespace MeiHi.Admin.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Login(LoginModel model)
         {
+            
             if (Session["ValidateCode"] != null && Session["ValidateCode"].ToString() != model.ValidateCode)
             {
                 ModelState.AddModelError("", "验证码错误，请从新输入");

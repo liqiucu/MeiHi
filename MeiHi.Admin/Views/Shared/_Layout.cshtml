@@ -139,6 +139,9 @@
                         </a>
                         <ul class="dropdown-menu">
                             <li>@Html.ActionLink("订单总览", "ManageBookings", "Booking")</li>
+                            <li>@Html.ActionLink("已支付订单", "ManageBookingHaveBillinged", "Booking")</li>
+                            <li>@Html.ActionLink("退款订单", "ManageCancelBooking", "Booking")</li>
+                            <li>@Html.ActionLink("未结清订单", "ManageUnPayToShopBooking", "Booking")</li>
                             @*<li>@Html.ActionLink("每日资金流动", "Index", "Home")</li>
                             <li>@Html.ActionLink("资金记录", "Index", "Home")</li>*@
                         </ul>
@@ -174,9 +177,9 @@
                         </a>
                         <ul class="dropdown-menu">
                             <li>@Html.ActionLink("会员注册统计", "Index", "Home")</li>
-                            <li>@Html.ActionLink("店铺注册统计", "Index", "Home")</li>
-                            <li>@Html.ActionLink("店铺资金流水统计", "Index", "Home")</li>
-                            <li>@Html.ActionLink("会员资金流水统计", "Index", "Home")</li>
+                            <li>@Html.ActionLink("会员下载统计", "Index", "Home")</li>
+                            @*<li>@Html.ActionLink("店铺资金流水统计", "Index", "Home")</li>
+                            <li>@Html.ActionLink("会员资金流水统计", "Index", "Home")</li>*@
                         </ul>
                     </li>
                 </ul>

@@ -37,7 +37,7 @@
             </td>
             <td>
                 @Html.ActionLink("编辑", "EditAdd", new { addId = item.AddId }) |
-                @Html.ActionLink("删除", "DeleteAdd", new { addId = item.AddId })
+                @Html.ActionLink("删除", "DeleteAdd", new { addId = item.AddId }, new { onclick = "return confirm('确定要删除吗')" })
             </td>
         </tr>
     }

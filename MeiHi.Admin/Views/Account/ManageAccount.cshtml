@@ -52,7 +52,7 @@
             <td>
                 @Html.ActionLink("修改", "EditAccount", new { adminId = item.AdminId }) |
                 @Html.ActionLink("详情", "AccountDetail", new { adminId = item.AdminId }) |
-                @Html.ActionLink("删除", "DeleteAccount", new { adminId = item.AdminId })
+                @Html.ActionLink("删除", "DeleteAccount", new { adminId = item.AdminId }, new { onclick = "return confirm('确定要删除吗')" })
             </td>
         </tr>
     }

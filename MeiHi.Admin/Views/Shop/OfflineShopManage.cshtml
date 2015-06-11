@@ -79,7 +79,7 @@
                 @Html.ActionLink("服务", "ShowServicesByShopId", new { shopId = item.ShopId }) |
                 @Html.ActionLink("编辑", "EditShop", new { shopId = item.ShopId }) |
                 @Html.ActionLink("详情", "ShopDetail", new { shopId = item.ShopId }) |
-                @Html.ActionLink("删除", "DeleteShop", new { shopId = item.ShopId }) |
+                @Html.ActionLink("删除", "DeleteShop", new { shopId = item.ShopId }, new { onclick = "return confirm('确定要删除吗')" }) |
                 @Html.ActionLink("上架", "SetUpShop", new { shopId = item.ShopId })
             </td>
         </tr>

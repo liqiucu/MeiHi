@@ -351,6 +351,9 @@
     <Content Include="Views\User\ManageAllComments.cshtml" />
     <Content Include="Views\User\ManageAllSuggests.cshtml" />
     <Content Include="Scripts\less\datetimepicker.less" />
+    <Content Include="Views\Booking\ManageBookingHaveBillinged.cshtml" />
+    <Content Include="Views\Booking\ManageCancelBooking.cshtml" />
+    <Content Include="Views\Booking\ManageUnPayToShopBooking.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

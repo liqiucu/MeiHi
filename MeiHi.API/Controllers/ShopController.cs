@@ -186,7 +186,7 @@ namespace MeiHi.API.Controllers
                     }
 
                     HttpRuntime.Cache.Insert(region, shopDistances, null,
-                          DateTime.Now.AddSeconds(3600), TimeSpan.Zero);
+                          DateTime.Now.AddSeconds(1200), TimeSpan.Zero);
 
                     return new
                     {

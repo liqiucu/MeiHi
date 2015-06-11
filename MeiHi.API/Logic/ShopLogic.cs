@@ -46,7 +46,7 @@ namespace MeiHi.API.Logic
                         }
 
                         HttpRuntime.Cache.Insert("AllShops", shops, null,
-                           DateTime.Now.AddSeconds(3600), TimeSpan.Zero);
+                           DateTime.Now.AddSeconds(1200), TimeSpan.Zero);
                     }
                 }
 

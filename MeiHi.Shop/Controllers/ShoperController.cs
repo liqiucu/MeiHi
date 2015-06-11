@@ -19,6 +19,7 @@ using MeiHi.CommonDll.Helper;
 using MeiHi.Shop.Logic;
 using MeiHi.Shop.Models.Shoper;
 using MeiHi.Shop.Models.User;
+using MeiHi.Shop.Models.Booking;
 
 namespace MeiHi.Shop.Controllers
 {

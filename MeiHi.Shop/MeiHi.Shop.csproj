@@ -167,13 +167,16 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\BookingController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ShoperController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Logic\BookingLogic.cs" />
     <Compile Include="Logic\ShoperLogic.cs" />
     <Compile Include="Models\Booking\BookingModel.cs" />
+    <Compile Include="Models\Booking\ShopsBookingManageModel.cs" />
     <Compile Include="Models\HomeModel\ShoperHomeModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\LoginModel.cs" />
@@ -228,6 +231,11 @@
     <Content Include="Views\Shoper\ManageShopers.cshtml" />
     <Content Include="Views\Shoper\ManageUserCommentsByShopId.cshtml" />
     <Content Include="Views\Shoper\ReplyUserComment.cshtml" />
+    <Content Include="Views\Booking\ManageBookingHaveBillinged.cshtml" />
+    <Content Include="Views\Booking\ManageBookings.cshtml" />
+    <Content Include="Views\Booking\ManageCancelBooking.cshtml" />
+    <Content Include="Views\Booking\ManageUnPayToShopBooking.cshtml" />
+    <Content Include="Views\Booking\PayUnBillingBooking.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -2,57 +2,17 @@
 @using PagedList.Mvc;
 <link href="~/Content/PagedList.css" rel="stylesheet" />
 @{
-    ViewBag.Title = "订单总览";
+    ViewBag.Title = "已支付";
 }
-<h2>订单总览</h2>
-<div>
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.TotalNotPayedCount)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.TotalNotPayedCount)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.TotalNotPayedMoney)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.TotalNotPayedMoney)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.TotalPayedMoney)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.TotalPayedMoney)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.TotalGotedMoney)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.TotalGotedMoney)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.TotalCancelCount)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.TotalCancelCount)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.TotalCancelMoney)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.TotalCancelMoney)
-        </dd>
-    </dl>
-</div>
-
-@using (Html.BeginForm("ManageBookings", "Booking", FormMethod.Get))
+<h2>未结清</h2>
+@using (Html.BeginForm("ManageUnPayToShopBooking", "Booking", FormMethod.Get))
 {
     <label>美嗨券查询</label>
     <input type="text" name="meihiTicket" value="" id="meihiTicket" />
     <input type="submit" value="查询" class="btn btn-default" />
 }
-@using (Html.BeginForm("ManageBookings", "Booking", FormMethod.Get))
+
+@using (Html.BeginForm("ManageUnPayToShopBooking", "Booking", FormMethod.Get))
 {
     <label>订单号查询</label>
     <input type="text" name="bookingId" value="" id="bookingId" />
@@ -60,7 +20,7 @@
 }
 <table class="table">
     <tr>
-        <th> 
+        <th>
             订单ID
         </th>
         <th>
@@ -134,12 +94,7 @@
             <td>
                 @if (item.IsBilling && item.IsUsed && !item.Cancel && !item.CancelSuccess && !item.Status)
                 {
-                    @Html.ActionLink("结算", "PayUnBillingBooking", new { bookingId = item.BookingId })
-                }
-
-                @if (item.IsBilling && !item.IsUsed && item.Cancel && !item.CancelSuccess && !item.Status)
-                {
-                    @Html.ActionLink("退款", "RefundToUserByBookingId", new { bookingId = item.BookingId })
+                    @Html.ActionLink("结算", "PayUnBillingBooking", new { bookingId = item.BookingId }, new { onclick = "return confirm('确定要退款吗')" })
                 }
             </td>
         </tr>
@@ -148,5 +103,5 @@
 <br />
 Page @(Model.UserBookings.PageCount < Model.UserBookings.PageNumber ? 0 : Model.UserBookings.PageNumber) of @Model.UserBookings.PageCount
 
-@Html.PagedListPager(Model.UserBookings, page => Url.Action("ManageBookings", "Booking",
+@Html.PagedListPager(Model.UserBookings, page => Url.Action("ManageUnPayToShopBooking", "Booking",
     new { page }))
