@@ -68,6 +68,22 @@ namespace MeiHi.API.Logic
                 return userComments;
             }
         }
+
+        public static bool CheckUserNameAvaliable(string userName)
+        {
+            using (var db = new MeiHiEntities())
+            {
+                var user = db.User.FirstOrDefault(a => a.FullName == userName);
+
+                if (user != null)
+                {
+                    return false;
+                }
+
+                return true;
+            }
+        }
+
         //public static List<string> GetSharedImagesById(long id)
         //{
         //    using (var db = new MeiHiEntities())

@@ -20,10 +20,17 @@ namespace MeiHi.API.Controllers
         [HttpGet]
         [Route("show_service")]
         [AllowAnonymous]
-        public object GetService(long serviceId, long userId)
+        public object GetService(long serviceId, long userId = 0)
         {
             using (var db = new MeiHiEntities())
             {
+                bool haveAddedToFavorite = false;
+
+                if (userId != 0)
+                {
+                    haveAddedToFavorite = db.UserFavorites.FirstOrDefault(a => a.ServiceId == serviceId && a.UserId == userId) != null;
+                }
+
                 var service = db.Service.Where(a => a.ServiceId == serviceId).FirstOrDefault();
 
                 if (service != null)
@@ -40,7 +47,7 @@ namespace MeiHi.API.Controllers
                     serviceModel.Title = service.Title;
                     serviceModel.TitleUrl = service.TitleUrl;
                     serviceModel.UserComments = ShopLogic.GetUserCommentsTopFiveByServiceId(service.ServiceId);
-                    serviceModel.HaveAddedToFavorite = db.UserFavorites.FirstOrDefault(a => a.ShopId == serviceId && a.UserId == userId) != null;
+                    serviceModel.HaveAddedToFavorite = haveAddedToFavorite;
 
                     return new
                     {

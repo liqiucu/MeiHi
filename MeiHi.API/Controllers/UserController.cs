@@ -94,11 +94,11 @@ namespace MeiHi.API.Controllers
         [Route("Update_UserDetail")]
         public object UpdateUserDetail(
             long userId,
-            string userFullName,
-            int hairLenth,
-            DateTime birthday,
-            int gender,
-            string address)
+            string userFullName = null,
+            string address = null,
+            int? hairLenth = null,
+            DateTime? birthday = null,
+            int? gender = null)
         {
             using (var db = new MeiHiEntities())
             {
@@ -124,18 +124,79 @@ namespace MeiHi.API.Controllers
                     };
                 }
 
-                user.FullName = userFullName;
-                user.HairOfLegth = hairLenth;
-                user.BirthDay = birthday;
-                user.Gender = gender;
-                user.Address = address;
+                if (!string.IsNullOrEmpty(userFullName))
+                {
+                    if (!UserLogic.CheckUserNameAvaliable(userFullName))
+                    {
+                        return new
+                        {
+                            jsonStatus = 0,
+                            result = "昵称已经被注册"
+                        };
+                    }
 
-                db.SaveChanges();
+                    user.FullName = userFullName;
+                    db.SaveChanges();
+
+                    return new
+                    {
+                        jsonStatus = 1,
+                        result = "更新用户名成功"
+                    };
+                }
+
+                if (!string.IsNullOrEmpty(address))
+                {
+                    user.Address = address;
+                    db.SaveChanges();
+
+                    return new
+                    {
+                        jsonStatus = 1,
+                        result = "更新用户地址成功"
+                    };
+                }
+
+                if (hairLenth != null)
+                {
+                    user.HairOfLegth = hairLenth;
+                    db.SaveChanges();
+
+                    return new
+                    {
+                        jsonStatus = 1,
+                        result = "更新用户发型成功"
+                    };
+                }
+
+                if (birthday != null)
+                {
+                    user.BirthDay = birthday;
+                    db.SaveChanges();
+
+                    return new
+                    {
+                        jsonStatus = 1,
+                        result = "更新用户生日成功"
+                    };
+                }
+
+                if (gender != null)
+                {
+                    user.Gender = gender;
+                    db.SaveChanges();
+
+                    return new
+                    {
+                        jsonStatus = 1,
+                        result = "更新用户生日成功"
+                    };
+                }
 
                 return new
                 {
-                    jsonStatus = 1,
-                    result = "用户信息更新成功"
+                    jsonStatus = 0,
+                    result = "参数无效"
                 };
             }
         }
@@ -151,6 +212,12 @@ namespace MeiHi.API.Controllers
                 {
                     // 设置上传目录
                     string tempPath = "/upload/temp/";
+
+                    if (!Directory.Exists(HttpContext.Current.Server.MapPath(tempPath)))
+                    {
+                        Directory.CreateDirectory(HttpContext.Current.Server.MapPath(tempPath));
+                    }
+
                     var provider = new MultipartFormDataStreamProvider(HttpContext.Current.Server.MapPath(tempPath));
 
                     // 接收数据，并保存文件

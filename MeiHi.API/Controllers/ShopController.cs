@@ -213,13 +213,20 @@ namespace MeiHi.API.Controllers
         [HttpGet]
         [Route("Show_ShopServices")]
         [AllowAnonymous]
-        public object GetShopServices(long shopId, long userId)
+        public object GetShopServices(long shopId, long userId = 0)
         {
             using (var db = new MeiHiEntities())
             {
                 var shop = db.Shop.FirstOrDefault(a => a.ShopId == shopId);
                 if (shop != null)
                 {
+                    bool haveAddedToFavorite = false;
+
+                    if (userId != 0)
+                    {
+                        haveAddedToFavorite = db.UserFavorites.FirstOrDefault(a => a.ShopId == shopId && a.UserId == userId) != null;
+                    }
+
                     var shopModel = new ShopModel()
                     {
                         Coordinates = shop.Coordinates,
@@ -234,7 +241,7 @@ namespace MeiHi.API.Controllers
                                         : null,
                         ProductBrandCount = shop.ProductBrand.Count,
                         Services = ShopLogic.GetServices(shop.ShopId),
-                        HaveAddedToFavorite = db.UserFavorites.FirstOrDefault(a => a.ShopId == shopId && a.UserId == userId) != null
+                        HaveAddedToFavorite = haveAddedToFavorite
                     };
                     return new
                     {
