@@ -19,5 +19,9 @@ namespace MeiHi.Shop.ViewModels
         [DataType(DataType.Password)]
         [Display(Name = "密码")]
         public string Password { get; set; }
+
+        [Required]
+        [Display(Name = "验证码")]
+        public string ValidateCode { get; set; }
     }
 }

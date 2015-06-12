@@ -1,0 +1,25 @@
+﻿@model MeiHi.Shop.Models.HomeModel.ShoperHomeModel
+
+@{
+    ViewBag.Title = "美嗨店主管理系统";
+}
+
+@Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+@if (TempData["WelcomeMessage"] != null)
+{
+    <label class="text-success">验证通过：@TempData["WelcomeMessage"]</label>
+}
+
+@using (Html.BeginForm("VerifyUserMeiHiCode", "Shoper", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    <label>验证用户美嗨券</label>
+    <input name="MeiHiCode" id="code" value="" />
+    <input name="ShopId" value="@Model.ShopId" type="hidden" />
+    <input name="ShopName" value="@Model.ShopName" type="hidden" />
+    <input type="submit" value="验证" />
+}
+<div>
+    @Html.ActionLink("返回主页", "Index", "Home", null, null)
+</div>

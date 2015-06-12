@@ -10,5 +10,7 @@ namespace MeiHi.Shop.Models.HomeModel
         public long ShopId { get; set; }
 
         public string ShopName { get; set; }
+
+        public string MeiHiCode { get; set; }
     }
 }

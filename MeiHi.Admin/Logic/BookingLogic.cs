@@ -56,7 +56,8 @@ namespace MeiHi.Admin.Logic
                             ShopName = item.ShopName,
                             Status = item.Status,
                             UserId = item.UserId,
-                            VerifyCode = item.VerifyCode 
+                            VerifyCode = item.VerifyCode,
+                            ServiceTitleImage=item.Service.TitleUrl
                         });
                     }
                 }
@@ -133,7 +134,8 @@ namespace MeiHi.Admin.Logic
                             ShopName = item.ShopName,
                             Status = item.Status,
                             UserId = item.UserId,
-                            VerifyCode = item.VerifyCode
+                            VerifyCode = item.VerifyCode,
+                            ServiceTitleImage = item.Service.TitleUrl
                         });
                     }
                 }
@@ -204,7 +206,8 @@ namespace MeiHi.Admin.Logic
                             ShopName = item.ShopName,
                             Status = item.Status,
                             UserId = item.UserId,
-                            VerifyCode = item.VerifyCode
+                            VerifyCode = item.VerifyCode,
+                            ServiceTitleImage = item.Service.TitleUrl
                         });
                     }
                 }
@@ -262,7 +265,8 @@ namespace MeiHi.Admin.Logic
                             ShopName = item.ShopName,
                             Status = item.Status,
                             UserId = item.UserId,
-                            VerifyCode = item.VerifyCode
+                            VerifyCode = item.VerifyCode,
+                            ServiceTitleImage = item.Service.TitleUrl
                         });
                     }
                 }

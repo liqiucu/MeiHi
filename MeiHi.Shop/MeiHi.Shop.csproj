@@ -206,6 +206,7 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\Login\Login.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
@@ -225,17 +226,12 @@
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="Views\Home\ResetShoperPassword.cshtml" />
-    <Content Include="Views\Shoper\GetBillingedBookingsByShopId.cshtml" />
-    <Content Include="Views\Shoper\GetUnBillingBookingsByShopId.cshtml" />
-    <Content Include="Views\Shoper\ManageShopers.cshtml" />
-    <Content Include="Views\Shoper\ManageUserCommentsByShopId.cshtml" />
-    <Content Include="Views\Shoper\ReplyUserComment.cshtml" />
+    <Content Include="Views\Account\ResetShoperPassword.cshtml" />
     <Content Include="Views\Booking\ManageBookingHaveBillinged.cshtml" />
     <Content Include="Views\Booking\ManageBookings.cshtml" />
     <Content Include="Views\Booking\ManageCancelBooking.cshtml" />
     <Content Include="Views\Booking\ManageUnPayToShopBooking.cshtml" />
-    <Content Include="Views\Booking\PayUnBillingBooking.cshtml" />
+    <Content Include="Views\Shoper\VerifyUserMeiHiCode.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

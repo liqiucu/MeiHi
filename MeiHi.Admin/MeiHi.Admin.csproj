@@ -186,6 +186,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ShopController.cs" />
     <Compile Include="Controllers\ShoperController.cs" />
+    <Compile Include="Controllers\StatisticsController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -195,6 +196,7 @@
     <Compile Include="Logic\ServiceLogic.cs" />
     <Compile Include="Logic\CommonLogic.cs" />
     <Compile Include="Logic\ShoperLogic.cs" />
+    <Compile Include="Logic\StatisticsLogic.cs" />
     <Compile Include="Logic\UserLogic.cs" />
     <Compile Include="Logic\ShopLogic.cs" />
     <Compile Include="Models\Advertising\AdvertisingModel.cs" />
@@ -208,6 +210,7 @@
     <Compile Include="Models\Shops\RecommandShopModel.cs" />
     <Compile Include="Models\Shops\ShopModel.cs" />
     <Compile Include="Models\Shops\ServiceForShopDetailModel.cs" />
+    <Compile Include="Models\Statistics\StatisticsUserRegistersModel.cs" />
     <Compile Include="Models\UserComments\UserCommentsModel.cs" />
     <Compile Include="Models\UserSuggest\UserSuggests.cs" />
     <Compile Include="Models\User\UserModel.cs" />
@@ -354,6 +357,7 @@
     <Content Include="Views\Booking\ManageBookingHaveBillinged.cshtml" />
     <Content Include="Views\Booking\ManageCancelBooking.cshtml" />
     <Content Include="Views\Booking\ManageUnPayToShopBooking.cshtml" />
+    <Content Include="Views\Statistics\SearchUserStatistics.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

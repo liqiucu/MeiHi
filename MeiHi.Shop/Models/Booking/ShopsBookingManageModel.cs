@@ -9,6 +9,9 @@ namespace MeiHi.Shop.Models.Booking
 {
     public class ShopsBookingManageModel
     {
+         [Display(Name = "店铺ID")]
+        public long ShopId { get; set; }
+
         [Display(Name = "未结清订单数")]
         public int TotalNotPayedCount { get; set; }
 

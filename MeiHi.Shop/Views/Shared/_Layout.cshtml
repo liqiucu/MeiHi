@@ -96,7 +96,7 @@
             <label>欢迎你, </label>@Session["UserName"]<label>, </label>
             @Html.ActionLink("登出", "LogOff", "Account");
             <label>, </label>
-            @Html.ActionLink("重置密码", "ResetShoperPassword", "Home", new { shopId = Session["ShopId"] }, new { })
+            @Html.ActionLink("重置密码", "ResetShoperPassword", "Account", new { shopId = Session["ShopId"] }, new { })
         }
         <hr />
         @RenderBody()

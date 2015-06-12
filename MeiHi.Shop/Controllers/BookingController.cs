@@ -13,7 +13,8 @@ namespace MeiHi.Shop.Controllers
     public class BookingController : Controller
     {
         // GET: Booking
-        public ActionResult ManageBookings(long shoppId, int page = 1, string meihiTicket = "", long bookingId = 0)
+         [Auth(Roles = "店主")]
+        public ActionResult ManageBookings(long shopId, int page = 1, string meihiTicket = "", long bookingId = 0)
         {
             ShopsBookingManageModel model = new ShopsBookingManageModel();
 
@@ -23,8 +24,8 @@ namespace MeiHi.Shop.Controllers
                 return View(model);
             }
 
-            model = BookingLogic.GetAllBookings(page, 10, meihiTicket, bookingId);
-
+            model = BookingLogic.GetAllBookings(shopId,page, 10, meihiTicket, bookingId);
+            model.ShopId = shopId;
             return View(model);
         }
 
@@ -35,7 +36,8 @@ namespace MeiHi.Shop.Controllers
         /// <param name="meihiTicket"></param>
         /// <param name="bookingId"></param>
         /// <returns></returns>
-        public ActionResult ManageBookingHaveBillinged(int page = 1, string meihiTicket = "", long bookingId = 0)
+          [Auth(Roles = "店主")]
+        public ActionResult ManageBookingHaveBillinged(long shopId, int page = 1, string meihiTicket = "", long bookingId = 0)
         {
             ShopsBookingManageModel model = new ShopsBookingManageModel();
 
@@ -45,7 +47,7 @@ namespace MeiHi.Shop.Controllers
                 return View(model);
             }
 
-            model = BookingLogic.GetAllBillingedBookings(page, 10, meihiTicket, bookingId);
+            model = BookingLogic.GetAllBillingedBookings(shopId, page, 10, meihiTicket, bookingId);
 
             return View(model);
         }
@@ -57,7 +59,8 @@ namespace MeiHi.Shop.Controllers
         /// <param name="meihiTicket"></param>
         /// <param name="bookingId"></param>
         /// <returns></returns>
-        public ActionResult ManageCancelBooking(int page = 1, string meihiTicket = "", long bookingId = 0)
+         [Auth(Roles = "店主")]
+        public ActionResult ManageCancelBooking(long shopId, int page = 1, string meihiTicket = "", long bookingId = 0)
         {
             ShopsBookingManageModel model = new ShopsBookingManageModel();
 
@@ -67,7 +70,7 @@ namespace MeiHi.Shop.Controllers
                 return View(model);
             }
 
-            model = BookingLogic.GetAllCancelBookings(page, 10, meihiTicket, bookingId);
+            model = BookingLogic.GetAllCancelBookings(shopId,page, 10, meihiTicket, bookingId);
 
             return View(model);
         }
@@ -79,7 +82,8 @@ namespace MeiHi.Shop.Controllers
         /// <param name="meihiTicket"></param>
         /// <param name="bookingId"></param>
         /// <returns></returns>
-        public ActionResult ManageUnPayToShopBooking(int page = 1, string meihiTicket = "", long bookingId = 0)
+         [Auth(Roles = "店主")]
+        public ActionResult ManageUnPayToShopBooking(long shopId, int page = 1, string meihiTicket = "", long bookingId = 0)
         {
             ShopsBookingManageModel model = new ShopsBookingManageModel();
 
@@ -89,40 +93,9 @@ namespace MeiHi.Shop.Controllers
                 return View(model);
             }
 
-            model = BookingLogic.GetAllUnPayToShopBookings(page, 10, meihiTicket, bookingId);
+            model = BookingLogic.GetAllUnPayToShopBookings(shopId,page, 10, meihiTicket, bookingId);
 
             return View(model);
-        }
-
-        public ActionResult RefundToUserByBookingId(long bookingId)
-        {
-            using (var db = new MeiHiEntities())
-            {
-                var booking = db.Booking.First(a => a.BookingId == bookingId
-                    && a.IsBilling
-                    && !a.IsUsed
-                    && !a.Status
-                    && a.Cancel
-                    && !a.CancelSuccess);
-
-                try
-                {
-                    if (booking != null)
-                    {
-                        booking.CancelSuccess = true;
-                        db.SaveChanges();
-                        //if pay success
-                        //else booking.CancelSuccess = false; db.SaveChanges();
-                    }
-                }
-                catch (Exception ex)
-                {
-                    booking.CancelSuccess = false;
-                    db.SaveChanges();
-                }
-
-                return RedirectToAction("ManageBookings", new { bookingId = bookingId });
-            }
         }
     }
 }

@@ -1,0 +1,66 @@
+﻿@model MeiHi.Admin.Models.Statistics.StatisticsUserRegistersModel
+
+@{
+    ViewBag.Title = "SearchUserStatistics";
+}
+
+<h2>用户注册下载统计</h2>
+
+<div>
+    @if (TempData["message"] != null)
+    {
+        <label class="text-success">@TempData["message"]</label>
+        <br />
+        @Html.ActionLink("总的下载量: " + @Model.TotalDownloadCount+" ", "SearchUserStatistics", new { start = TempData["start"], end = TempData["end"] })
+
+        @Html.ActionLink("总的注册量: " + @Model.TotalRegisterCount, "SearchUserStatistics", new { start = TempData["start"], end = TempData["end"] })
+    }
+    else
+    {
+        @Html.ActionLink("总的下载量: " + @Model.TotalDownloadCount+" ", "SearchUserStatistics")
+
+        @Html.ActionLink("总的注册量: " + @Model.TotalRegisterCount, "SearchUserStatistics")
+    }
+
+    <br />
+    @Html.ActionLink("今日下载量: " + @Model.TodayDownloadCount, "SearchUserStatistics", new { start = DateTime.Today, end = DateTime.Today.AddDays(1) })
+
+    @Html.ActionLink("今日注册量: " + @Model.TodayRegisterCount, "SearchUserStatistics", new { start = DateTime.Today, end = DateTime.Today.AddDays(1) })
+    <hr />
+</div>
+
+@using (Html.BeginForm("SearchUserStatistics", "Statistics", FormMethod.Get))
+{
+    <label>输入起始时间：</label><input type="date" value="" name="start" />
+    <label>输入结束时间：</label><input type="date" value="" name="end" />
+
+    <input type="submit" value="查询" class="btn btn-default" />
+}
+
+<table class="table">
+    <tr>
+        <th>
+            类型
+        </th>
+        <th>
+            注册数
+        </th>
+        <th>
+            下载数
+        </th>
+    </tr>
+    @foreach (var item in Model.StatisticsTypes)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Type)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RegisterCount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DownloadCount)
+            </td>
+        </tr>
+    }
+</table>

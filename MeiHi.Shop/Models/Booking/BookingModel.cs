@@ -7,6 +7,7 @@ namespace MeiHi.Shop.Models.Booking
 {
     public class BookingModel
     {
+        public string ServiceTitleUrl { get; set; }
         public long BookingId { get; set; }
         public long UserId { get; set; }
         public string Mobile { get; set; }

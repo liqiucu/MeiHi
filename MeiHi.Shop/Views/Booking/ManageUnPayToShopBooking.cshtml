@@ -1,4 +1,4 @@
-﻿@model MeiHi.Admin.Models.Booking.ShopsBookingManageModel
+﻿@model MeiHi.Shop.Models.Booking.ShopsBookingManageModel
 @using PagedList.Mvc;
 <link href="~/Content/PagedList.css" rel="stylesheet" />
 @{
@@ -10,6 +10,7 @@
     <label>美嗨券查询</label>
     <input type="text" name="meihiTicket" value="" id="meihiTicket" />
     <input type="submit" value="查询" class="btn btn-default" />
+    <input type="hidden" value="@Model.ShopId" name="shopId" />
 }
 
 @using (Html.BeginForm("ManageUnPayToShopBooking", "Booking", FormMethod.Get))
@@ -17,6 +18,7 @@
     <label>订单号查询</label>
     <input type="text" name="bookingId" value="" id="bookingId" />
     <input type="submit" value="查询" class="btn btn-default" />
+    <input type="hidden" value="@Model.ShopId" name="shopId" />
 }
 <table class="table">
     <tr>
@@ -27,7 +29,7 @@
             美嗨券
         </th>
         <th>
-            店铺名
+            服务图片
         </th>
         <th>
             服务名
@@ -53,7 +55,7 @@
         <th>
             和店铺已结算
         </th>
-        <th></th>
+        @*<th></th>*@
     </tr>
     @foreach (var item in Model.UserBookings)
     {
@@ -65,7 +67,7 @@
                 @Html.DisplayFor(modelItem => item.VerifyCode)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.ShopName)
+                <img src="@item.ServiceTitleUrl" />
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.ServiceName)
@@ -91,12 +93,12 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Status)
             </td>
-            <td>
+            @*<td>
                 @if (item.IsBilling && item.IsUsed && !item.Cancel && !item.CancelSuccess && !item.Status)
                 {
                     @Html.ActionLink("结算", "PayUnBillingBooking", new { bookingId = item.BookingId }, new { onclick = "return confirm('确定要退款吗')" })
                 }
-            </td>
+            </td>*@
         </tr>
     }
 </table>
@@ -105,3 +107,7 @@ Page @(Model.UserBookings.PageCount < Model.UserBookings.PageNumber ? 0 : Model.
 
 @Html.PagedListPager(Model.UserBookings, page => Url.Action("ManageUnPayToShopBooking", "Booking",
     new { page }))
+
+<div>
+    @Html.ActionLink("返回主页", "Index", "Home", null, null)
+</div>

@@ -27,7 +27,7 @@
             美嗨券
         </th>
         <th>
-            店铺名
+            服务图片
         </th>
         <th>
             服务名
@@ -65,7 +65,7 @@
                 @Html.DisplayFor(modelItem => item.VerifyCode)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.ShopName)
+                <img src="@item.ServiceTitleImage" />
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.ServiceName)

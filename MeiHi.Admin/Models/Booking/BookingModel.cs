@@ -14,6 +14,7 @@ namespace MeiHi.Admin.Models.Booking
         public long ServiceId { get; set; }
         public string ServiceName { get; set; }
         public long ShopId { get; set; }
+        public string ServiceTitleImage { get; set; }
         public string ShopName { get; set; }
         public string Designer { get; set; }
         public decimal Cost { get; set; }

@@ -31,19 +31,21 @@ namespace MeiHi.API.Logic
         {
             using (var db = new MeiHiEntities())
             {
-                var user = HttpRuntime.Cache.Get("GetUserByUserId" + userId) as User;
+                //var user = HttpRuntime.Cache.Get("GetUserByUserId" + userId) as User;
 
-                if (user == null)
-                {
-                    lock (CacheLockObjectGetUserByUserId)
-                    {
-                        user = db.User.FirstOrDefault(a => a.UserId == userId);
-                        HttpRuntime.Cache.Insert("GetUserByUserId" + userId, user, null,
-                           DateTime.Now.AddSeconds(300), TimeSpan.Zero);
-                    }
-                }
+                //if (user == null)
+                //{
+                //    lock (CacheLockObjectGetUserByUserId)
+                //    {
+                //        user = db.User.FirstOrDefault(a => a.UserId == userId);
+                //        HttpRuntime.Cache.Insert("GetUserByUserId" + userId, user, null,
+                //           DateTime.Now.AddSeconds(300), TimeSpan.Zero);
+                //    }
+                //}
 
-                return user;
+                //return user;
+
+                return db.User.FirstOrDefault(a => a.UserId == userId);
             }
         }
 

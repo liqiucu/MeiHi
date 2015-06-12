@@ -145,7 +145,7 @@ namespace MeiHi.API.ViewModels
         public int? Gender { get; set; }
 
         /// <summary>
-        /// 1 2 3
+        /// 1 短 2 中 3 长
         /// </summary>
         public int? HairLenth { get; set; }
 

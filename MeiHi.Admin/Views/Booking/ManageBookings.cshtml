@@ -6,44 +6,18 @@
 }
 <h2>订单总览</h2>
 <div>
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.TotalNotPayedCount)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.TotalNotPayedCount)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.TotalNotPayedMoney)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.TotalNotPayedMoney)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.TotalPayedMoney)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.TotalPayedMoney)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.TotalGotedMoney)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.TotalGotedMoney)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.TotalCancelCount)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.TotalCancelCount)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.TotalCancelMoney)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.TotalCancelMoney)
-        </dd>
-    </dl>
+    @Html.ActionLink(@Model.TotalNotPayedCount.ToString() + " 个未结清订单", "ManageUnPayToShopBooking")
+    <br />
+    @Html.ActionLink(@Model.TotalNotPayedMoney.ToString() + " RMB 未结清", "ManageUnPayToShopBooking")
+    <hr />
+    @Html.ActionLink(@Model.TotalCancelCount.ToString() + " 个订单在申请退款", "ManageCancelBooking")
+    <br />
+    @Html.ActionLink(@Model.TotalCancelMoney.ToString() + " RMB 在申请退款", "ManageCancelBooking")
+    @*<br />
+        @Html.ActionLink(@Model.TotalPayedMoney.ToString() + "RMB 已结清", "ManageBookingHavePayed", new { shopId = @Model.ShopId })*@
+    <hr />
+    @Html.ActionLink("销售总额:" + @Model.TotalGotedMoney.ToString() + "RMB", "ManageBookingHaveBillinged")
+    <hr />
 </div>
 
 @using (Html.BeginForm("ManageBookings", "Booking", FormMethod.Get))
@@ -67,7 +41,7 @@
             美嗨券
         </th>
         <th>
-            店铺名
+            服务图片
         </th>
         <th>
             服务名
@@ -105,7 +79,7 @@
                 @Html.DisplayFor(modelItem => item.VerifyCode)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.ShopName)
+                <img src="@item.ServiceTitleImage" />
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.ServiceName)
