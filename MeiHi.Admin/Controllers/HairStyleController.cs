@@ -12,7 +12,7 @@ namespace MeiHi.Admin.Controllers
     public class HairStyleController : Controller
     {
         #region type
-
+         [Auth(PermissionName = "发型管理")]
         [HttpGet]
         public ActionResult ManageHairStyleType()
         {
@@ -36,14 +36,14 @@ namespace MeiHi.Admin.Controllers
                 return View(models);
             }
         }
-
+         [Auth(PermissionName = "发型管理")]
         [HttpGet]
         public ActionResult CreateHairStyleType()
         {
             var models = new HairStyleTypeModel();
             return View(models);
         }
-
+         [Auth(PermissionName = "发型管理")]
         [HttpGet]
         public ActionResult EditHairStyleType(long hairStyleTypeId)
         {
@@ -65,7 +65,7 @@ namespace MeiHi.Admin.Controllers
                 return View(model);
             }
         }
-
+         [Auth(PermissionName = "发型管理")]
         [HttpPost]
         public ActionResult EditHairStyleType(HairStyleTypeModel model)
         {
@@ -86,7 +86,7 @@ namespace MeiHi.Admin.Controllers
                 return RedirectToAction("ManageHairStyleType");
             }
         }
-
+         [Auth(PermissionName = "发型管理")]
         [HttpPost]
         public ActionResult SaveHairStyleType(HairStyleTypeModel model)
         {
@@ -103,7 +103,7 @@ namespace MeiHi.Admin.Controllers
                 return RedirectToAction("ManageHairStyleType");
             }
         }
-
+         [Auth(PermissionName = "发型管理")]
         [HttpGet]
         public ActionResult DeleteHairStyleType(long hairStyleTypeId)
         {
@@ -127,7 +127,7 @@ namespace MeiHi.Admin.Controllers
             }
         }
         #endregion
-
+         [Auth(PermissionName = "发型管理")]
         [HttpGet]
         public ActionResult ManageHairStyle(long hairStyleTypeId)
         {
@@ -164,7 +164,7 @@ namespace MeiHi.Admin.Controllers
                 return View(result);
             }
         }
-
+         [Auth(PermissionName = "发型管理")]
         [HttpGet]
         public ActionResult CreateHairStyle(long hairStyleTypeId)
         {
@@ -182,7 +182,7 @@ namespace MeiHi.Admin.Controllers
             }
 
         }
-
+         [Auth(PermissionName = "发型管理")]
         [HttpPost]
         public ActionResult SaveHairStyle(
             HairStyleModel model,
@@ -219,7 +219,7 @@ namespace MeiHi.Admin.Controllers
 
             return RedirectToAction("ManageHairStyle", new { hairStyleTypeId = model.HairStyleTypeId });
         }
-
+         [Auth(PermissionName = "发型管理")]
         [HttpGet]
         public ActionResult EditHairStyle(long hairStyleId)
         {
@@ -244,7 +244,7 @@ namespace MeiHi.Admin.Controllers
                 return View(result);
             }
         }
-
+         [Auth(PermissionName = "发型管理")]
         [HttpPost]
         public ActionResult UpdateHairStyle(
             HairStyleModel model,
@@ -299,7 +299,7 @@ namespace MeiHi.Admin.Controllers
 
             return RedirectToAction("ManageHairStyle", new { hairStyleTypeId = model.HairStyleTypeId });
         }
-
+         [Auth(PermissionName = "发型管理")]
         [HttpGet]
         public ActionResult DeleteHairStyle(long hairStyleId)
         {

@@ -715,29 +715,7 @@ namespace MeiHi.Admin.Controllers
                 return RedirectToAction("PermissionManage");
             }
         }
-
-        [HttpPost]
-        [Auth(RoleName = "管理员")]
-        public ActionResult UpdateRole(PermissionModel model)
-        {
-            using (var db = new MeiHiEntities())
-            {
-                var permission = db.Permission.FirstOrDefault(a => a.PermissionId == model.PermissionId);
-
-                if (permission == null)
-                {
-                    throw new Exception("权限ID：" + model.PermissionId + " 不存在");
-                }
-
-                permission.Group = model.Group;
-                permission.Description = model.Description;
-                permission.Name = model.PermissionName;
-                permission.DateModified = DateTime.Now;
-                db.SaveChanges();
-
-                return RedirectToAction("PermissionManage");
-            }
-        }
+        
         #endregion
     }
 }

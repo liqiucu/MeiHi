@@ -12,6 +12,7 @@ namespace MeiHi.Admin.Controllers
     public class StatisticsController : Controller
     {
         // GET: Statistics
+        [Auth(RoleName = "市场部")]
         public ActionResult SearchUserStatistics(DateTime? start = null, DateTime? end = null)
         {
             using (var db = new MeiHiEntities())

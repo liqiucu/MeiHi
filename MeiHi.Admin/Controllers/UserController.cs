@@ -13,6 +13,7 @@ namespace MeiHi.Admin.Controllers
 {
     public class UserController : Controller
     {
+         [Auth(PermissionName = "用户维护管理")]
         // GET: User
         public ActionResult ManageUsers(int page = 1, string userName = "")
         {
@@ -20,12 +21,12 @@ namespace MeiHi.Admin.Controllers
             model.Users = UserLogic.GetUsers(page, 10, userName);
             return View(model);
         }
-
+        [Auth(PermissionName = "用户维护管理")]
         public ActionResult ManageUserCommentsByUserId(long userId, int page = 1)
         {
             return View(UserLogic.GetUserCommentsByUserId(userId, page, 10));
         }
-
+        [Auth(PermissionName = "用户维护管理")]
         public ActionResult ManageUserBookingsByUserId(long userId, int page = 1)
         {
             var model = new UserBookingsModel();
@@ -33,7 +34,7 @@ namespace MeiHi.Admin.Controllers
 
             return View(model);
         }
-
+        [Auth(PermissionName = "用户维护管理")]
         public ActionResult RefundToUserByBookingId(long userBookingId)
         {
             using (var db = new MeiHiEntities())
@@ -54,7 +55,7 @@ namespace MeiHi.Admin.Controllers
                 return RedirectToAction("ManageUserBookingsByUserId", new { userId = booking.UserId });
             }
         }
-
+        [Auth(PermissionName = "用户维护管理")]
         public ActionResult UnDisplayUserComment(long userCommentId, bool allManage = false)
         {
             using (var db = new MeiHiEntities())
@@ -75,7 +76,7 @@ namespace MeiHi.Admin.Controllers
                 return RedirectToAction("ManageUserCommentsByUserId", new { userId = userComment.UserId });
             }
         }
-
+        [Auth(PermissionName = "用户维护管理")]
         public ActionResult DisplayUserComment(long userCommentId, bool allManage = false)
         {
             using (var db = new MeiHiEntities())
@@ -96,7 +97,7 @@ namespace MeiHi.Admin.Controllers
                 return RedirectToAction("ManageUserCommentsByUserId", new { shopId = userComment.ShopId });
             }
         }
-
+        [Auth(PermissionName = "用户维护管理")]
         [HttpPost]
         public ActionResult ReplyUserComment(UserCommentsReplyModel model, bool allManage = false)
         {
@@ -118,7 +119,7 @@ namespace MeiHi.Admin.Controllers
                 return RedirectToAction("ManageUserCommentsByUserId", new { userId = model.UserId });
             }
         }
-
+        [Auth(PermissionName = "用户维护管理")]
         public ActionResult ReplyUserComment(long userCommentId)
         {
             using (var db = new MeiHiEntities())
@@ -137,7 +138,7 @@ namespace MeiHi.Admin.Controllers
                 return View(model);
             }
         }
-
+        [Auth(PermissionName = "用户维护管理")]
         public ActionResult ManageAllComments(
             int page = 1,
             string userName = "",
@@ -194,7 +195,7 @@ namespace MeiHi.Admin.Controllers
                 return View(model);
             }
         }
-
+        [Auth(PermissionName = "用户维护管理")]
         public ActionResult ManageAllSuggests(UserSuggestsModel model, int page = 1, int search = 0)
         {
             using (var db = new MeiHiEntities())

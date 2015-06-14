@@ -12,6 +12,7 @@ namespace MeiHi.Admin.Controllers
     public class CityController : Controller
     {
         // GET: CityRegion
+         [Auth(PermissionName = "店铺维护管理")]
         public ActionResult ManageCityRegions(int cityId = 20)
         {
             var model = CityLogic.GetAllRegionsByCityId(cityId);
@@ -19,6 +20,7 @@ namespace MeiHi.Admin.Controllers
             return View(model);
         }
 
+         [Auth(PermissionName = "店铺维护管理")]
         public ActionResult CreateRegionByCityId(int cityId = 20)
         {
             using (var db = new MeiHiEntities())
@@ -42,6 +44,7 @@ namespace MeiHi.Admin.Controllers
             }
         }
 
+         [Auth(PermissionName = "店铺维护管理")]
         [HttpPost]
         public ActionResult CreateRegionByCityId(RegionModel model)
         {
@@ -62,7 +65,7 @@ namespace MeiHi.Admin.Controllers
                 return RedirectToAction("ManageCityRegions", new { cityId = model.ParentRegionId });
             }
         }
-
+         [Auth(PermissionName = "店铺维护管理")]
         public ActionResult EditRegion(int regionId)
         {
             using (var db = new MeiHiEntities())
@@ -84,7 +87,7 @@ namespace MeiHi.Admin.Controllers
                 return View(model);
             }
         }
-
+         [Auth(PermissionName = "店铺维护管理")]
         [HttpPost]
         public ActionResult EditRegion(RegionModel model)
         {
@@ -103,7 +106,7 @@ namespace MeiHi.Admin.Controllers
                 return RedirectToAction("ManageCityRegions", new { cityId = region.ParentRegionId });
             }
         }
-
+         [Auth(PermissionName = "店铺维护管理")]
         public ActionResult DeleteRegion(int regionId)
         {
             using (var db = new MeiHiEntities())
@@ -121,7 +124,7 @@ namespace MeiHi.Admin.Controllers
                 return RedirectToAction("ManageCityRegions", new { cityId = region.ParentRegionId });
             }
         }
-
+         [Auth(PermissionName = "店铺维护管理")]
         public ActionResult DeleteStreet(int regionId)
         {
             using (var db = new MeiHiEntities())
@@ -137,7 +140,7 @@ namespace MeiHi.Admin.Controllers
                 return RedirectToAction("StreetManage", new { regionId = region.ParentRegionId });
             }
         }
-
+         [Auth(PermissionName = "店铺维护管理")]
         public ActionResult EditStreet(int regionId)
         {
             using (var db = new MeiHiEntities())
@@ -159,7 +162,7 @@ namespace MeiHi.Admin.Controllers
                 return View(model);
             }
         }
-
+         [Auth(PermissionName = "店铺维护管理")]
         [HttpPost]
         public ActionResult EditStreet(RegionModel model)
         {
@@ -178,7 +181,7 @@ namespace MeiHi.Admin.Controllers
                 return RedirectToAction("StreetManage", new { regionId = region.ParentRegionId });
             }
         }
-
+         [Auth(PermissionName = "店铺维护管理")]
         public ActionResult CreateStreetByRegionId(int regionId)
         {
             using (var db = new MeiHiEntities())
@@ -201,7 +204,7 @@ namespace MeiHi.Admin.Controllers
                 return View(model);
             }
         }
-
+         [Auth(PermissionName = "店铺维护管理")]
         [HttpPost]
         public ActionResult CreateStreetByRegionId(RegionModel model)
         {
@@ -222,7 +225,7 @@ namespace MeiHi.Admin.Controllers
                 return RedirectToAction("StreetManage", new { regionId = model.ParentRegionId });
             }
         }
-
+         [Auth(PermissionName = "店铺维护管理")]
         public ActionResult StreetManage(int regionId)
         {
             var model = CityLogic.GetAllStreetsByRegionId(regionId);

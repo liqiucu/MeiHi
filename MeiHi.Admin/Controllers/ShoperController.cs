@@ -28,6 +28,7 @@ namespace MeiHi.Admin.Controllers
     public class ShoperController : Controller
     {
         // GET: Shoper
+        [Auth(PermissionName = "用户维护管理")]
         public ActionResult ManageShopers(int page = 1, string shopName="")
         {
             var model = new ShopersModel()
@@ -37,12 +38,12 @@ namespace MeiHi.Admin.Controllers
 
             return View(model);
         }
-
+        [Auth(PermissionName = "用户维护管理")]
         public ActionResult GetUnBillingBookingsByShopId(long shopId, int page = 1)
         {
             return View(ShoperLogic.GetUnBillingBookingsByShopId(shopId, page, 10));
         }
-
+        [Auth(PermissionName = "用户维护管理")]
         [HttpPost]
         public ActionResult PayAllUnBillingBookings(PayAllUnBillingBookingsModel model)
         {
@@ -89,17 +90,17 @@ namespace MeiHi.Admin.Controllers
 
             return RedirectToAction("GetUnBillingBookingsByShopId", new { shopId = model.ShopId });
         }
-
+        [Auth(PermissionName = "用户维护管理")]
         public ActionResult GetBillingedBookingsByShopId(long shopId, int page = 1)
         {
             return View(ShoperLogic.GetBillingedBookingsByShopId(shopId, page, 10));
         }
-
+        [Auth(PermissionName = "用户维护管理")]
         public ActionResult ManageUserCommentsByShopId(long shopId, int page = 1)
         {
             return View(ShoperLogic.GetUserCommentsByShopId(shopId, page, 10));
         }
-
+        [Auth(PermissionName = "用户维护管理")]
         public ActionResult UnDisplayUserComment(long userCommentId)
         {
             using (var db = new MeiHiEntities())
@@ -116,7 +117,7 @@ namespace MeiHi.Admin.Controllers
                 return RedirectToAction("ManageUserCommentsByShopId", new { shopId = userComment.ShopId });
             }
         }
-
+        [Auth(PermissionName = "用户维护管理")]
         public ActionResult DisplayUserComment(long userCommentId)
         {
             using (var db = new MeiHiEntities())
@@ -133,7 +134,7 @@ namespace MeiHi.Admin.Controllers
                 return RedirectToAction("ManageUserCommentsByShopId", new { shopId = userComment.ShopId });
             }
         }
-
+        [Auth(PermissionName = "用户维护管理")]
         [HttpPost]
         public ActionResult ReplyUserComment(UserCommentsReplyModel model)
         {
@@ -151,7 +152,7 @@ namespace MeiHi.Admin.Controllers
                 return RedirectToAction("ManageUserCommentsByShopId", new { shopId = model.ShopId });
             }
         }
-
+        [Auth(PermissionName = "用户维护管理")]
         public ActionResult ReplyUserComment(long userCommentId)
         {
             using (var db = new MeiHiEntities())

@@ -13,6 +13,7 @@ namespace MeiHi.Admin.Controllers
     public class BookingController : Controller
     {
         // GET: Booking
+        [Auth(PermissionName = "订单与资金维护管理")]
         public ActionResult ManageBookings(int page = 1, string meihiTicket = "", long bookingId = 0)
         {
             ShopsBookingManageModel model = new ShopsBookingManageModel();
@@ -28,6 +29,7 @@ namespace MeiHi.Admin.Controllers
             return View(model);
         }
 
+        [Auth(PermissionName = "订单与资金维护管理")]
         /// <summary>
         /// 已支付订单列表
         /// </summary>
@@ -50,6 +52,7 @@ namespace MeiHi.Admin.Controllers
             return View(model);
         }
 
+        [Auth(PermissionName = "订单与资金维护管理")]
         /// <summary>
         /// 正在申请退款订单列表
         /// </summary>
@@ -72,6 +75,7 @@ namespace MeiHi.Admin.Controllers
             return View(model);
         }
 
+        [Auth(PermissionName = "订单与资金维护管理")]
         /// <summary>
         /// 未结清订单
         /// </summary>
@@ -94,6 +98,7 @@ namespace MeiHi.Admin.Controllers
             return View(model);
         }
 
+        [Auth(PermissionName = "订单与资金维护管理")]
         public ActionResult RefundToUserByBookingId(long bookingId)
         {
             using (var db = new MeiHiEntities())
@@ -124,7 +129,7 @@ namespace MeiHi.Admin.Controllers
                 return RedirectToAction("ManageBookings", new { bookingId = bookingId });
             }
         }
-
+        [Auth(PermissionName = "订单与资金维护管理")]
         public ActionResult PayUnBillingBooking(long bookingId)
         {
             using (var db = new MeiHiEntities())
@@ -147,7 +152,7 @@ namespace MeiHi.Admin.Controllers
                 return View(model);
             }
         }
-
+        [Auth(PermissionName = "订单与资金维护管理")]
         /// <summary>
         /// 这个是批量支付 较危险 只能一个人操作
         /// 设置权限的时候只有一个人有权限

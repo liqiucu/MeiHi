@@ -875,6 +875,7 @@ namespace MeiHi.Admin.Controllers
         #endregion
 
         #region servicetype
+        [Auth(PermissionName = "店铺维护管理")]
         public ActionResult ManageServiceType()
         {
             using (var db = new MeiHiEntities())
@@ -890,12 +891,12 @@ namespace MeiHi.Admin.Controllers
                 return View(model);
             }
         }
-
+        [Auth(PermissionName = "店铺维护管理")]
         public ActionResult CreateServiceType()
         {
             return View(new ServiceTypeModel());
         }
-
+        [Auth(PermissionName = "店铺维护管理")]
         [HttpPost]
         public ActionResult CreateServiceType(ServiceTypeModel model)
         {
@@ -907,7 +908,7 @@ namespace MeiHi.Admin.Controllers
                 return RedirectToAction("ManageServiceType");
             }
         }
-
+        [Auth(PermissionName = "店铺维护管理")]
         public ActionResult EditServiceType(int serviceTypeId)
         {
             using(var db=new MeiHiEntities())
@@ -920,7 +921,7 @@ namespace MeiHi.Admin.Controllers
                 return View(model);
             }
         }
-
+        [Auth(PermissionName = "店铺维护管理")]
         [HttpPost]
         public ActionResult EditServiceType(ServiceTypeModel model)
         {
@@ -934,7 +935,7 @@ namespace MeiHi.Admin.Controllers
                 return RedirectToAction("ManageServiceType");
             }
         }
-
+        [Auth(PermissionName = "店铺维护管理")]
         public ActionResult DeleteServiceType(int serviceTypeId)
         {
             using (var db = new MeiHiEntities())
