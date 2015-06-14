@@ -40,6 +40,7 @@ namespace MeiHi.Model
         public System.DateTime DateCreated { get; set; }
         public System.DateTime DateModified { get; set; }
         public string Title { get; set; }
+        public Nullable<int> StreetId { get; set; }
     
         public virtual ICollection<Booking> Booking { get; set; }
         public virtual ICollection<ProductBrand> ProductBrand { get; set; }
@@ -50,5 +51,6 @@ namespace MeiHi.Model
         public virtual ICollection<ShopUser> ShopUser { get; set; }
         public virtual ICollection<UserComments> UserComments { get; set; }
         public virtual ICollection<UserFavorites> UserFavorites { get; set; }
+        public virtual Region Region1 { get; set; }
     }
 }

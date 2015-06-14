@@ -5,21 +5,21 @@
     ViewBag.Title = "订单总览";
 }
 <h2>订单总览</h2>
-@Html.ActionLink("验证美嗨券", "VerifyUserMeiHiCode", "Shoper", new { shopId = @Model.ShopId }, null)
+@Html.ActionLink("验证美嗨券", "VerifyUserMeiHiCode", "Shoper", new { }, null)
 <hr />
 
 <div>
-    @Html.ActionLink(@Model.TotalNotPayedCount.ToString() + " 个未结清订单", "ManageUnPayToShopBooking", new { shopId = @Model.ShopId })
+    @Html.ActionLink(@Model.TotalNotPayedCount.ToString() + " 个未结清订单", "ManageUnPayToShopBooking", new { })
     <br />
-    @Html.ActionLink(@Model.TotalNotPayedMoney.ToString() + " RMB 未结清", "ManageUnPayToShopBooking", new { shopId = @Model.ShopId })
+    @Html.ActionLink(@Model.TotalNotPayedMoney.ToString() + " RMB 未结清", "ManageUnPayToShopBooking", new { })
     <hr />
-    @Html.ActionLink(@Model.TotalCancelCount.ToString() + " 个订单在申请退款", "ManageCancelBooking", new { shopId = @Model.ShopId })
+    @Html.ActionLink(@Model.TotalCancelCount.ToString() + " 个订单在申请退款", "ManageCancelBooking", new { })
     <br />
-    @Html.ActionLink(@Model.TotalNotPayedMoney.ToString() + " RMB 在申请退款", "ManageCancelBooking", new { shopId = @Model.ShopId })
+    @Html.ActionLink(@Model.TotalNotPayedMoney.ToString() + " RMB 在申请退款", "ManageCancelBooking", new { })
     @*<br />
     @Html.ActionLink(@Model.TotalPayedMoney.ToString() + "RMB 已结清", "ManageBookingHavePayed", new { shopId = @Model.ShopId })*@
     <hr />
-    @Html.ActionLink("销售总额:" + @Model.TotalGotedMoney.ToString() + "RMB", "ManageBookingHaveBillinged", new { shopId = @Model.ShopId })
+    @Html.ActionLink("销售总额:" + @Model.TotalGotedMoney.ToString() + "RMB", "ManageBookingHaveBillinged", new { })
     <hr />
 </div>
 
@@ -27,14 +27,14 @@
 {
     <label>美嗨券查询</label>
     <input type="text" name="meihiTicket" value="" id="meihiTicket" />
-    <input type="hidden" value="@Model.ShopId" name="shopId" />
+    @*<input type="hidden" value="@Model.ShopId" name="shopId" />*@
     <input type="submit" value="查询" class="btn btn-default" />
 }
 @using (Html.BeginForm("ManageBookings", "Booking", FormMethod.Get))
 {
     <label>订单号查询</label>
     <input type="text" name="bookingId" value="" id="bookingId" />
-    <input type="hidden" value="@Model.ShopId" name="shopId" />
+    @*<input type="hidden" value="@Model.ShopId" name="shopId" />*@
     <input type="submit" value="查询" class="btn btn-default" />
 }
 <table class="table">

@@ -1,0 +1,41 @@
+﻿@model MeiHi.Admin.Models.City.RegionModel
+
+@{
+    ViewBag.Title = "StreetManage";
+}
+
+<h2>@Model.RegionName 街道管理</h2>
+
+<p>
+    @Html.ActionLink("创建新街道", "CreateStreetByRegionId", new { regionId = @Model.RegionId })
+</p>
+<table class="table">
+    <tr>
+        <th>
+            街道ID
+        </th>
+        <th>
+            街道名称
+        </th>
+        <th></th>
+    </tr>
+    @foreach (var item in Model.StreetList)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.RegionId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RegionName)
+            </td>
+            <td>
+                @Html.ActionLink("街道编辑", "EditStreet", new { regionId = item.RegionId })|
+                @Html.ActionLink("删除街道", "DeleteStreet", new { regionId = item.RegionId }, new { onclick = "return confirm('确定要删除吗')" })
+            </td>
+        </tr>
+    }
+</table>
+
+<p>
+    @Html.ActionLink("返回城市街道管理", "ManageCityRegions", new { cityId=@Model.ParentRegionId})
+</p>

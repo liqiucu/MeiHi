@@ -45,6 +45,7 @@ namespace MeiHi.Shop.Controllers
                 if (ModelState.IsValid && ShoperLogic.Logon(model.UserName, model.Password, out shopId))
                 {
                     Session["ShopId"] = shopId;
+                    Session["UserLoginName"] = model.UserName;
                     Session["UserName"] = db.ShopUser.FirstOrDefault(a => a.ShopId == shopId).Shop.Title;
 
                     if (Session["ReturnUrl"] != null)

@@ -15,11 +15,13 @@ namespace MeiHi.Shop
     {
         public override void OnAuthorization(AuthorizationContext filterContext)
         {
-            if (filterContext.HttpContext.Session["ShopId"] != null)
+            if (filterContext.HttpContext.Session["ShopId"] != null
+                && filterContext.HttpContext.Session["UserLoginName"] != null)
             {
                 long shopId = (long)filterContext.HttpContext.Session["ShopId"];
+                var userLoginName = filterContext.HttpContext.Session["UserLoginName"];
 
-                if (!ShoperLogic.HasPermission(shopId) && !filterContext.HttpContext.Response.IsRequestBeingRedirected)
+                if (!ShoperLogic.HasPermission(shopId, userLoginName.ToString()) && !filterContext.HttpContext.Response.IsRequestBeingRedirected)
                 {
                     filterContext.Result = new RedirectResult(Constants.ShoperLoginUrl);
                     filterContext.HttpContext.Session["permissionnotenough"] = true;

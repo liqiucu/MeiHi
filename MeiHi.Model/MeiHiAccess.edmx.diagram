@@ -57,6 +57,7 @@
         <AssociationConnector Association="MeiHiModel.FK_UserFavorites_User" ManuallyRouted="false" />
         <AssociationConnector Association="MeiHiModel.FK_UserCommentSharedImg_UserComments" ManuallyRouted="false" />
         <AssociationConnector Association="MeiHiModel.FK_UserCommentsReply_UserComments" ManuallyRouted="false" />
+        <AssociationConnector Association="MeiHiModel.FK_Shop_Street" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

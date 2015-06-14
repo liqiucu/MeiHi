@@ -12,6 +12,7 @@ namespace MeiHi.Admin.Controllers
 {
     public class HomeController : Controller
     {
+        [Auth]
         public ActionResult Index()
         {
             return View();

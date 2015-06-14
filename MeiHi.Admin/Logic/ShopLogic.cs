@@ -61,30 +61,86 @@ namespace MeiHi.Admin.Logic
         /// <summary>
         /// 检测父店名 是否有效 如果有效 将父店ID设置成自己
         /// </summary>
-        /// <param name="shopName"></param>
+        /// <param name="parentShopName"></param>
         /// <returns></returns>
-        public static bool CheckParentShopName(string shopName)
+        public static bool CheckParentShopName(string parentShopName, long selfShopId)
         {
             using (var db = new MeiHiEntities())
             {
-                var shop = db.Shop.FirstOrDefault(a => a.Title == shopName);
+                var shop = db.Shop.FirstOrDefault(a => a.Title == parentShopName);
 
                 if (shop == null)
                 {
                     return false;
                 }
 
-                if (shop.ParentShopId != null && shop.ParentShopId > 0)
+                var selfChildShopCount = db.Shop.Count(a => a.ParentShopId == selfShopId);
+
+                if (selfChildShopCount > 1 && shop.ShopId != selfShopId)
                 {
                     return false;
                 }
 
-                if ( shop.ParentShopId!=shop.ShopId)
+                if (shop.ParentShopId == null
+                  || shop.ParentShopId == 0)
                 {
                     shop.ParentShopId = shop.ShopId;
                     db.SaveChanges();
+                    return true;
                 }
-              
+
+                if (shop.ParentShopId != shop.ShopId)
+                {
+                    return false;
+                }
+
+                return true;
+            }
+        }
+
+        public static bool CheckSelfShopId(long shopId)
+        {
+            using (var db = new MeiHiEntities())
+            {
+                var shopCount = db.Shop.Count(a => a.ParentShopId == shopId);
+
+                if (shopCount > 1)
+                {
+                    return false;
+                }
+
+                return true;
+            }
+        }
+        /// <summary>
+        /// 检测父店名 是否有效 如果有效 将父店ID设置成自己
+        /// </summary>
+        /// <param name="shopName"></param>
+        /// <returns></returns>
+        public static bool CheckParentShopId(long parentShopId)
+        {
+            using (var db = new MeiHiEntities())
+            {
+                var shop = db.Shop.FirstOrDefault(a => a.ShopId == parentShopId);
+
+                if (shop == null)
+                {
+                    return false;
+                }
+
+                if (shop.ParentShopId == null
+                    || shop.ParentShopId == 0)
+                {
+                    shop.ParentShopId = shop.ShopId;
+                    db.SaveChanges();
+                    return true;
+                }
+
+                if (shop.ParentShopId != shop.ShopId)
+                {
+                    return false;
+                }
+
                 return true;
             }
         }
@@ -104,15 +160,28 @@ namespace MeiHi.Admin.Logic
             }
         }
 
-        public static StaticPagedList<ShopListDetailModel> GetShops(int page, int pageSize, bool isOnline = true, string shopName = "")
+        public static StaticPagedList<ShopListDetailModel> GetShops(
+            int page,
+            int pageSize,
+            bool isOnline = true,
+            string shopName = "",
+            long parentShopId = 0)
         {
             using (var access = new MeiHiEntities())
             {
                 var shops = access.Shop.Where(a => a.IsOnline == isOnline).OrderByDescending(a => a.IsHot).Skip((page - 1) * pageSize).Take(pageSize);
+                int count = access.Shop.Count();
 
                 if (!string.IsNullOrEmpty(shopName))
                 {
                     shops = access.Shop.Where(a => a.Title.Contains(shopName) && a.IsOnline == isOnline).OrderByDescending(a => a.IsHot).Skip((page - 1) * pageSize).Take(pageSize);
+                    count = access.Shop.Where(a => a.Title.Contains(shopName) && a.IsOnline == isOnline).Count();
+                }
+
+                if (parentShopId > 0)
+                {
+                    shops = access.Shop.Where(a => a.ParentShopId == parentShopId && a.IsOnline == isOnline).OrderByDescending(a => a.IsHot).Skip((page - 1) * pageSize).Take(pageSize);
+                    count = access.Shop.Where(a => a.ParentShopId == parentShopId && a.IsOnline == isOnline).Count();
                 }
 
                 List<ShopListDetailModel> shopLists = new List<ShopListDetailModel>();
@@ -130,11 +199,19 @@ namespace MeiHi.Admin.Logic
                         ShopId = item.ShopId,
                         Title = item.Title
                     };
+
+                    if (item.ParentShopId != null && item.ParentShopId > 0)
+                    {
+                        temp.ParentShopName = access.Shop.First(a => a.ShopId == item.ParentShopId.Value).Title;
+                        temp.ParentShopId = item.ParentShopId;
+                        temp.BranchShopCount = access.Shop.Count(a => a.ParentShopId == item.ParentShopId);
+                    }
+
                     shopLists.Add(temp);
                 }
 
                 StaticPagedList<ShopListDetailModel> result = new StaticPagedList<ShopListDetailModel>
-                    (shopLists, page, pageSize, access.Shop.Count());
+                    (shopLists, page, pageSize, count);
                 return result;
             }
         }

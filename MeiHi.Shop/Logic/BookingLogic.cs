@@ -77,7 +77,7 @@ namespace MeiHi.Shop.Logic
                     result.TotalNotPayedMoney = db.Booking.Where(a => a.ShopId == shopId && a.IsBilling && a.IsUsed && !a.Cancel && !a.Status).Sum(a => a.Cost);
                 }
 
-                if (db.Booking.Where(a => a.IsBilling && a.IsUsed).Count()>0)
+                if (db.Booking.Where(a => a.ShopId == shopId && a.IsBilling && a.IsUsed).Count()>0)
                 {
                     result.TotalGotedMoney = db.Booking.Where(a => a.ShopId == shopId && a.IsBilling && a.IsUsed).Sum(a => a.Cost);
                     result.TotalPayedMoney = db.Booking.Where(a => a.ShopId == shopId && a.IsBilling && a.IsUsed && a.Status).Sum(a => a.Cost);

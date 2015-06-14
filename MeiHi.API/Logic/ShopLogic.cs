@@ -34,7 +34,7 @@ namespace MeiHi.API.Logic
                                 ShopId = item.ShopId,
                                 Title = item.Title,
                                 DiscountRate = GetDiscountRate(item.ShopId),
-                                RegionName = item.Region.Name,
+                                //RegionName = item.Region.Name,
                                 ShopImageUrl = item.ShopBrandImages.FirstOrDefault() != null ? item.ShopBrandImages.FirstOrDefault().url : "",
                                 Rate = GetShopRate(item.ShopId),
                                 ParentShopId = item.ParentShopId,
@@ -42,11 +42,20 @@ namespace MeiHi.API.Logic
                                 IsOnline = item.IsOnline
                             };
 
+                            if (item.StreetId == null)
+                            {
+                                shopModel.RegionName = item.Region.Name;
+                            }
+                            else
+                            {
+                                shopModel.RegionName = item.Region1.Name;
+                            }
+
                             shops.Add(shopModel);
                         }
 
                         HttpRuntime.Cache.Insert("AllShops", shops, null,
-                           DateTime.Now.AddSeconds(1200), TimeSpan.Zero);
+                           DateTime.Now.AddSeconds(30), TimeSpan.Zero);
                     }
                 }
 
@@ -430,14 +439,15 @@ namespace MeiHi.API.Logic
         {
             using (var db = new MeiHiEntities())
             {
-                var region = (from a in db.Region where a.RegionId == regionId select a).FirstOrDefault();
+                var shop = db.Shop.FirstOrDefault(a => a.ShopId == shopId);
+                //var region = (from a in db.Region where a.RegionId == regionId select a).FirstOrDefault();
 
-                if (region == null)
-                {
-                    throw new Exception("店铺ID: " + shopId + " 区域未设置");
-                }
+                //if (region == null)
+                //{
+                //    throw new Exception("店铺ID: " + shopId + " 区域未设置");
+                //}
 
-                return region.Name;
+                return shop.StreetId != null ? shop.Region1.Name : shop.Region.Name;
             }
         }
 

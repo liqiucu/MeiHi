@@ -4,6 +4,7 @@
     ViewBag.Title = "创建店铺";
 }
 <h2>创建店铺</h2>
+<script src="~/Scripts/Region/Region.js"></script>
 <script src="~/Scripts/Shop/Shop.js"></script>
 @using (Html.BeginForm("CreateShop", "Shop", FormMethod.Post, new { enctype = "multipart/form-data", id = "form2" }))
 {
@@ -23,6 +24,12 @@
             <label class="control-label col-md-2">区域</label>
             <div class="col-md-10">
                 @Html.DropDownListFor(model => model.RegionId, Model.RegionNameList)
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-md-2">街道</label>
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.StreetId, Model.StreetNameList)
             </div>
         </div>
         <div class="form-group">
@@ -71,7 +78,20 @@
                 @Html.ValidationMessageFor(model => model.WinXinPayAccount, "", new { @class = "text-danger" })
             </div>
         </div>
-
+        <div class="form-group">
+            @Html.LabelFor(model => model.BankName, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.BankName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.BankName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.BankNo, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.BankNo, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.BankNo, "", new { @class = "text-danger" })
+            </div>
+        </div>
         <div class="form-group">
             @Html.LabelFor(model => model.FullName, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
@@ -103,23 +123,24 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Comment, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.TextAreaFor(model => model.Comment,10,200, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.TextAreaFor(model => model.Comment, 10, 200, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.Comment, "", new { @class = "text-danger" })
             </div>
         </div>
-
+        
+        <input type="hidden" name="ParentShopId" value="@Model.ParentShopId" />
         @*如果有分店就填写主店铺名字（必须完全一致），否则就不要写*@
-        <div class="form-group">
-            @Html.LabelFor(model => model.ParentShopName, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.ParentShopName, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.ParentShopName, "", new { @class = "text-danger" })
-            </div>
-        </div>
+        @*<div class="form-group">
+                @Html.LabelFor(model => model.ParentShopName, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.ParentShopName, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.ParentShopName, "", new { @class = "text-danger" })
+                </div>
+            </div>*@
 
         @*产品*@
         <div class="form-group">
-            <label for="file" class="control-label col-md-2">上传店铺品牌图片</label>
+            <label for="file" class="control-label col-md-2">上传品牌图片</label>
             <div class="col-md-10">
                 <input type="file" name="ProductBrandFile" id="fileToUpload2" multiple="multiple" />
             </div>
@@ -136,7 +157,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.PurchaseNotes, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.TextAreaFor(model => model.PurchaseNotes,15,200, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.TextAreaFor(model => model.PurchaseNotes, 15, 200, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.PurchaseNotes, "", new { @class = "text-danger" })
             </div>
         </div>

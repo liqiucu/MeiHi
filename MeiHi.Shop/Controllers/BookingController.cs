@@ -13,9 +13,15 @@ namespace MeiHi.Shop.Controllers
     public class BookingController : Controller
     {
         // GET: Booking
-         [Auth(Roles = "店主")]
-        public ActionResult ManageBookings(long shopId, int page = 1, string meihiTicket = "", long bookingId = 0)
+        [Auth(Roles = "店主")]
+        public ActionResult ManageBookings(int page = 1, string meihiTicket = "", long bookingId = 0)
         {
+            if (Session["ShopId"] == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            var shopId = (long)Session["ShopId"];
             ShopsBookingManageModel model = new ShopsBookingManageModel();
 
             if (!string.IsNullOrEmpty(meihiTicket) && bookingId > 0)
@@ -24,7 +30,7 @@ namespace MeiHi.Shop.Controllers
                 return View(model);
             }
 
-            model = BookingLogic.GetAllBookings(shopId,page, 10, meihiTicket, bookingId);
+            model = BookingLogic.GetAllBookings(shopId, page, 10, meihiTicket, bookingId);
             model.ShopId = shopId;
             return View(model);
         }
@@ -36,9 +42,16 @@ namespace MeiHi.Shop.Controllers
         /// <param name="meihiTicket"></param>
         /// <param name="bookingId"></param>
         /// <returns></returns>
-          [Auth(Roles = "店主")]
-        public ActionResult ManageBookingHaveBillinged(long shopId, int page = 1, string meihiTicket = "", long bookingId = 0)
+        [Auth(Roles = "店主")]
+        public ActionResult ManageBookingHaveBillinged(int page = 1, string meihiTicket = "", long bookingId = 0)
         {
+            if (Session["ShopId"] == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            var shopId = (long)Session["ShopId"];
+
             ShopsBookingManageModel model = new ShopsBookingManageModel();
 
             if (!string.IsNullOrEmpty(meihiTicket) && bookingId > 0)
@@ -59,9 +72,16 @@ namespace MeiHi.Shop.Controllers
         /// <param name="meihiTicket"></param>
         /// <param name="bookingId"></param>
         /// <returns></returns>
-         [Auth(Roles = "店主")]
-        public ActionResult ManageCancelBooking(long shopId, int page = 1, string meihiTicket = "", long bookingId = 0)
+        [Auth(Roles = "店主")]
+        public ActionResult ManageCancelBooking(int page = 1, string meihiTicket = "", long bookingId = 0)
         {
+            if (Session["ShopId"] == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            var shopId = (long)Session["ShopId"];
+
             ShopsBookingManageModel model = new ShopsBookingManageModel();
 
             if (!string.IsNullOrEmpty(meihiTicket) && bookingId > 0)
@@ -70,7 +90,7 @@ namespace MeiHi.Shop.Controllers
                 return View(model);
             }
 
-            model = BookingLogic.GetAllCancelBookings(shopId,page, 10, meihiTicket, bookingId);
+            model = BookingLogic.GetAllCancelBookings(shopId, page, 10, meihiTicket, bookingId);
 
             return View(model);
         }
@@ -82,9 +102,15 @@ namespace MeiHi.Shop.Controllers
         /// <param name="meihiTicket"></param>
         /// <param name="bookingId"></param>
         /// <returns></returns>
-         [Auth(Roles = "店主")]
-        public ActionResult ManageUnPayToShopBooking(long shopId, int page = 1, string meihiTicket = "", long bookingId = 0)
+        [Auth(Roles = "店主")]
+        public ActionResult ManageUnPayToShopBooking(int page = 1, string meihiTicket = "", long bookingId = 0)
         {
+            if (Session["ShopId"] == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            var shopId = (long)Session["ShopId"];
             ShopsBookingManageModel model = new ShopsBookingManageModel();
 
             if (!string.IsNullOrEmpty(meihiTicket) && bookingId > 0)
@@ -93,7 +119,7 @@ namespace MeiHi.Shop.Controllers
                 return View(model);
             }
 
-            model = BookingLogic.GetAllUnPayToShopBookings(shopId,page, 10, meihiTicket, bookingId);
+            model = BookingLogic.GetAllUnPayToShopBookings(shopId, page, 10, meihiTicket, bookingId);
 
             return View(model);
         }

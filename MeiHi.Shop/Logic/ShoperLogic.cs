@@ -23,11 +23,11 @@ namespace MeiHi.Shop.Logic
 {
     public class ShoperLogic
     {
-        public static bool HasPermission(long shopId)
+        public static bool HasPermission(long shopId, string userLoginName)
         {
             using (var db = new MeiHiEntities())
             {
-                var shopuser = db.ShopUser.FirstOrDefault(a => a.ShopId == shopId);
+                var shopuser = db.ShopUser.FirstOrDefault(a => a.ShopId == shopId && a.ShopUserName == userLoginName);
 
                 if (shopuser == null)
                 {

@@ -17,6 +17,7 @@ namespace MeiHi.Model
         public Region()
         {
             this.Shop = new HashSet<Shop>();
+            this.Shop1 = new HashSet<Shop>();
         }
     
         public int RegionId { get; set; }
@@ -30,5 +31,6 @@ namespace MeiHi.Model
     
         public virtual Province Province { get; set; }
         public virtual ICollection<Shop> Shop { get; set; }
+        public virtual ICollection<Shop> Shop1 { get; set; }
     }
 }

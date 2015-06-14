@@ -378,7 +378,7 @@ namespace MeiHi.API.Controllers
                             ShopId = item.ShopId,
                             Title = item.Title,
                             DiscountRate = ShopLogic.GetDiscountRate(item.ShopId),
-                            RegionName = item.Region.Name,
+                            RegionName = item.StreetId != null ? item.Region1.Name : item.Region.Name,
                             ShopImageUrl = item.ShopBrandImages.FirstOrDefault() != null ? item.ShopBrandImages.FirstOrDefault().url : "",
                             Rate = ShopLogic.GetShopRate(item.ShopId),
                             ParentShopId = item.ParentShopId,

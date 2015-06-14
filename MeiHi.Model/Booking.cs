@@ -11,7 +11,6 @@ namespace MeiHi.Model
 {
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
     
     public partial class Booking
     {
@@ -35,8 +34,6 @@ namespace MeiHi.Model
         public string VerifyCode { get; set; }
         public System.DateTime DateCreated { get; set; }
         public System.DateTime DateModified { get; set; }
-
-        [Timestamp]
         public byte[] Version { get; set; }
     
         public virtual Service Service { get; set; }

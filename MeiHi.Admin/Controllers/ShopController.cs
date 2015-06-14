@@ -19,11 +19,13 @@ using System.Data.Entity.Validation;
 using MeiHi.Admin.Models.Service;
 using System.IO;
 using MeiHi.CommonDll.Helper;
+using MeiHi.Admin.Models.City;
 
 namespace MeiHi.Admin.Controllers
 {
     public class ShopController : Controller
     {
+        #region shop
         /// <summary>
         /// 展示店铺列表 分页
         /// </summary>
@@ -31,10 +33,10 @@ namespace MeiHi.Admin.Controllers
         /// <returns></returns>
         [HttpGet]
         [Auth(PermissionName = "店铺维护管理")]
-        public ActionResult ShopManege(int page = 1, string shopName = "")
+        public ActionResult ShopManege(int page = 1, string shopName = "", long parentShopId = 0)
         {
             ShopModel shopmodel = new ShopModel();
-            shopmodel.Lists = ShopLogic.GetShops(page, 10, true, shopName);
+            shopmodel.Lists = ShopLogic.GetShops(page, 10, true, shopName, parentShopId);
 
             return View(shopmodel);
         }
@@ -117,31 +119,37 @@ namespace MeiHi.Admin.Controllers
             HttpPostedFileBase[] ProductBrandFile,
             HttpPostedFileBase[] shopProductFile)
         {
+            var RegionNameList = new CommonLogic().RegionList();
+
             if (!ModelState.IsValid)
             {
                 ModelState.AddModelError("", "请检查输入的信息是否有问题");
-                model.RegionNameList = new CommonLogic().RegionList();
+                model.RegionNameList = RegionNameList;
+                model.StreetNameList = new CommonLogic().StreetList(Convert.ToInt32(RegionNameList[0].Value));
                 return View(model);
             }
 
             if (ShopLogic.HaveRegisteredShopMobile(model.Phone))
             {
                 ModelState.AddModelError("", "手机已经被注册");
-                model.RegionNameList = new CommonLogic().RegionList();
+                model.RegionNameList = RegionNameList;
+                model.StreetNameList = new CommonLogic().StreetList(Convert.ToInt32(RegionNameList[0].Value));
                 return View(model);
             }
 
             if (ShopLogic.HaveRegisteredShopName(model.Title))
             {
                 ModelState.AddModelError("", "店铺名已经被注册");
-                model.RegionNameList = new CommonLogic().RegionList();
+                model.RegionNameList = RegionNameList;
+                model.StreetNameList = new CommonLogic().StreetList(Convert.ToInt32(RegionNameList[0].Value));
                 return View(model);
             }
 
-            if (!string.IsNullOrEmpty(model.ParentShopName) && !ShopLogic.CheckParentShopName(model.ParentShopName))
+            if (model.ParentShopId > 0 && !ShopLogic.CheckParentShopId(model.ParentShopId))
             {
                 ModelState.AddModelError("", "父店铺不合法");
-                model.RegionNameList = new CommonLogic().RegionList();
+                model.RegionNameList = RegionNameList;
+                model.StreetNameList = new CommonLogic().StreetList(Convert.ToInt32(RegionNameList[0].Value));
                 return View(model);
             }
 
@@ -156,7 +164,7 @@ namespace MeiHi.Admin.Controllers
                         Comment = model.Comment,
                         PurchaseNotes = model.PurchaseNotes,
                         Phone = model.Phone,
-                        ParentShopId = ShopLogic.GetParentShopId(model.ParentShopName),
+                        ParentShopId = model.ParentShopId,
                         IsOnline = model.IsOnline,
                         IsHot = model.IsHot,
                         Contract = model.Contract,
@@ -167,6 +175,11 @@ namespace MeiHi.Admin.Controllers
                         DateModified = DateTime.Now
                     };
 
+                    if (model.StreetId > 0)
+                    {
+                        shop.StreetId = model.StreetId;
+                    }
+
                     shop.ShopUser.Add(new ShopUser()
                     {
                         DateCreated = DateTime.Now,
@@ -175,7 +188,9 @@ namespace MeiHi.Admin.Controllers
                         AliPayAccount = model.AliPayAccount,
                         FullName = model.FullName,
                         WeiXinPayAccount = model.WinXinPayAccount,
-                        Password = model.Phone.Substring(model.Phone.Length - 6)
+                        Password = model.Phone.Substring(model.Phone.Length - 6),
+                        BankName = model.BankName,
+                        BankNo = model.BankNo
                     });
 
                     var productBrandImages = ImageHelper.SaveImage(
@@ -220,15 +235,58 @@ namespace MeiHi.Admin.Controllers
             }
         }
 
+        [HttpPost]
+        public JsonResult GetStreetsByRegionId(int regionId)
+        {
+            using (var db = new MeiHiEntities())
+            {
+                var result = new List<StreetModel>();
+                var streets = db.Region.Where(a => a.ParentRegionId == regionId);
+
+                foreach (var itemStreet in streets)
+                {
+                    result.Add(new StreetModel()
+                    {
+                        RegionId = itemStreet.RegionId,
+                        RegionName = itemStreet.Name
+                    });
+                }
+
+                return Json(result, JsonRequestBehavior.AllowGet);
+            }
+        }
+
         [HttpGet]
         [Auth(PermissionName = "店铺维护管理")]
-        public ActionResult CreateShop()
+        public ActionResult CreateShop(long shopId = 0)
         {
+            long parentShopId = 0;
+
+            if (shopId > 0)
+            {
+                using (var db = new MeiHiEntities())
+                {
+                    var shop = db.Shop.First(a => a.ShopId == shopId);
+
+                    if (shop.ParentShopId == null || shop.ParentShopId == 0)
+                    {
+                        parentShopId = shop.ShopId;
+                    }
+                    else
+                    {
+                        parentShopId = shop.ParentShopId.Value;
+                    }
+                }
+            }
+
+            var RegionNameList = new CommonLogic().RegionList();
             CreateShopMpdel model = new CreateShopMpdel()
             {
-                RegionNameList = new CommonLogic().RegionList()
+                RegionNameList = RegionNameList,
+                StreetNameList = new CommonLogic().StreetList(Convert.ToInt32(RegionNameList[0].Value))
             };
 
+            model.ParentShopId = parentShopId;
             return View(model);
         }
 
@@ -252,14 +310,18 @@ namespace MeiHi.Admin.Controllers
             if (!ModelState.IsValid)
             {
                 ModelState.AddModelError("", "请检查输入的信息是否有问题");
-                model.RegionNameList = new CommonLogic().RegionList();
+                model.RegionNameList = new CommonLogic().RegionList(model.RegionId);
+                model.StreetNameList = new CommonLogic().StreetList(model.RegionId, model.StreetId);
                 return View(model);
             }
 
-            if (!string.IsNullOrEmpty(model.ParentShopName) && !ShopLogic.CheckParentShopName(model.ParentShopName))
+            if (!string.IsNullOrEmpty(model.ParentShopName)
+                && !ShopLogic.CheckParentShopName(model.ParentShopName, model.ShopId))
+            //&& !ShopLogic.CheckSelfShopId(model.ShopId))
             {
                 ModelState.AddModelError("", "父店铺不合法");
-                model.RegionNameList = new CommonLogic().RegionList();
+                model.RegionNameList = new CommonLogic().RegionList(model.RegionId);
+                model.StreetNameList = new CommonLogic().StreetList(model.RegionId, model.StreetId);
                 return View(model);
             }
 
@@ -272,7 +334,8 @@ namespace MeiHi.Admin.Controllers
                     if (shop == null)
                     {
                         ModelState.AddModelError("", "店铺不存在");
-                        model.RegionNameList = new CommonLogic().RegionList();
+                        model.RegionNameList = new CommonLogic().RegionList(model.RegionId);
+                        model.StreetNameList = new CommonLogic().StreetList(model.RegionId, model.StreetId);
                         return View(model);
                     }
 
@@ -281,17 +344,18 @@ namespace MeiHi.Admin.Controllers
                     if (oldMobile != model.Phone && ShopLogic.HaveRegisteredShopMobile(model.Phone))
                     {
                         ModelState.AddModelError("", "手机已经被注册");
-                        model.RegionNameList = new CommonLogic().RegionList();
+                        model.RegionNameList = new CommonLogic().RegionList(model.RegionId);
+                        model.StreetNameList = new CommonLogic().StreetList(model.RegionId, model.StreetId);
                         return View(model);
                     }
 
                     if (shop.Title != model.Title && ShopLogic.HaveRegisteredShopName(model.Title))
                     {
                         ModelState.AddModelError("", "店铺名已经被注册");
-                        model.RegionNameList = new CommonLogic().RegionList();
+                        model.RegionNameList = new CommonLogic().RegionList(model.RegionId);
+                        model.StreetNameList = new CommonLogic().StreetList(model.RegionId, model.StreetId);
                         return View(model);
                     }
-
 
                     //产品
                     if (ProductBrandFile != null && ProductBrandFile.FirstOrDefault() != null)
@@ -344,6 +408,16 @@ namespace MeiHi.Admin.Controllers
                     }
 
                     shop.RegionID = model.RegionId;
+
+                    if (model.StreetId == 0)
+                    {
+                        shop.StreetId = null;
+                    }
+                    else
+                    {
+                        shop.StreetId = model.StreetId;
+                    }
+
                     shop.ShopTag = model.ShopTag;
                     shop.Comment = model.Comment;
                     shop.PurchaseNotes = model.PurchaseNotes;
@@ -364,6 +438,8 @@ namespace MeiHi.Admin.Controllers
                         shopUser.WeiXinPayAccount = model.WinXinPayAccount;
                         shopUser.AliPayAccount = model.AliPayAccount;
                         shopUser.FullName = model.FullName;
+                        shopUser.BankName = model.BankName;
+                        shopUser.BankNo = model.BankNo;
                     }
 
                     db.SaveChanges();
@@ -419,6 +495,19 @@ namespace MeiHi.Admin.Controllers
                                             : null
                     };
 
+                    //model.RegionId = shop.RegionID;
+
+                    if (shop.StreetId != null)
+                    {
+                        model.StreetNameList = new CommonLogic().StreetList(shop.RegionID, shop.StreetId.Value);
+                        // model.StreetId = shop.StreetId.Value;
+
+                    }
+                    else
+                    {
+                        model.StreetNameList = new CommonLogic().StreetList(shop.RegionID);
+                    }
+
                     return View(model);
                 }
 
@@ -433,12 +522,18 @@ namespace MeiHi.Admin.Controllers
             using (var db = new MeiHiEntities())
             {
                 var shop = db.Shop.Where(a => a.ShopId == shopId).FirstOrDefault();
+                var shopUser = db.ShopUser.FirstOrDefault(a => a.ShopId == shopId);
 
                 if (shop != null)
                 {
-                    ShopDetailMpdel model = new ShopDetailMpdel()
+                    CreateShopMpdel model = new CreateShopMpdel()
                     {
-                        ShopId = shopId,
+                        ShopId = shop.ShopId,
+                        AliPayAccount = shopUser.AliPayAccount,
+                        BankName = shopUser.BankName,
+                        BankNo = shopUser.BankNo,
+                        FullName = shopUser.FullName,
+                        WinXinPayAccount = shopUser.WeiXinPayAccount,
                         Comment = shop.Comment,
                         Contract = shop.Contract,
                         Phone = shop.Phone,
@@ -555,6 +650,7 @@ namespace MeiHi.Admin.Controllers
 
             return RedirectToAction("OfflineShopManage");
         }
+        #endregion
 
         #region service
         [HttpPost]
@@ -591,7 +687,7 @@ namespace MeiHi.Admin.Controllers
                         service.OriginalUnitCost = model.OriginalUnitCost;
                         service.Title = model.Title;
                         service.ShopId = model.ShopId;
-                        service.IfSupportRealTimeRefund = model.IfSupportRealTimeRefund;
+                        service.IfSupportRealTimeRefund = true;
                         service.DateCreated = DateTime.Now;
                         service.DateModified = DateTime.Now;
                         db.Service.Add(service);
@@ -774,6 +870,79 @@ namespace MeiHi.Admin.Controllers
                 }
 
                 return RedirectToAction("ShopManege");
+            }
+        }
+        #endregion
+
+        #region servicetype
+        public ActionResult ManageServiceType()
+        {
+            using (var db = new MeiHiEntities())
+            {
+                List<ServiceTypeModel> model = new List<ServiceTypeModel>();
+
+                db.ServiceType.ToList().ForEach(a => model.Add(new ServiceTypeModel()
+                {
+                    ServiceTypeId = a.ServiceTypeId,
+                    ServiceTypeName = a.Title
+                }));
+
+                return View(model);
+            }
+        }
+
+        public ActionResult CreateServiceType()
+        {
+            return View(new ServiceTypeModel());
+        }
+
+        [HttpPost]
+        public ActionResult CreateServiceType(ServiceTypeModel model)
+        {
+            using (var db = new MeiHiEntities())
+            {
+                db.ServiceType.Add(new ServiceType() { DateCreated = DateTime.Now, Title = model.ServiceTypeName });
+                db.SaveChanges();
+
+                return RedirectToAction("ManageServiceType");
+            }
+        }
+
+        public ActionResult EditServiceType(int serviceTypeId)
+        {
+            using(var db=new MeiHiEntities())
+            {
+                var srrvicetype=db.ServiceType.FirstOrDefault(a=>a.ServiceTypeId==serviceTypeId);
+                var model = new ServiceTypeModel();
+                model.ServiceTypeId = serviceTypeId;
+                model.ServiceTypeName = srrvicetype.Title;
+
+                return View(model);
+            }
+        }
+
+        [HttpPost]
+        public ActionResult EditServiceType(ServiceTypeModel model)
+        {
+            using (var db = new MeiHiEntities())
+            {
+                var serviceType = db.ServiceType.FirstOrDefault(a => a.ServiceTypeId == model.ServiceTypeId);
+
+                serviceType.Title = model.ServiceTypeName;
+                db.SaveChanges();
+
+                return RedirectToAction("ManageServiceType");
+            }
+        }
+
+        public ActionResult DeleteServiceType(int serviceTypeId)
+        {
+            using (var db = new MeiHiEntities())
+            {
+                db.ServiceType.Remove(db.ServiceType.First(a => a.ServiceTypeId == serviceTypeId));
+                db.SaveChanges();
+
+                return RedirectToAction("ManageServiceType"); 
             }
         }
         #endregion

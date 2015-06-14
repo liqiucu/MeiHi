@@ -1,4 +1,4 @@
-﻿@model MeiHi.Admin.Models.ShopDetailMpdel
+﻿@model MeiHi.Admin.Models.CreateShopMpdel
 
 @{
     ViewBag.Title = "店铺详情";
@@ -48,6 +48,34 @@
             @Html.DisplayFor(model => model.DetailAddress)
         </dd>
 
+        <dt>
+            @Html.DisplayNameFor(model => model.AliPayAccount)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.AliPayAccount)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.WinXinPayAccount)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.WinXinPayAccount)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.BankNo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.BankNo)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.BankName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.BankName)
+        </dd>
         <dt>
             @Html.DisplayNameFor(model => model.Phone)
         </dt>

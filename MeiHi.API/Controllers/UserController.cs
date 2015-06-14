@@ -22,7 +22,7 @@ namespace MeiHi.API.Controllers
         [Route("Show_UserHome")]
         public object UserHome(long userId)
         {
-            using (var db = new MeiHiEntities())
+            using (var db = new MeiHiEntities()) 
             {
                 var user = UserLogic.GetUserByUserId(userId);
 

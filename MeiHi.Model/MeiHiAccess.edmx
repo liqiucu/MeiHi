@@ -212,6 +212,7 @@
           <Property Name="DateCreated" Type="datetime" Nullable="false" />
           <Property Name="DateModified" Type="datetime" Nullable="false" />
           <Property Name="Title" Type="nvarchar" MaxLength="50" />
+          <Property Name="StreetId" Type="int" />
         </EntityType>
         <EntityType Name="ShopBrandImages">
           <Key>
@@ -235,6 +236,8 @@
           <Property Name="AliPayAccount" Type="nvarchar" MaxLength="50" />
           <Property Name="FullName" Type="nvarchar" MaxLength="50" />
           <Property Name="WeiXinPayAccount" Type="nvarchar" MaxLength="50" />
+          <Property Name="BankName" Type="nvarchar" MaxLength="50" />
+          <Property Name="BankNo" Type="nchar" MaxLength="10" />
         </EntityType>
         <EntityType Name="User">
           <Key>
@@ -506,6 +509,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Shop_Street">
+          <End Role="Region" Type="Self.Region" Multiplicity="0..1" />
+          <End Role="Shop" Type="Self.Shop" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Region">
+              <PropertyRef Name="RegionId" />
+            </Principal>
+            <Dependent Role="Shop">
+              <PropertyRef Name="StreetId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_ShopBrandImages_Shop">
           <End Role="Shop" Type="Self.Shop" Multiplicity="0..1" />
           <End Role="ShopBrandImages" Type="Self.ShopBrandImages" Multiplicity="*" />
@@ -717,6 +732,10 @@
             <End Role="Region" EntitySet="Region" />
             <End Role="Shop" EntitySet="Shop" />
           </AssociationSet>
+          <AssociationSet Name="FK_Shop_Street" Association="Self.FK_Shop_Street">
+            <End Role="Region" EntitySet="Region" />
+            <End Role="Shop" EntitySet="Shop" />
+          </AssociationSet>
           <AssociationSet Name="FK_ShopBrandImages_Shop" Association="Self.FK_ShopBrandImages_Shop">
             <End Role="Shop" EntitySet="Shop" />
             <End Role="ShopBrandImages" EntitySet="ShopBrandImages" />
@@ -923,6 +942,7 @@
           <Property Name="DateModified" Type="DateTime" Nullable="false" Precision="3" />
           <NavigationProperty Name="Province" Relationship="Self.FK_Region_Province" FromRole="Region" ToRole="Province" />
           <NavigationProperty Name="Shop" Relationship="Self.FK_Shop_Region" FromRole="Region" ToRole="Shop" />
+          <NavigationProperty Name="Shop1" Relationship="MeiHiModel.FK_Shop_Street" FromRole="Region" ToRole="Shop" />
         </EntityType>
         <EntityType Name="Role">
           <Key>
@@ -1006,6 +1026,8 @@
           <NavigationProperty Name="ShopUser" Relationship="Self.FK_ShopUser_Shop" FromRole="Shop" ToRole="ShopUser" />
           <NavigationProperty Name="UserComments" Relationship="Self.FK_UserComments_Shop" FromRole="Shop" ToRole="UserComments" />
           <NavigationProperty Name="UserFavorites" Relationship="Self.FK_UserFavorites_Shop" FromRole="Shop" ToRole="UserFavorites" />
+          <Property Name="StreetId" Type="Int32" />
+          <NavigationProperty Name="Region1" Relationship="MeiHiModel.FK_Shop_Street" FromRole="Shop" ToRole="Region" />
         </EntityType>
         <EntityType Name="ShopBrandImages">
           <Key>
@@ -1031,6 +1053,8 @@
           <Property Name="AliPayAccount" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="FullName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="WeiXinPayAccount" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="BankName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="BankNo" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
         </EntityType>
         <EntityType Name="User">
           <Key>
@@ -1566,7 +1590,23 @@
             <End Role="UserComments" EntitySet="UserComments" />
             <End Role="UserCommentsReply" EntitySet="UserCommentsReply" />
           </AssociationSet>
+          <AssociationSet Name="FK_Shop_Street" Association="MeiHiModel.FK_Shop_Street">
+            <End Role="Region" EntitySet="Region" />
+            <End Role="Shop" EntitySet="Shop" />
+          </AssociationSet>
         </EntityContainer>
+        <Association Name="FK_Shop_Street">
+          <End Type="MeiHiModel.Region" Role="Region" Multiplicity="0..1" />
+          <End Type="MeiHiModel.Shop" Role="Shop" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Region">
+              <PropertyRef Name="RegionId" />
+            </Principal>
+            <Dependent Role="Shop">
+              <PropertyRef Name="StreetId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1778,6 +1818,7 @@
           <EntitySetMapping Name="Shop">
             <EntityTypeMapping TypeName="MeiHiModel.Shop">
               <MappingFragment StoreEntitySet="Shop">
+                <ScalarProperty Name="StreetId" ColumnName="StreetId" />
                 <ScalarProperty Name="ShopId" ColumnName="ShopId" />
                 <ScalarProperty Name="DetailAddress" ColumnName="DetailAddress" />
                 <ScalarProperty Name="RegionID" ColumnName="RegionID" />
@@ -1809,6 +1850,8 @@
           <EntitySetMapping Name="ShopUser">
             <EntityTypeMapping TypeName="MeiHiModel.ShopUser">
               <MappingFragment StoreEntitySet="ShopUser">
+                <ScalarProperty Name="BankNo" ColumnName="BankNo" />
+                <ScalarProperty Name="BankName" ColumnName="BankName" />
                 <ScalarProperty Name="WeiXinPayAccount" ColumnName="WeiXinPayAccount" />
                 <ScalarProperty Name="FullName" ColumnName="FullName" />
                 <ScalarProperty Name="AliPayAccount" ColumnName="AliPayAccount" />

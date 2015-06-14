@@ -31,23 +31,30 @@ namespace MeiHi.Shop.Controllers
         [Auth(Roles = "店主")]
         public ActionResult VerifyUserMeiHiCode(long shopId)
         {
-            using (var db = new MeiHiEntities())
+            try
             {
-                ShoperHomeModel model = new ShoperHomeModel();
-
-                var shop = db.Shop.FirstOrDefault(a => a.ShopId == shopId);
-
-                if (shop != null)
+                using (var db = new MeiHiEntities())
                 {
-                    model.ShopId = shop.ShopId;
-                    model.ShopName = shop.Title;
-                }
-                else
-                {
-                    ModelState.AddModelError("", "店铺信息不存在 请重新登陆 如还未解决问题 请联系美嗨客服！");
-                }
+                    ShoperHomeModel model = new ShoperHomeModel();
 
-                return View(model);  
+                    var shop = db.Shop.FirstOrDefault(a => a.ShopId == shopId);
+
+                    if (shop != null)
+                    {
+                        model.ShopId = shop.ShopId;
+                        model.ShopName = shop.Title;
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("", "店铺信息不存在 请重新登陆 如还未解决问题 请联系美嗨客服！");
+                    }
+
+                    return View(model);
+                }
+            }
+            catch (Exception)
+            {
+                return RedirectToAction("Index", "Home");
             }
         }
 

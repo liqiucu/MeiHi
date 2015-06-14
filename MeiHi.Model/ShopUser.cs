@@ -23,6 +23,8 @@ namespace MeiHi.Model
         public string AliPayAccount { get; set; }
         public string FullName { get; set; }
         public string WeiXinPayAccount { get; set; }
+        public string BankName { get; set; }
+        public string BankNo { get; set; }
     
         public virtual Shop Shop { get; set; }
     }

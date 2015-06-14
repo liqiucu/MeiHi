@@ -10,7 +10,7 @@
     <label>美嗨券查询</label>
     <input type="text" name="meihiTicket" value="" id="meihiTicket" />
     <input type="submit" value="查询" class="btn btn-default" />
-    <input type="hidden" value="@Model.ShopId" name="shopId" />
+    @*<input type="hidden" value="@Model.ShopId" name="shopId" />*@
 }
 
 @using (Html.BeginForm("ManageUnPayToShopBooking", "Booking", FormMethod.Get))
@@ -18,7 +18,7 @@
     <label>订单号查询</label>
     <input type="text" name="bookingId" value="" id="bookingId" />
     <input type="submit" value="查询" class="btn btn-default" />
-    <input type="hidden" value="@Model.ShopId" name="shopId" />
+    @*<input type="hidden" value="@Model.ShopId" name="shopId" />*@
 }
 <table class="table">
     <tr>

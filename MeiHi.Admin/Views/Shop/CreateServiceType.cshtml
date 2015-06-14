@@ -1,0 +1,40 @@
+﻿@model MeiHi.Admin.Models.Service.ServiceTypeModel
+
+@{
+    ViewBag.Title = "CreateServiceType";
+}
+
+<h2>创建服务类型</h2>
+
+
+@using (Html.BeginForm("CreateServiceType", "Shop", FormMethod.Post)) 
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <input type="hidden" value="@Model.ServiceTypeId" name="ServiceTypeId" />
+        <div class="form-group">
+            @Html.LabelFor(model => model.ServiceTypeName, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.ServiceTypeName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.ServiceTypeName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="创建" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("返回服务类型管理", "ManageServiceType")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

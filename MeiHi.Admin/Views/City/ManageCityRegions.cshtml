@@ -1,0 +1,48 @@
+﻿@model MeiHi.Admin.Models.City.CityRegionModel
+
+@{
+    ViewBag.Title = "ManageCityRegions";
+}
+
+<h2>@Model.CityName 的区域街道管理</h2>
+
+<p>
+    @Html.ActionLink("创建新区域", "CreateRegionByCityId", new { cityId = @Model.CityId })
+</p>
+<table class="table">
+    <tr>
+        <th>
+            区域ID
+        </th>
+        <th>
+            区域名称
+        </th>
+        <th>
+            街道列表
+        </th>
+        <th></th>
+    </tr>
+    @foreach (var item in Model.RegionList)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.RegionId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RegionName)
+            </td>
+            <td>
+                @if (item.StreetList != null && item.StreetList.Count > 0)
+                {
+                    var temp = string.Join(",", item.StreetList.Select(a => a.RegionName));
+                    <label>@temp</label>
+                }
+            </td>
+            <td>
+                @Html.ActionLink("街道管理", "StreetManage", new { regionId = item.RegionId }) |
+                @Html.ActionLink("区域编辑", "EditRegion", new { regionId = item.RegionId })|
+                @Html.ActionLink("删除区域", "DeleteRegion", new { regionId = item.RegionId }, new { onclick = "return confirm('确定要删除吗')" })
+            </td>
+        </tr>
+    }
+</table>

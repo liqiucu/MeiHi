@@ -5,7 +5,8 @@
 }
 
 <h2>编辑店铺</h2>
-
+<script src="~/Scripts/Region/Region.js"></script>
+<script src="~/Scripts/Shop/Shop.js"></script>
 @using (Html.BeginForm("EditShop", "Shop", FormMethod.Post, new { enctype = "multipart/form-data", id = "form2" }))
 {
     @Html.AntiForgeryToken()
@@ -16,11 +17,24 @@
         <input type="hidden" id="ShopId" name="ShopId" value="@Model.ShopId" />
 
         <div class="form-group">
-            <label class="control-label col-md-2">Region</label>
+            <label class="control-label col-md-2">区域</label>
             <div class="col-md-10">
                 <select id="RegionId" name="RegionId">
 
                     @foreach (var item in Model.RegionNameList)
+                    {
+                        <option value="@item.Value" selected="@item.Selected">
+                            @item.Text
+                        </option>
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-md-2">街道</label>
+            <div class="col-md-10">
+                <select id="StreetId" name="StreetId">
+                    @foreach (var item in Model.StreetNameList)
                     {
                         <option value="@item.Value" selected="@item.Selected">
                             @item.Text
