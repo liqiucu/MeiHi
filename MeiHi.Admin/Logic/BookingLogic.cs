@@ -78,8 +78,8 @@ namespace MeiHi.Admin.Logic
 
                 if (db.Booking.Where(a => a.IsBilling && a.IsUsed).Count()>0)
                 {
-                    result.TotalGotedMoney = db.Booking.Where(a => a.IsBilling && a.IsUsed).Sum(a => a.Cost);
-                    result.TotalPayedMoney = db.Booking.Where(a => a.IsBilling && a.IsUsed && a.Status).Sum(a => a.Cost);
+                    result.TotalGotedMoney = db.Booking.Where(a => a.IsBilling).Sum(a => a.Cost);
+                    result.TotalPayedMoney = db.Booking.Where(a => a.IsBilling && a.Status).Sum(a => a.Cost);
                 }
             
 
