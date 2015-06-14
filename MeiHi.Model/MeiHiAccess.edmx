@@ -79,6 +79,7 @@
           <Property Name="DateCreated" Type="datetime" Nullable="false" />
           <Property Name="DateModified" Type="datetime" Nullable="false" />
           <Property Name="Version" Type="timestamp" StoreGeneratedPattern="Computed" />
+          <Property Name="Tickets" Type="bigint" />
         </EntityType>
         <EntityType Name="HairStyle">
           <Key>
@@ -864,6 +865,7 @@
           <NavigationProperty Name="Shop" Relationship="Self.FK_Booking_Shop" FromRole="Booking" ToRole="Shop" />
           <NavigationProperty Name="User" Relationship="Self.FK_Booking_User" FromRole="Booking" ToRole="User" />
           <Property Name="Version" Type="Binary" MaxLength="8" FixedLength="true" annotation:StoreGeneratedPattern="Computed" />
+          <Property Name="Tickets" Type="Int64" />
         </EntityType>
         <EntityType Name="HairStyle">
           <Key>
@@ -1668,6 +1670,7 @@
           <EntitySetMapping Name="Booking">
             <EntityTypeMapping TypeName="MeiHiModel.Booking">
               <MappingFragment StoreEntitySet="Booking">
+                <ScalarProperty Name="Tickets" ColumnName="Tickets" />
                 <ScalarProperty Name="Version" ColumnName="Version" />
                 <ScalarProperty Name="BookingId" ColumnName="BookingId" />
                 <ScalarProperty Name="UserId" ColumnName="UserId" />

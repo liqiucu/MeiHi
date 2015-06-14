@@ -10,6 +10,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
@@ -89,10 +90,10 @@ namespace MeiHi.API.Controllers
         [Route("generate_booking")]
         [HttpPost]
         public object GenerateBooking(
-            long userId, 
-            int count, 
+            long userId,
+            int count,
             long serviceId,
-            decimal cost, 
+            decimal cost,
             string designer = null)
         {
             try
@@ -166,7 +167,7 @@ namespace MeiHi.API.Controllers
         [HttpPost]
         public object CallAliPayApiToPayServices(
             decimal cost,
-            long companyId, 
+            long companyId,
             long bookingId)
         {
             try
@@ -214,7 +215,7 @@ namespace MeiHi.API.Controllers
         [HttpPost]
         public object CallWeiXinPayApiToPayServices(
             decimal cost,
-            long companyId, 
+            long companyId,
             long bookingId)
         {
             try
@@ -254,6 +255,220 @@ namespace MeiHi.API.Controllers
             {
 
                 throw;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="count"></param>
+        /// <param name="serviceId"></param>
+        /// <param name="cost"></param>
+        /// <param name="designer"></param>
+        /// <returns></returns>
+        [ApiAuthorize]
+        [Route("generate_bookings")]
+        [HttpPost]
+        public object GenerateBookings(GenerateBookingsModel model)
+        {
+            try
+            {
+                using (var db = new MeiHiEntities())
+                {
+                    var user = db.User.FirstOrDefault(a => a.UserId == model.UserId);
+
+                    if (user == null)
+                    {
+                        return new
+                        {
+                            jsonStatus = 0,
+                            result = "获取用户信息失败"
+                        };
+                    }
+
+                    var tickets = DateTime.Now.Ticks;
+
+                    foreach (var item in model.Details)
+                    {
+                        var service = db.Service.FirstOrDefault(a => a.ServiceId == item.ServiceId);
+
+                        if (service == null)
+                        {
+                            return new
+                            {
+                                jsonStatus = 0,
+                                result = "获取服务失败 服务ID:" + item.ServiceId
+                            };
+                        }
+
+                        var booking = new Booking()
+                        {
+                            ServiceName = service.Title,
+                            ShopName = service.Shop.Title,
+                            ServiceId = service.ServiceId,
+                            ShopId = service.ShopId,
+                            Mobile = user.Mobile,
+                            UserId = user.UserId,
+                            DateModified = DateTime.Now,
+                            DateCreated = DateTime.Now,
+                            Count = item.Count,
+                            Cost = item.Cost,
+                            Designer = string.IsNullOrEmpty(item.Designer) ? null : item.Designer,
+                            Status = false,
+                            IsUsed = false,
+                            IsBilling = false,
+                            CancelSuccess = false,
+                            Cancel = false,
+                            VerifyCode = "",
+                            AlipayAccount = "",
+                            WeiXinAccount = "",
+                            Tickets = tickets
+                        };
+
+                        db.Booking.Add(booking);
+                    }
+
+                    db.SaveChanges();
+
+                    return new
+                    {
+                        jsonStatus = 1,
+                        result = "批量生产订单成功 批量订单号:" + tickets
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new
+                {
+                    jsonStatus = 0,
+                    result = "生产订单失败:" + ex
+                };
+            }
+        }
+
+        [ApiAuthorize]
+        [Route("Call_AliPayApiToPayBookings")]
+        [HttpPost]
+        public object CallAliPayApiToPayBookings(
+            decimal cost,
+            long companyId,
+            long bookingsId)
+        {
+            try
+            {
+                using (var db = new MeiHiEntities())
+                {
+                    var bookings = db.Booking.Where(a => a.Tickets == bookingsId);
+
+                    if (bookings == null || bookings.Count() == 0)
+                    {
+                        return new
+                        {
+                            jsonStatus = 0,
+                            result = "批量订单不存在 BookingsId:" + bookingsId
+                        };
+                    }
+
+                    if (cost != bookings.Sum(a => a.Cost))
+                    {
+                        return new
+                       {
+                           jsonStatus = 0,
+                           result = "批量订单号:" + bookingsId + " 支付不成功 请核对价格 订单实际总额为:" + bookings.Sum(a => a.Cost) + " 请求总额为:" + cost
+                       };
+                    }
+
+                    //call alipay success 
+                    var sb = new StringBuilder();
+
+                    foreach (var item in bookings)
+                    {
+                        var temp = Guid.NewGuid().ToString().Replace("-", string.Empty);
+                        var verifyCode = Regex.Replace(temp, "[a-zA-Z]", string.Empty).Substring(0, 12);
+                        item.VerifyCode = verifyCode;
+                        item.IsBilling = true;
+                        sb.Append("订购[" + item.ShopName + "][" + item.ServiceName + "]服务成功, 美嗨券:" + verifyCode);
+                    }
+
+                    db.SaveChanges();
+                    LuoSiMaoTextMessage.SendBookingVerifyCode(
+                        bookings.First().Mobile,
+                        sb.ToString() + "【美嗨科技】");
+
+                    return new
+                    {
+                        jsonStatus = 1,
+                        result = "批量支付订单成功：" + sb.ToString()
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new
+                {
+                    jsonStatus = 0,
+                    result = "批量支付订单失败：" + ex
+                };
+            }
+        }
+
+        [ApiAuthorize]
+        [Route("Call_WeiXinPayApiToPayBookings")]
+        [HttpPost]
+        public object CallWeiXinPayApiToPayBookings(
+            decimal cost,
+            long companyId,
+            long bookingsId)
+        {
+            try
+            {
+                using (var db = new MeiHiEntities())
+                {
+                    var bookings = db.Booking.Where(a => a.Tickets == bookingsId);
+
+                    if (bookings == null || bookings.Count() == 0)
+                    {
+                        return new
+                        {
+                            jsonStatus = 0,
+                            result = "批量订单不存在"
+                        };
+                    }
+
+                    //call weixinpay success 
+                    var sb = new StringBuilder();
+
+                    foreach (var item in bookings)
+                    {
+                        var temp = Guid.NewGuid().ToString().Replace("-", string.Empty);
+                        var verifyCode = Regex.Replace(temp, "[a-zA-Z]", string.Empty).Substring(0, 12);
+                        item.VerifyCode = verifyCode;
+                        item.IsBilling = true;
+                        sb.Append("订购[" + item.ShopName + "][" + item.ServiceName + "]服务成功, 美嗨券:" + verifyCode);
+                    }
+
+                    db.SaveChanges();
+                    LuoSiMaoTextMessage.SendBookingVerifyCode(
+                        bookings.First().Mobile,
+                        sb.ToString() + "【美嗨科技】");
+
+                    return new
+                    {
+                        jsonStatus = 1,
+                        result = "批量支付订单成功：" + sb.ToString()
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+
+                return new
+                {
+                    jsonStatus = 0,
+                    result = "批量支付订单失败：" + ex
+                };
             }
         }
 

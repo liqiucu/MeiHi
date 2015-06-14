@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using Newtonsoft.Json;
 
 namespace MeiHi.API.ViewModels
 {
@@ -88,5 +89,27 @@ namespace MeiHi.API.ViewModels
         public long UserId { get; set; }
 
         public List<NotPayedBookingModel> NotPayedBookings { get; set; }
+    }
+
+    [Serializable]
+    public class GenerateBookingsModel
+    {
+        public long UserId { get; set; }
+
+        public decimal TotalCost { get; set; }
+
+        public List<GenerateBookingsDetailModel> Details { get; set; }
+    }
+
+    [Serializable]
+    public class GenerateBookingsDetailModel
+    {
+        public int Count { get; set; }
+
+        public long ServiceId { get; set; }
+
+        public decimal Cost { get; set; }
+
+        public string Designer { get; set; }
     }
 }

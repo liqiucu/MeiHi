@@ -63,7 +63,7 @@ namespace MeiHi.API.Logic
                     {
                         userComments = db.UserComments.Where(a => a.ShopId == userId && a.Display == true).ToList();
                         HttpRuntime.Cache.Insert("GetUserCommentsByUserId" + userId, userComments, null,
-                           DateTime.Now.AddSeconds(600), TimeSpan.Zero);
+                           DateTime.Now.AddSeconds(1), TimeSpan.Zero);
                     }
                 }
 

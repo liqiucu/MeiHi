@@ -55,7 +55,7 @@ namespace MeiHi.API.Logic
                         }
 
                         HttpRuntime.Cache.Insert("AllShops", shops, null,
-                           DateTime.Now.AddSeconds(30), TimeSpan.Zero);
+                           DateTime.Now.AddSeconds(1), TimeSpan.Zero);
                     }
                 }
 
@@ -77,7 +77,7 @@ namespace MeiHi.API.Logic
                     {
                         userComments = db.UserComments.Where(a => a.ShopId == shopId && a.Display == true).ToList();
                         HttpRuntime.Cache.Insert("GetUserCommentsByShopId" + shopId, userComments, null,
-                           DateTime.Now.AddSeconds(600), TimeSpan.Zero);
+                           DateTime.Now.AddSeconds(1), TimeSpan.Zero);
                     }
                 }
 
@@ -426,7 +426,7 @@ namespace MeiHi.API.Logic
                     {
                         services = db.Service.Where(a => a.ShopId == shopId).ToList();
                         HttpRuntime.Cache.Insert("AllService" + services, services, null,
-                           DateTime.Now.AddSeconds(600), TimeSpan.Zero);
+                           DateTime.Now.AddSeconds(1), TimeSpan.Zero);
                     }
 
                 }

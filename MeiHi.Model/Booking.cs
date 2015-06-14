@@ -35,6 +35,7 @@ namespace MeiHi.Model
         public System.DateTime DateCreated { get; set; }
         public System.DateTime DateModified { get; set; }
         public byte[] Version { get; set; }
+        public Nullable<long> Tickets { get; set; }
     
         public virtual Service Service { get; set; }
         public virtual Shop Shop { get; set; }
