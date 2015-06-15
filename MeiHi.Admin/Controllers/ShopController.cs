@@ -580,7 +580,16 @@ namespace MeiHi.Admin.Controllers
                         access.RecommandShop.Remove(shop.RecommandShop);
                     }
 
-                    access.Service.RemoveRange(shop.Service);
+                    if (shop.Service != null && shop.Service.Count() > 0)
+                    {
+                        foreach (var service in shop.Service)
+                        {
+                            access.UserFavorites.RemoveRange(service.UserFavorites);
+                        }
+
+                        access.Service.RemoveRange(shop.Service);
+                    }
+                   
                     access.ShopUser.RemoveRange(shop.ShopUser);
 
                     if (shop.ProductBrand != null && shop.ProductBrand.Count > 0)
@@ -605,10 +614,28 @@ namespace MeiHi.Admin.Controllers
 
                     }
 
-                    access.UserComments.RemoveRange(shop.UserComments);
+
+                    if (shop.UserComments != null && shop.UserComments.Count > 0)
+                    { 
+                        foreach (var userComment in shop.UserComments)
+                        {
+                            access.UserCommentSharedImg.RemoveRange(userComment.UserCommentSharedImg);
+                            access.UserCommentsReply.RemoveRange(userComment.UserCommentsReply);
+                        }
+
+                        access.UserComments.RemoveRange(shop.UserComments);
+                    }
+                   
                     access.UserFavorites.RemoveRange(shop.UserFavorites);
                     access.Shop.Remove(shop);
                     access.SaveChanges();
+
+                    var childShops = access.Shop.Where(a => a.ParentShopId == shop.ParentShopId && a.ShopId != shop.ShopId);
+
+                    foreach (var item in childShops)
+                    {
+                        DeleteShop(item.ShopId);
+                    }
                 }
             }
 
@@ -701,10 +728,13 @@ namespace MeiHi.Admin.Controllers
                                 "/upload/shops/" + service.Shop.Title + "/service/",
                                 serviceTitleUrl);
 
-                            ImageHelper.DeleteImageFromDataBaseAndPhyclePath(
+                            if (!string.IsNullOrEmpty(service.TitleUrl))
+                            {
+                                ImageHelper.DeleteImageFromDataBaseAndPhyclePath(
                                 service.TitleUrl,
                                 "/upload/shops/" + service.Shop.Title + "/service/");
-
+                            }
+                            
                             service.TitleUrl = serviceImageUrl[0];
                         }
 
@@ -911,9 +941,9 @@ namespace MeiHi.Admin.Controllers
         [Auth(PermissionName = "店铺维护管理")]
         public ActionResult EditServiceType(int serviceTypeId)
         {
-            using(var db=new MeiHiEntities())
+            using (var db = new MeiHiEntities())
             {
-                var srrvicetype=db.ServiceType.FirstOrDefault(a=>a.ServiceTypeId==serviceTypeId);
+                var srrvicetype = db.ServiceType.FirstOrDefault(a => a.ServiceTypeId == serviceTypeId);
                 var model = new ServiceTypeModel();
                 model.ServiceTypeId = serviceTypeId;
                 model.ServiceTypeName = srrvicetype.Title;
@@ -943,7 +973,7 @@ namespace MeiHi.Admin.Controllers
                 db.ServiceType.Remove(db.ServiceType.First(a => a.ServiceTypeId == serviceTypeId));
                 db.SaveChanges();
 
-                return RedirectToAction("ManageServiceType"); 
+                return RedirectToAction("ManageServiceType");
             }
         }
         #endregion
