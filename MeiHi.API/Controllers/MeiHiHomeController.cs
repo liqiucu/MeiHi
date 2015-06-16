@@ -197,7 +197,7 @@ namespace MeiHi.API.Controllers
         {
             using (var db = new MeiHiEntities())
             {
-                var temp = db.Shop.Where(a => a.RegionID == regionId);
+                var temp = db.Shop.Where(a => a.RegionID == regionId && a.IsHot);
 
                 if (temp != null)
                 {

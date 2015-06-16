@@ -8,7 +8,7 @@ namespace MeiHi.Admin.Models.Advertising
 {
     public class AdvertisingModel
     {
-        [Display(Name="地址")]
+        [Display(Name="图片地址")]
         public string Url { get; set; }
 
         [Display(Name="标题")]
