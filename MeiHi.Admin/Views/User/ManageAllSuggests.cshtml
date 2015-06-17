@@ -26,6 +26,7 @@
         <th>
             创建时间
         </th>
+        <th></th>
     </tr>
 
     @foreach (var item in Model.UserSuggest)
@@ -39,6 +40,9 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.DateCreated)
+            </td>
+            <td>
+                @Html.ActionLink("删除", "DeleteSuggestBySuggestId", new { userSuggestId = item.UserSuggestId })
             </td>
         </tr>
     }

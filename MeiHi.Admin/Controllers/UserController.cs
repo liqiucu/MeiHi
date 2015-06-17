@@ -13,7 +13,7 @@ namespace MeiHi.Admin.Controllers
 {
     public class UserController : Controller
     {
-         [Auth(PermissionName = "用户维护管理")]
+        [Auth(PermissionName = "用户维护管理")]
         // GET: User
         public ActionResult ManageUsers(int page = 1, string userName = "")
         {
@@ -195,6 +195,7 @@ namespace MeiHi.Admin.Controllers
                 return View(model);
             }
         }
+
         [Auth(PermissionName = "用户维护管理")]
         public ActionResult ManageAllSuggests(UserSuggestsModel model, int page = 1, int search = 0)
         {
@@ -202,7 +203,7 @@ namespace MeiHi.Admin.Controllers
             {
                 if (search == 1)
                 {
-                    model = UserLogic.GetAllUserSuggests(page, 30, model.StartDateTime,model.EndDateTime);
+                    model = UserLogic.GetAllUserSuggests(page, 30, model.StartDateTime, model.EndDateTime);
                 }
                 else
                 {
@@ -213,6 +214,28 @@ namespace MeiHi.Admin.Controllers
                 model.StartDateTime = DateTime.Now.AddDays(-1);
                 return View(model);
             }
+        }
+
+        public ActionResult DeleteSuggestBySuggestId(long userSuggestId)
+        {
+            using (var db = new MeiHiEntities())
+            {
+                var suggest = db.UserSuggest.First(a => a.UserSuggestId == userSuggestId);
+
+                if (suggest != null)
+                {
+                    db.UserSuggest.Remove(suggest);
+                    db.SaveChanges();
+                }
+
+                return RedirectToAction("ManageAllSuggests");
+            }
+        }
+
+        [Auth(PermissionName = "用户维护管理")]
+        public ActionResult GetUserInfoByUserId(long userId)
+        {
+            return View(UserLogic.GetUserInfoByUserId(userId));
         }
     }
 }

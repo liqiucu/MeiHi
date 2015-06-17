@@ -94,7 +94,7 @@
                 @Html.ActionLink("店铺编辑", "EditShop", new { shopId = item.ShopId }) |
                 @Html.ActionLink("店铺预览", "ShopDetail", new { shopId = item.ShopId }) |
                 @*@Html.ActionLink("分店管理", "BranchShopsManage", new { shopId = item.ShopId })|*@
-                @Html.ActionLink("删除", "DeleteShop", new { shopId = item.ShopId }, new { onclick = "return confirm('确定要删除吗')" })|
+                @*@Html.ActionLink("删除", "DeleteShop", new { shopId = item.ShopId }, new { onclick = "return confirm('确定要删除吗')" })|*@
                 @Html.ActionLink("下架", "DropDownShop", new { shopId = item.ShopId }, new { onclick = "return confirm('确定要下架吗')" })
             </td>
         </tr>

@@ -90,4 +90,34 @@ namespace MeiHi.Admin.Models.User
         [Display(Name = "正在申请退款")]
         public bool HaveCancelBooking { get; set; }
     }
+
+    public class UserInfoModel
+    {
+        [Display(Name="用户ID")]
+        public long UserId { get; set; }
+        [Display(Name = "手机")]
+        public string Mobile { get; set; }
+        [Display(Name = "昵称")]
+        public string FullName { get; set; }
+        [Display(Name = "性别")]
+        public string Gender { get; set; }
+        [Display(Name = "头像")]
+        public string ProfilePhoto { get; set; }
+        [Display(Name = "美嗨余额")]
+        public decimal Balance { get; set; }
+        [Display(Name = "设备")]
+        public string Device { get; set; }
+        [Display(Name = "版本号")]
+        public string Version { get; set; }
+        [Display(Name = "从哪下的")]
+        public Nullable<int> DownloadFromApplicationId { get; set; }
+        [Display(Name = "发长")]
+        public string HairOfLegth { get; set; }
+        [Display(Name = "详细地址")]
+        public string Address { get; set; }
+        [Display(Name = "生日")]
+        public Nullable<System.DateTime> BirthDay { get; set; }
+        [Display(Name = "注册时间")]
+        public System.DateTime DateCreated { get; set; }
+    }
 }

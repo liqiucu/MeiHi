@@ -4,10 +4,10 @@
     ViewBag.Title = "ShowServicesByShopId";
 }
 
-<h2>ShopId:@Model.ShopId</h2>
+<h2>店铺: @Model.ShopName 的服务列表</h2>
 
 <p>
-    @Html.ActionLink("Create New", "CreateService", new { shopId = Model.ShopId })
+    @Html.ActionLink("创建服务", "CreateService", new { shopId = Model.ShopId })
 </p>
 <table class="table">
     <tr>
@@ -54,15 +54,15 @@
                 @Html.DisplayFor(modelItem => item.IfSupportRealTimeRefund)
             </td>
             <td>
-                @Html.ActionLink("Edit", "EditService", new { serviceId = item.ServiceId }) |
-                @Html.ActionLink("Details", "ServiceDetail", new { serviceId = item.ServiceId }) |
-                @Html.ActionLink("Delete", "DeleteService", new { serviceId = item.ServiceId })
+                @Html.ActionLink("编辑服务", "EditService", new { serviceId = item.ServiceId }) |
+                @Html.ActionLink("服务详情", "ServiceDetail", new { serviceId = item.ServiceId }) |
+                @Html.ActionLink("删除服务", "DeleteService", new { serviceId = item.ServiceId })
             </td>
         </tr>
     }
 
 </table>
 <p>
-    @Html.ActionLink("Back to List", "ShopManege")
+    @Html.ActionLink("返回商铺了列表", "ShopManege")
 </p>
 

@@ -76,6 +76,7 @@
                 @Html.DisplayFor(modelItem => item.HaveCancelBooking)
             </td>
             <td>
+                @Html.ActionLink("用户基本信息", "GetUserInfoByUserId", new { userId = item.UserId })
                 @Html.ActionLink("订单", "ManageUserBookingsByUserId", new { userId = item.UserId })
                 @Html.ActionLink("评论", "ManageUserCommentsByUserId", new { userId = item.UserId })
             </td>

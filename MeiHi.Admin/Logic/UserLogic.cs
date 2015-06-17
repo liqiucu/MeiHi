@@ -368,5 +368,55 @@ namespace MeiHi.Admin.Logic
                 return result;
             }
         }
+
+        public static UserInfoModel GetUserInfoByUserId(long userId)
+        {
+            using (var db = new MeiHiEntities())
+            {
+
+                var user = db.User.First(a => a.UserId == userId);
+                string gender = "";
+                if (user.Gender != null)
+                {
+                    gender = user.Gender == 0 ? "男" : "女";
+                }
+
+                string hairlength = "";
+
+                if (user.Gender != null)
+                {
+                    if (user.HairOfLegth == 0)
+                    {
+                        hairlength = "短";
+                    }
+                    else if (user.HairOfLegth == 1)
+                    {
+                        hairlength = "中";
+                    }
+                    else
+                    {
+                        hairlength = "长";
+                    }
+                }
+                return new UserInfoModel()
+                {
+                    Address = user.Address,
+                    Balance = user.Balance,
+                    BirthDay = user.BirthDay,
+                    DateCreated = user.DateCreated,
+                    Device = user.Device,
+                    DownloadFromApplicationId = user.DownloadFromApplicationId,
+                    FullName = user.FullName,
+                    Gender = gender,
+                    HairOfLegth = hairlength,
+                    Mobile = user.Mobile,
+                    ProfilePhoto = user.ProfilePhoto,
+                    UserId = user.UserId,
+
+                    Version = user.VerifyCode
+
+                };
+            }
+        }
     }
 }

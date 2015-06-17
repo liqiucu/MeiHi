@@ -788,7 +788,6 @@ namespace MeiHi.Admin.Controllers
 
                 if (services != null && services.Count() > 0)
                 {
-
                     foreach (var item in services)
                     {
                         results.Add(new ShowServiceListModel()
@@ -805,6 +804,7 @@ namespace MeiHi.Admin.Controllers
 
                 ShowServiceModel model = new ShowServiceModel();
                 model.ShopId = shopId;
+                model.ShopName = access.Shop.First(a => a.ShopId == shopId).Title;
                 model.ShowServiceList = results;
                 return View(model);
             }

@@ -4,7 +4,7 @@
     ViewBag.Title = "编辑服务";
 }
 
-<h2>服务ID:@Model.ServiceId</h2>
+<h2>编辑服务 @Model.Title</h2>
 
 @using (Html.BeginForm("SaveService", "Shop", FormMethod.Post, new { enctype = "multipart/form-data", id = "form2" }))
 {
