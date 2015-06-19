@@ -460,6 +460,26 @@ namespace MeiHi.Admin.Controllers
             }
         }
 
+        private List<string> GetImages(IEnumerable<string> list)
+        {
+            List<string> result = new List<string>();
+
+            if (list == null)
+            {
+                return result;
+            }
+
+            foreach (var item in list)
+            {
+                if (!string.IsNullOrEmpty(item))
+                {
+                    result.Add(item.Replace("100X100_", ""));
+                }
+            }
+
+            return result;
+        }
+
         [HttpGet]
         [Auth(PermissionName = "店铺维护管理")]
         public ActionResult EditShop(long shopId)
@@ -487,11 +507,11 @@ namespace MeiHi.Admin.Controllers
                         ParentShopName = ShopLogic.GetShopNameByShopId(shop.ParentShopId.Value),
                         ProductBrandList = shop.ProductBrand != null
                                             && shop.ProductBrand.Count > 0
-                                            ? shop.ProductBrand.Select(a => a.ProductUrl).ToList()
+                                            ? GetImages(shop.ProductBrand.Select(a => a.ProductUrl))
                                             : null,
                         ShopProductList = shop.ShopBrandImages != null
                                             && shop.ShopBrandImages.Count > 0
-                                            ? shop.ShopBrandImages.Select(a => a.url).ToList()
+                                            ? GetImages(shop.ShopBrandImages.Select(a => a.url))
                                             : null
                     };
 
@@ -589,7 +609,7 @@ namespace MeiHi.Admin.Controllers
 
                         access.Service.RemoveRange(shop.Service);
                     }
-                   
+
                     access.ShopUser.RemoveRange(shop.ShopUser);
 
                     if (shop.ProductBrand != null && shop.ProductBrand.Count > 0)
@@ -616,7 +636,7 @@ namespace MeiHi.Admin.Controllers
 
 
                     if (shop.UserComments != null && shop.UserComments.Count > 0)
-                    { 
+                    {
                         foreach (var userComment in shop.UserComments)
                         {
                             access.UserCommentSharedImg.RemoveRange(userComment.UserCommentSharedImg);
@@ -625,7 +645,7 @@ namespace MeiHi.Admin.Controllers
 
                         access.UserComments.RemoveRange(shop.UserComments);
                     }
-                   
+
                     access.UserFavorites.RemoveRange(shop.UserFavorites);
                     access.Shop.Remove(shop);
                     access.SaveChanges();
@@ -734,7 +754,7 @@ namespace MeiHi.Admin.Controllers
                                 service.TitleUrl,
                                 "/upload/shops/" + service.Shop.Title + "/service/");
                             }
-                            
+
                             service.TitleUrl = serviceImageUrl[0];
                         }
 

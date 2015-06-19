@@ -42,7 +42,7 @@
                 @Html.DisplayFor(modelItem => item.DateCreated)
             </td>
             <td>
-                @Html.ActionLink("删除", "DeleteSuggestBySuggestId", new { userSuggestId = item.UserSuggestId })
+                @Html.ActionLink("删除", "DeleteSuggestBySuggestId", new { userSuggestId = item.UserSuggestId }, new { onclick = "return confirm('确定要删除吗')" })
             </td>
         </tr>
     }
